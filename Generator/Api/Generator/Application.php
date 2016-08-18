@@ -105,10 +105,10 @@ class Application
                         'actionName' => ucfirst(strtolower($data['action'])),
                         'entityName' => ucfirst(strtolower($data['entity'])),
                         'entityFields' => $this->entities[$data['entity']],
-                        'managerArgs' => trim($managerArgs, ','),
+                        'managerArgs' => trim($managerArgs, ', '),
                         'fields' => $this->entities[$data['entity']],
                         'valueObjects' => $this->valueObjects,
-                        'constructorArgs' => trim($constructorParams, ','),
+                        'constructorArgs' => trim($constructorParams, ', '),
                         'destinationPath' => $this->destinationPath,
                     ];
 
@@ -177,10 +177,10 @@ class Application
                         'actionName' => ucfirst(strtolower($data['action'])),
                         'entityName' => ucfirst(strtolower($data['entity'])),
                         'entityFields' => $this->entities[$data['entity']],
-                        'managerArgs' => trim($managerArgs, ','),
+                        'managerArgs' => trim($managerArgs, ', '),
                         'fields' => $this->entities[$data['entity']],
                         'valueObjects' => $this->valueObjects,
-                        'constructorArgs' => trim($constructorParams, ','),
+                        'constructorArgs' => trim($constructorParams, ', '),
                         'destinationPath' => $this->destinationPath,
                     ];
 
@@ -229,10 +229,10 @@ class Application
                         'actionName' => ucfirst(strtolower($data['action'])),
                         'entityName' => ucfirst(strtolower($data['entity'])),
                         'entityFields' => $this->entities[$data['entity']],
-                        'managerArgs' => trim($managerArgs, ','),
+                        'managerArgs' => trim($managerArgs, ', '),
                         'fields' => $this->entities[$data['entity']],
                         'valueObjects' => $this->valueObjects,
-                        'constructorArgs' => trim($constructorParams, ','),
+                        'constructorArgs' => trim($constructorParams, ', '),
                         'destinationPath' => $this->destinationPath,
 
                     ];

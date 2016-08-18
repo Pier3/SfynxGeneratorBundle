@@ -103,6 +103,8 @@ abstract class AbstractHandler
 
     public function renderFile($template, $target, $parameters)
     {
+        var_dump($target);die;
+
         if (!is_dir(dirname($target))) {
             mkdir(dirname($target), 0777, true);
         }

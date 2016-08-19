@@ -234,8 +234,10 @@ class Domain
             if (count($voToCreate['fields']) > 1) {
                 $composite = true;
             }
+
             $constructorParams = "";
             $parameters['fields'] = $voToCreate['fields'];
+
             foreach ($voToCreate["fields"] as $field) {
                 $constructorParams .= "$" . $field["name"] . ",";
             }
@@ -258,15 +260,20 @@ class Domain
 
     public function generateTests()
     {
-        foreach ($this->entities as $name => $data) {
+        foreach ($this->pathsToCreate as $route => $verbData) {
+            foreach ($verbData as $verb => $data) {
 
-            $parameters = [
-                'rootDir' => $this->rootDir . "/src",
-                'projectDir' => $this->projectDir,
-                'projectName' => str_replace('src/', '', $this->projectDir),
-                'entityName' => ucfirst(strtolower($name)),
-                'destinationPath' => $this->destinationPath,
-            ];
+                $parameters = [
+                    'rootDir' => $this->rootDir . "/src",
+                    'projectDir' => $this->projectDir,
+                    'projectName' => str_replace('src/', '', $this->projectDir),
+                    'actionName' => ucfirst(strtolower($data['action'])),
+                    'entityName' => ucfirst(strtolower($data['entity'])),
+                    'entityFields' => $this->entities[$data['entity']],
+                    'fields' => $this->entities[$data['entity']],
+                    'valueObjects' => $this->valueObjects,
+                    'destinationPath' => $this->destinationPath,
+                ];
 
             $this->generator->addHandler(new ORMRepositoryFactoryTestHandler($parameters));
             $this->generator->addHandler(new CountryManagerTestHandler($parameters));

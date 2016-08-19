@@ -10,6 +10,7 @@ use Sfynx\DddBundle\Layer\Domain\Generalisation\Traits\TraitTenant;
 {% for vo in valueObjects %}use {{ vo.type|trim("\\") }};
 {% endfor %}
 
+
 /**
  * @ORM\Entity
  * @Orm\Table(name="{{ entityName }}")
@@ -104,13 +105,13 @@ class {{ entityName }}
      */
     protected function __construct($tenantId, {{ constructorArgs }})
     {
-{% for field in fields %}
+{% for field in  fields %}
 {% if field.type == "id" %}
 {% if field.voName is defined %}
         $this->{{ field.type }} = new {{ field.voName }}(${{ field.name }});
 {% endif %}
 {% endif %}
-    $this->setTenantId($tenantId);
+        $this->setTenantId($tenantId);
 {% if field.type != "id" %}
         $this->set{{ field.name|ucfirst }}(${{ field.name }});
 {% endif %}

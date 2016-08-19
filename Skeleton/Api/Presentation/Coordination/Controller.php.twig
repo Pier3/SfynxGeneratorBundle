@@ -126,7 +126,8 @@ class Controller
         $this->getByIdsQueryHandler = $getByIdsQueryHandler;
         $this->searchByQueryHandler = $searchByQueryHandler;
     }
-    {% include("actions/getSwaggerFile.php.twig") %}
+
+{% include("actions/getSwaggerFile.php.twig") %}
 {% endif %}
 
 {% for action in controllerData %}

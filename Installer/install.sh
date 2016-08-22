@@ -24,16 +24,17 @@ then
 	exit 2
 fi
 
-composer create-project symfony/framework-standard-edition "$projectName" "$version" --no-install
-cd "$projectName"
+composer create-project symfony/framework-standard-edition "$projectName" "$version" --no-install && cd "$projectName"
 
 echo 'Replace the composer.json content'
 cat ../generator/Installer/templates/composer.json.tpl > composer.json
 
 echo 'Removing the composer.lock and re-install the new one'
 
+
 rm composer.lock
 composer install --ignore-platform-reqs
+sleep 10
 
 echo 'Activate bundles into the Kernel'
 cat ../generator/Installer/templates/appKernel.php.tpl > app/AppKernel.php

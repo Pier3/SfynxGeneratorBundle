@@ -1,12 +1,17 @@
+    /**
+     * @return Response
+     *
+     * @example
+     * <code>
+     * </code>
+     */
     public function {{ action.action }}Action() {
         $adapter = new PatchCommandAdapter();
-        $command = $adapter->createCommandFromRequest(
-        new PatchRequest($this->request, $this->resolver)
-        );
+        $command = $adapter->createCommandFromRequest(new PatchRequest($this->request, $this->resolver));
         if ($entity = $this->patchCommandHandlerDecorator->process($command)) {
-        return $this->responseHandler->create($entity, Response::HTTP_OK)->getResponse();
+            return $this->responseHandler->create($entity, Response::HTTP_OK)->getResponse();
         }
         //if error
-        $result = ["message" =>"validation handler not accepted"];
+        $result = ['message' => 'Validation handler not accepted.'];
         return $this->responseHandler->create($result, Response::HTTP_INTERNAL_SERVER_ERROR)->getResponse();
     }

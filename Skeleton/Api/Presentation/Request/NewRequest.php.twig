@@ -29,7 +29,7 @@ class NewRequest extends AbstractRequest implements CommandRequestInterface
     protected $allowedTypes = [
 {% for field in entityFields %}
 {% if field.type!="id" %}
-        '{{ field.name }}'=>['{% if field.type!="id" %}{% if field.type=="number" %}integer{% elseif field.type=="datetime" %}string{% elseif field.type=="valueObject" %}array{% else %}{{ field.type }}{% endif %}{% else %}string{% endif %}'],
+        '{{ field.name }}' => ['{% if field.type!="id" %}{% if field.type=="number" %}integer{% elseif field.type=="datetime" %}string{% elseif field.type=="valueObject" %}array{% else %}{{ field.type }}{% endif %}{% else %}string{% endif %}'],
 {% endif %}
 {% endfor %}
     ];

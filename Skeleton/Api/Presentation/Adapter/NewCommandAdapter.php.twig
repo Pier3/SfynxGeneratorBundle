@@ -23,6 +23,6 @@ class NewCommandAdapter implements CommandAdapterInterface
     {
         $parameters = $request->getRequestParameters();
 
-        return new NewCommand({% for field in entityFields %}{% if field.type!="id" %}$parameters["{{ field.name }}"]{% if loop.index < entityFields|length %}, {% endif %}{% endif %}{% endfor %});
+        return new NewCommand({% for field in entityFields %}{% if field.type!="id" %}$parameters['{{ field.name }}']{% if loop.index < entityFields|length %}, {% endif %}{% endif %}{% endfor %});
     }
 }

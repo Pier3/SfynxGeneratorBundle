@@ -20,12 +20,12 @@ class SearchByRequest extends AbstractRequest implements QueryRequestInterface
     ];
 
     protected $required = [
-        'criterias'
+        'criteria'
     ];
 
     protected $allowedTypes = [
-        'criterias'=>['array'],
-        'start'=>['integer'],
-        'count'=>['integer'],
+        'criteria' => ['array'],
+        'start' => ['integer'],
+        'count' => ['integer'],
     ];
 }

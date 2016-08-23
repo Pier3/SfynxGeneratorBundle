@@ -15,11 +15,11 @@ use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\AbstractRequest;
 class PatchRequest extends AbstractRequest implements CommandRequestInterface
 {
     protected $defaults = [
-    {% for field in entityFields %}
-        {%  if field.type != "id" %}
-         '{{ field.name }}'=>'',
-        {% endif %}
-    {% endfor %}
+{% for field in entityFields %}
+{%  if field.type != "id" %}
+        '{{ field.name }}' => '',
+{% endif %}
+{% endfor %}
     ];
 
     protected $required = [
@@ -28,12 +28,15 @@ class PatchRequest extends AbstractRequest implements CommandRequestInterface
 
     protected $allowedTypes = [
 {% for field in entityFields %}
-        '{{ field.name }}'=>['{% if field.type!="id" %}{% if field.type=="number" %}integer{% elseif field.type=="boolean" %}string{% elseif field.type=="valueObject" %}array{% else %}{{ field.type }}{% endif %}{% else %}string{% endif %}'],
+        '{{ field.name }}' => ['{% if field.type!="id" %}{% if field.type=="number" %}integer{% elseif field.type=="boolean" %}string{% elseif field.type=="valueObject" %}array{% else %}{{ field.type }}{% endif %}{% else %}string{% endif %}'],
 {% endfor %}
     ];
 
-
-
+    /**
+     * setOptions
+     *
+     * Set options from the request body and add the entity identifier.
+     */
     protected function setOptions()
     {
         $this->options = [];
@@ -44,7 +47,7 @@ class PatchRequest extends AbstractRequest implements CommandRequestInterface
 
         //get url's params
         $entityId = $this->request->get('entityId');
-        if ($entityId !== null) {
+        if (null !== $entityId) {
             $this->options['entityId'] = $entityId;
         }
     }

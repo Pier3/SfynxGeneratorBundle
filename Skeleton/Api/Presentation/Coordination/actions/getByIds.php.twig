@@ -1,14 +1,12 @@
     /**
-    * @return Response
-    *
-    * @example http://host/api/v1/actors.json/a299fc78-6548-45a3-9823-898c07f76c9b,a300fc78-6548-45a3-9823-898c07f76c9b,a301fc78-6548-45a3-9823-898c07f76c9b
-    */
+     * @return Response
+     *
+     * @example http://host/api/v1/actors.json/a299fc78-6548-45a3-9823-898c07f76c9b,a300fc78-6548-45a3-9823-898c07f76c9b,a301fc78-6548-45a3-9823-898c07f76c9b
+     */
     public function getByIdsAction()
     {
         $adapter = new GetByIdsQueryAdapter();
-        $query = $adapter->createQueryFromRequest(
-            new GetByIdsRequest($this->request, $this->resolver)
-        );
+        $query = $adapter->createQueryFromRequest(new GetByIdsRequest($this->request, $this->resolver));
         $entities = $this->getByIdsQueryHandler->process($query);
 
         return $this->responseHandler->create($entities, Response::HTTP_OK)->getResponse();

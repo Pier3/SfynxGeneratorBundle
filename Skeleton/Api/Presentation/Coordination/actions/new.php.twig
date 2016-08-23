@@ -1,20 +1,18 @@
     /**
-    * @return Response
-    *
-    * @example
-    * <code>
-    * </code>
-    */
+     * @return Response
+     *
+     * @example
+     * <code>
+     * </code>
+     */
     public function {{ action.action }}Action()
     {
         $adapter = new NewCommandAdapter();
-        $command = $adapter->createCommandFromRequest(
-            new NewRequest($this->request, $this->resolver)
-        );
+        $command = $adapter->createCommandFromRequest(new NewRequest($this->request, $this->resolver));
         if ($entity = $this->newCommandHandlerDecorator->process($command)) {
             return $this->responseHandler->create($entity, Response::HTTP_CREATED)->getResponse();
         }
         //if error
-        $result = ["message" =>"validation handler not accepted"];
+        $result = ['message' => 'Validation handler not accepted.'];
         return $this->responseHandler->create($result, Response::HTTP_INTERNAL_SERVER_ERROR)->getResponse();
     }

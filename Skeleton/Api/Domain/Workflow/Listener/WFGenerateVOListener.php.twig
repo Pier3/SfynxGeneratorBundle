@@ -8,7 +8,7 @@ use {{ projectName }}\Application\{{ entityName }}\Command\UpdateCommand;
 use {{ projectName }}\Application\{{ entityName }}\Command\PatchCommand;
 use Sfynx\DddBundle\Layer\Domain\ValueObject\IdVO;
 {% for  data in valueObjects %}
-use {{ projectName }}\Domain\ValueObject\{{ data.name}};
+use {{ projectName }}\Domain\ValueObject\{{ data.name }};
 {% endfor %}
 
 /**
@@ -20,50 +20,48 @@ use {{ projectName }}\Domain\ValueObject\{{ data.name}};
  */
 class WFGenerateVOListener implements ObserverInterface
 {
-
 {% for field in fields %}
     private ${{ field.name|lower }};
 {% endfor %}
-
-
 
     /**
      * @param WFObjectEvent $event
      */
     public function update(ObservableInterface $wfHandler)
     {
+        $this{% for field in fields %}->set{{ field.name|capitalize }}($wfHandler){% if loop.index == fields|length %};{% endif %}
+            {% endfor %}
+    }
 {% for field in fields %}
-        $this->set{{ field.name|capitalize }}($wfHandler);
-{% endfor %}
-}
 
-{% for field in fields %}
-    public function set{{ field.name|capitalize }}(ObservableInterface $wfHandler) {
-    {% if field.type=="id" %}
-        if ($wfHandler->getCommand() instanceof UpdateCommand  || $wfHandler->getCommand() instanceof PatchCommand) {
+    /**
+     * @param ObservableInterface $wfHandler
+     * @return $this
+     */
+    public function set{{ field.name|capitalize }}(ObservableInterface $wfHandler)
+    {
+{% if field.type=="id" %}
+        if ($wfHandler->getCommand() instanceof UpdateCommand || $wfHandler->getCommand() instanceof PatchCommand) {
 {% if field.voName is defined %}
-    $wfHandler->data->{{ field.name }}[] = new {{ field.voName }}($wfHandler->getCommand()->get{{ field.name|ucfirst }}());
+            $wfHandler->data->{{ field.name }}[] = new {{ field.voName }}($wfHandler->getCommand()->get{{ field.name|ucfirst }}());
 {% else %}
-    $wfHandler->data->{{ field.name }}[] = $wfHandler->getCommand()->get{{ field.name|ucfirst }}();
+            $wfHandler->data->{{ field.name }}[] = $wfHandler->getCommand()->get{{ field.name|ucfirst }}();
 {% endif %}
         }
-    {% elseif field.type == "valueObject" %}
-
-            {% set parameters = "" %}
-            {% for name, data in valueObjects %}
-                {% if name == field.voName %}
-                    {% for vofield in data.fields %}
-                        {% set parameters = parameters ~ "$wfHandler->getCommand()->get" ~ field.name|ucfirst ~"()['"~ vofield.name ~"']," %}
-                    {% endfor %}
-                {% endif %}
-            {% endfor %}
-
-            $wfHandler->data->{{ field.name }}[] = new {{ field.voName }}({{ parameters|trim(',') }});
-    {% else %}
-            $wfHandler->data->{{ field.name }}[] = $wfHandler->getCommand()->get{{ field.name|ucfirst }}();
-
-    {% endif %}
-    return $this;
+{% elseif field.type == "valueObject" %}
+{% set parameters = "" %}
+{% for name, data in valueObjects %}
+{% if name == field.voName %}
+{% for vofield in data.fields %}
+{% set parameters = parameters ~ "$wfHandler->getCommand()->get" ~ field.name|ucfirst ~"()['"~ vofield.name ~"']," %}
+{% endfor %}
+{% endif %}
+{% endfor %}
+        $wfHandler->data->{{ field.name }}[] = new {{ field.voName }}({{ parameters|trim(',') }});
+{% else %}
+        $wfHandler->data->{{ field.name }}[] = $wfHandler->getCommand()->get{{ field.name|ucfirst }}();
+{% endif %}
+        return $this;
     }
 {% endfor %}
 }

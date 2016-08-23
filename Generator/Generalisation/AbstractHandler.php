@@ -37,9 +37,20 @@ abstract class AbstractHandler
 
     public function setPermissions($target, $owner = 'www-data', $group = 'www-data', $rights = 0777)
     {
-        chown($target, $owner);
-        chgrp($target, $group);
-        chmod($target, $rights);
+        /* If you are on linux,
+               there is an issue on the chown/chmod command so
+               we have to execute directly the sudo command here
+           Else
+               just call the php internal functions
+        */
+        if (strtolower(substr(PHP_OS, 0, 3)) !== 'win') {
+            `sudo chown {$owner}:{$group} {$target}`;
+            `sudo chmod {$rights} {$target}`;
+        } else {
+            chown($target, $owner);
+            chgrp($target, $group);
+            chmod($target, $rights);
+        }
     }
 
     protected function render($template, $parameters)

@@ -5,23 +5,23 @@ echo 'Creation of the Symfony based project';
 
 if [ '' = "$1" ]
 then
-	echo 'ERROR: you must add the project name as 1st argument'
-	exit 1
+    echo 'ERROR: you must add the project name as 1st argument'
+    exit 1
 fi
 
 projectName=$1;
 
 if [ '' = "$2" ]
 then
-	version="2.8.*"
+    version="2.8.*"
 else
-	version=$2
+    version=$2
 fi
 
 if [ -d "$projectName" ]
 then
-	echo 'ERROR: this project already exist.'
-	exit 2
+    echo 'ERROR: this project already exist.'
+    exit 2
 fi
 
 composer create-project symfony/framework-standard-edition "$projectName" "$version" --no-install && cd "$projectName"

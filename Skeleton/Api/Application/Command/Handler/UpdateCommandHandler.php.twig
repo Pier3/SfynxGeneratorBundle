@@ -30,17 +30,18 @@ class UpdateCommandHandler implements CommandHandlerInterface
     }
 
     /**
-    * @param CommandInterface $command
-    *
-    * @return object $entity
-    */
+     * @param CommandInterface $command
+     *
+     * @throws WorkflowException
+     * @return \{{ projectName }}\Domain\Entity\{{ entityName }} $entity
+     */
     public function process(CommandInterface $command)
     {
         $this->workflowHandler->process($command);
 
         $entity = !empty($this->workflowHandler->data->entity) ? end($this->workflowHandler->data->entity) : null;
         if (null === $entity) {
-            throw new WorkflowException('Entity has not been created');
+            throw new WorkflowException('Entity has not been updated.');
         }
 
         return $entity;

@@ -6,6 +6,13 @@ use Sfynx\DddBundle\Layer\Application\Generalisation\Command\Handler\Decorator\A
 use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandHandlerInterface;
 use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandInterface;
 
+/**
+ * Class NewCommandHandlerDecorator
+ *
+ * @category   {{ projectName }}
+ * @package    Application
+ * @subpackage Command
+ */
 class NewCommandHandlerDecorator extends AbstractCommandHandlerDecorator
 {
     protected $validationHandler;
@@ -19,11 +26,11 @@ class NewCommandHandlerDecorator extends AbstractCommandHandlerDecorator
     }
 
     /**
-    * Method to decorate (override)
-    *
-    * @param CommandInterface $command
-    * @return mixed
-    */
+     * Method to decorate (override)
+     *
+     * @param CommandInterface $command
+     * @return mixed
+     */
     public function process(CommandInterface $command)
     {
         $this->validationHandler->process($command);

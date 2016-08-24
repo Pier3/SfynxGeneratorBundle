@@ -6,6 +6,7 @@ use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandHandlerIn
 use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandInterface;
 use Sfynx\DddBundle\Layer\Domain\Workflow\Generalisation\WorkflowHandlerInterface;
 use Sfynx\DddBundle\Layer\Infrastructure\Exception\WorkflowException;
+
 /**
  * Class NewCommandHandler.
  *
@@ -29,17 +30,18 @@ class NewCommandHandler implements CommandHandlerInterface
     }
 
     /**
-    * @param CommandInterface $command
-    *
-    * @return \{{ projectName }}\Domain\Entity\{{ entityName }} $entity
-    */
+     * @param CommandInterface $command
+     *
+     * @throws WorkflowException
+     * @return \{{ projectName }}\Domain\Entity\{{ entityName }} $entity
+     */
     public function process(CommandInterface $command)
     {
         $this->workflowHandler->process($command);
 
         $entity = !empty($this->workflowHandler->data->entity) ? end($this->workflowHandler->data->entity) : null;
         if (null === $entity) {
-            throw new WorkflowException('Entity has not been created');
+            throw new WorkflowException('Entity has not been created.');
         }
 
         return $entity;

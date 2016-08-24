@@ -1,15 +1,12 @@
-
     /**
-    * @return Response
-    *
-    * @example http://host/api/v1/actor.json/a299fc78-6548-45a3-9823-898c07f76c9b
-    */
+     * @return Response
+     *
+     * @example http://host/api/v1/actor.json/a299fc78-6548-45a3-9823-898c07f76c9b
+     */
     public function {{ action.action }}Action()
     {
         $adapter = new GetQueryAdapter();
-        $query = $adapter->createQueryFromRequest(
-            new GetRequest($this->request, $this->resolver)
-        );
+        $query = $adapter->createQueryFromRequest(new GetRequest($this->request, $this->resolver));
 
         $entity = $this->getQueryHandler->process($query);
 

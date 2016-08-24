@@ -4,7 +4,7 @@ namespace {{ projectName }}\Domain\Service\{{ entityName }}\Factory\Orm;
 
 use Sfynx\DddBundle\Layer\Domain\Service\Generalisation\Factory\RepositoryFactoryInterface;
 use Sfynx\DddBundle\Layer\Domain\Service\Generalisation\Factory\TraitRepositoryFactory;
-use Sfynx\DddBundle\Layer\Infrastructure\Persistence\Generalisation\Odm\SaveRepository;
+use Sfynx\DddBundle\Layer\Infrastructure\Persistence\Generalisation\Orm\SaveRepository;
 use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\GetAllRepository;
 use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\DeleteManyRepository;
 use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\DeleteRepository;
@@ -12,29 +12,41 @@ use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm
 use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\GetRepository;
 use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\SearchByRepository;
 
+/**
+ * Class RepositoryFactory for entity {{ entityName }} using Orm DBMS.
+ *
+ * @category {{ entityName }}
+ * @package Domain
+ * @subpackage Service\Orm
+ */
 class RepositoryFactory implements RepositoryFactoryInterface
 {
     use TraitRepositoryFactory;
 
+    /**
+     * Build the repository depending on required action.
+     * @param string $action
+     * @throws \Exception
+     */
     public function buildRepository($action)
     {
         switch($action) {
-            case RepositoryFactoryInterface::ONE_REPOSITORY :
+            case RepositoryFactoryInterface::ONE_REPOSITORY:
                 return new GetRepository($this->manager);
-            case RepositoryFactoryInterface::SEARCHBY_REPOSITORY :
+            case RepositoryFactoryInterface::SEARCHBY_REPOSITORY:
                 return new SearchByRepository($this->manager);
-            case RepositoryFactoryInterface::ALL_REPOSITORY :
+            case RepositoryFactoryInterface::ALL_REPOSITORY:
                 return new GetAllRepository($this->manager);
-            case RepositoryFactoryInterface::GETBYIDS_REPOSITORY :
+            case RepositoryFactoryInterface::GETBYIDS_REPOSITORY:
                 return new GetByIdsRepository($this->manager);
-            case RepositoryFactoryInterface::DELETEONE_REPOSITORY :
+            case RepositoryFactoryInterface::DELETEONE_REPOSITORY:
                 return new DeleteRepository($this->manager);
-            case RepositoryFactoryInterface::DELETEMANY_REPOSITORY :
+            case RepositoryFactoryInterface::DELETEMANY_REPOSITORY:
                 return new DeleteManyRepository($this->manager);
-            case RepositoryFactoryInterface::NEW_REPOSITORY :
-            case RepositoryFactoryInterface::UPDATE_REPOSITORY :
+            case RepositoryFactoryInterface::NEW_REPOSITORY:
+            case RepositoryFactoryInterface::UPDATE_REPOSITORY:
                 return new SaveRepository($this->manager);
-            default :
+            default:
                 throw new \Exception('Wrong key for repository');
         }
     }

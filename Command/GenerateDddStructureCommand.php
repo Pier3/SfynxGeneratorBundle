@@ -158,7 +158,7 @@ class GenerateDddStructureCommand extends Command
         $this->generator->addHandler(new ControllerHandler($parameters));
         $this->generator->addHandler(new RoutingHandler($parameters));
         $this->generator->addHandler(new ResettingListenersPassHandler($parameters));
-        
+
         // Files Infrastructure
 
         $this->generator->addHandler(new InfrastructureBundleHandler($parameters));

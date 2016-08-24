@@ -17,8 +17,8 @@ use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Domain\Entity\EntityHandler;
 use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Domain\Service\Odm\RepositoryFactoryHandler as ODMRepositoryFactoryHandler;
 use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Domain\Service\Orm\RepositoryFactoryHandler as ORMRepositoryFactoryHandler;
 use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Domain\Service\CouchDB\RepositoryFactoryHandler as COUCHDBRepositoryFactoryHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Domain\Service\Entity\Manager\CountryManagerTestHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Domain\Service\Entity\Factory\Orm\RepositoryFactoryTestHandler as ORMRepositoryFactoryTestHandler;
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Domain\Service\Entity\Factory\Orm\CountryManagerTestHandler;
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Domain\Service\Entity\Factory\Orm\RepositoryFactoryHandler as ORMRepositoryFactoryTestHandler;
 use Sfynx\DddGeneratorBundle\Generator\Api\Handler\ValueObject\ValueObjectCompositeHandler;
 use Sfynx\DddGeneratorBundle\Generator\Api\Handler\ValueObject\ValueObjectHandler;
 use Sfynx\DddGeneratorBundle\Generator\Api\Handler\ValueObject\ValueObjectTypeCouchDBHandler;
@@ -76,23 +76,23 @@ class Domain
         foreach ($this->pathsToCreate as $route => $verbData) {
             foreach ($verbData as $verb => $data) {
 
-                $constructorParams = $managerArgs = "";
-                foreach ($this->entities[$data["entity"]] as $field) {
-                    $constructorParams .= "$" . $field['name'] . ",";
-                    $managerArgs .= "$" . $field['name'] . ",";
+                $constructorParams = $managerArgs = '';
+                foreach ($this->entities[$data['entity']] as $field) {
+                    $constructorParams .= '$' . $field['name'] . ', ';
+                    $managerArgs .= '$' . $field['name'] . ', ';
                 }
 
                 $parameters = [
-                    'rootDir' => $this->rootDir . "/src",
+                    'rootDir' => $this->rootDir . '/src',
                     'projectDir' => $this->projectDir,
                     'projectName' => str_replace('src/', '', $this->projectDir),
                     'actionName' => ucfirst(strtolower($data['action'])),
                     'entityName' => ucfirst(strtolower($data['entity'])),
                     'entityFields' => $this->entities[$data['entity']],
-                    'managerArgs' => trim($managerArgs, ','),
+                    'managerArgs' => trim($managerArgs, ', '),
                     'fields' => $this->entities[$data['entity']],
                     'valueObjects' => $this->valueObjects,
-                    'constructorArgs' => trim($constructorParams, ','),
+                    'constructorArgs' => trim($constructorParams, ', '),
                     'destinationPath' => $this->destinationPath,
                 ];
 
@@ -132,10 +132,10 @@ class Domain
                     'actionName' => ucfirst(strtolower($data['action'])),
                     'entityName' => ucfirst(strtolower($data['entity'])),
                     'entityFields' => $this->entities[$data['entity']],
-                    'managerArgs' => trim($managerArgs, ','),
+                    'managerArgs' => trim($managerArgs, ', '),
                     'fields' => $this->entities[$data['entity']],
                     'valueObjects' => $this->valueObjects,
-                    'constructorArgs' => trim($constructorParams, ','),
+                    'constructorArgs' => trim($constructorParams, ', '),
                     'destinationPath' => $this->destinationPath,
                 ];
 
@@ -193,11 +193,11 @@ class Domain
                 'rootDir' => $this->rootDir . "/src",
                 'projectDir' => $this->projectDir,
                 'projectName' => str_replace('src/', '', $this->projectDir),
-                'managerArgs' => trim($managerArgs, ','),
+                'managerArgs' => trim($managerArgs, ', '),
                 'fields' => $this->entities[$entityName],
                 'valueObjects' => $this->valueObjects,
                 'entityName' => $entityName,
-                'constructorArgs' => trim($constructorParams, ','),
+                'constructorArgs' => trim($constructorParams, ', '),
                 'destinationPath' => $this->destinationPath,
             ];
 
@@ -234,8 +234,10 @@ class Domain
             if (count($voToCreate['fields']) > 1) {
                 $composite = true;
             }
+
             $constructorParams = "";
             $parameters['fields'] = $voToCreate['fields'];
+
             foreach ($voToCreate["fields"] as $field) {
                 $constructorParams .= "$" . $field["name"] . ",";
             }
@@ -258,15 +260,20 @@ class Domain
 
     public function generateTests()
     {
-        foreach ($this->entities as $name => $data) {
+        foreach ($this->pathsToCreate as $route => $verbData) {
+            foreach ($verbData as $verb => $data) {
 
-            $parameters = [
-                'rootDir' => $this->rootDir . "/src",
-                'projectDir' => $this->projectDir,
-                'projectName' => str_replace('src/', '', $this->projectDir),
-                'entityName' => ucfirst(strtolower($name)),
-                'destinationPath' => $this->destinationPath,
-            ];
+                $parameters = [
+                    'rootDir' => $this->rootDir . "/src",
+                    'projectDir' => $this->projectDir,
+                    'projectName' => str_replace('src/', '', $this->projectDir),
+                    'actionName' => ucfirst(strtolower($data['action'])),
+                    'entityName' => ucfirst(strtolower($data['entity'])),
+                    'entityFields' => $this->entities[$data['entity']],
+                    'fields' => $this->entities[$data['entity']],
+                    'valueObjects' => $this->valueObjects,
+                    'destinationPath' => $this->destinationPath,
+                ];
 
             $this->generator->addHandler(new ORMRepositoryFactoryTestHandler($parameters));
             $this->generator->addHandler(new CountryManagerTestHandler($parameters));

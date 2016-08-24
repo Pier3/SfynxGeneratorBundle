@@ -1,14 +1,12 @@
     /**
-    * @return Response
-    */
+     * @return Response
+     */
     public function {{ action.action }}Action()
     {
         $adapter = new DeleteCommandAdapter();
-        $command = $adapter->createCommandFromRequest(
-            new DeleteRequest($this->request, $this->resolver)
-        );
+        $command = $adapter->createCommandFromRequest(new DeleteRequest($this->request, $this->resolver));
         $result = $this->deleteCommandHandler->process($command);
-        $result = ["message" => sprintf('%s row deleted', $result)];
+        $result = ['message' => sprintf('%s row(s) deleted.', $result)];
 
         return $this->responseHandler->create($result, Response::HTTP_OK)->getResponse();
     }

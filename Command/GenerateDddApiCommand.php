@@ -44,6 +44,11 @@ class GenerateDddApiCommand extends Command
 
     public function setRootDir($rootDir)
     {
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            $rootDir = str_replace("\\app", "", $rootDir);
+        } else {
+            $rootDir = str_replace("/app", "", $rootDir);
+        }
         $this->rootDir = $rootDir;
     }
 
@@ -113,6 +118,7 @@ class GenerateDddApiCommand extends Command
         }
         $input->setArgument('destination-path', $destPath);
 
+
         //set argument : context-name
         if (isset($_SERVER['SYMFONY_SFYNX_CONTEXT_NAME'])) {
             $contextName = $_SERVER['SYMFONY_SFYNX_CONTEXT_NAME'];
@@ -124,7 +130,6 @@ class GenerateDddApiCommand extends Command
             );
         }
         $input->setArgument('context-name', $contextName);
-
         // Parse swagger File
         $this->parseSwaggerFile($input, $output);
     }

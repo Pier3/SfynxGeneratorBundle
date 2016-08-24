@@ -1,9 +1,10 @@
+    /**
+     * @return Response
+     */
     public function getAllAction()
     {
         $adapter = new GetAllQueryAdapter();
-        $query = $adapter->createQueryFromRequest(
-            new GetAllRequest($this->request, $this->resolver)
-        );
+        $query = $adapter->createQueryFromRequest(new GetAllRequest($this->request, $this->resolver));
 
         $entities = $this->getAllQueryHandler->process($query);
 

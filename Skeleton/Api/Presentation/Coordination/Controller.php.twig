@@ -5,31 +5,30 @@ namespace {{ projectName }}\Presentation\Coordination\{{ entityName }}\{{ group 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 {% if group == "Query" %}
-    use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\QueryHandlerInterface;
-    use {{ projectName }}\Presentation\Adapter\{{ entityName }}\Query\GetAllQueryAdapter;
-    use {{ projectName }}\Presentation\Adapter\{{ entityName }}\Query\GetQueryAdapter;
-    use {{ projectName }}\Presentation\Adapter\{{ entityName }}\Query\GetByIdsQueryAdapter;
-    use {{ projectName }}\Presentation\Adapter\{{ entityName }}\Query\SearchByQueryAdapter;
-    use {{ projectName }}\Presentation\Request\{{ entityName }}\Query\GetAllRequest;
-    use {{ projectName }}\Presentation\Request\{{ entityName }}\Query\GetByIdsRequest;
-    use {{ projectName }}\Presentation\Request\{{ entityName }}\Query\GetRequest;
-    use {{ projectName }}\Presentation\Request\{{ entityName }}\Query\SearchByRequest;
+use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\QueryHandlerInterface;
+use {{ projectName }}\Presentation\Adapter\{{ entityName }}\Query\GetAllQueryAdapter;
+use {{ projectName }}\Presentation\Adapter\{{ entityName }}\Query\GetQueryAdapter;
+use {{ projectName }}\Presentation\Adapter\{{ entityName }}\Query\GetByIdsQueryAdapter;
+use {{ projectName }}\Presentation\Adapter\{{ entityName }}\Query\SearchByQueryAdapter;
+use {{ projectName }}\Presentation\Request\{{ entityName }}\Query\GetAllRequest;
+use {{ projectName }}\Presentation\Request\{{ entityName }}\Query\GetByIdsRequest;
+use {{ projectName }}\Presentation\Request\{{ entityName }}\Query\GetRequest;
+use {{ projectName }}\Presentation\Request\{{ entityName }}\Query\SearchByRequest;
 
 {% else %}
-    use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandHandlerInterface;
-    use {{ projectName }}\Presentation\Adapter\{{ entityName }}\Command\DeleteCommandAdapter;
-    use {{ projectName }}\Presentation\Adapter\{{ entityName }}\Command\DeleteManyCommandAdapter;
-    use {{ projectName }}\Presentation\Adapter\{{ entityName }}\Command\UpdateCommandAdapter;
-    use {{ projectName }}\Presentation\Adapter\{{ entityName }}\Command\PatchCommandAdapter;
-    use {{ projectName }}\Presentation\Adapter\{{ entityName }}\Command\NewCommandAdapter;
-    use {{ projectName }}\Presentation\Request\{{ entityName }}\Command\DeleteRequest;
-    use {{ projectName }}\Presentation\Request\{{ entityName }}\Command\DeleteManyRequest;
-    use {{ projectName }}\Presentation\Request\{{ entityName }}\Command\UpdateRequest;
-    use {{ projectName }}\Presentation\Request\{{ entityName }}\Command\PatchRequest;
-    use {{ projectName }}\Presentation\Request\{{ entityName }}\Command\NewRequest;
+use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandHandlerInterface;
+use {{ projectName }}\Presentation\Adapter\{{ entityName }}\Command\DeleteCommandAdapter;
+use {{ projectName }}\Presentation\Adapter\{{ entityName }}\Command\DeleteManyCommandAdapter;
+use {{ projectName }}\Presentation\Adapter\{{ entityName }}\Command\UpdateCommandAdapter;
+use {{ projectName }}\Presentation\Adapter\{{ entityName }}\Command\PatchCommandAdapter;
+use {{ projectName }}\Presentation\Adapter\{{ entityName }}\Command\NewCommandAdapter;
+use {{ projectName }}\Presentation\Request\{{ entityName }}\Command\DeleteRequest;
+use {{ projectName }}\Presentation\Request\{{ entityName }}\Command\DeleteManyRequest;
+use {{ projectName }}\Presentation\Request\{{ entityName }}\Command\UpdateRequest;
+use {{ projectName }}\Presentation\Request\{{ entityName }}\Command\PatchRequest;
+use {{ projectName }}\Presentation\Request\{{ entityName }}\Command\NewRequest;
 
 {% endif %}
-
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Resolver\ResolverInterface;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Request\RequestInterface;
 use Sfynx\DddBundle\Layer\Presentation\Response\Generalisation\ResponseHandlerInterface;
@@ -40,19 +39,19 @@ use Sfynx\DddBundle\Layer\Presentation\Response\Generalisation\ResponseHandlerIn
  */
 class Controller
 {
-    {% if group == "Command" %}
-    /** @var  \{{ projectName }}\Application\{{ entityName }}\Command\Handler\DeleteCommandHandler */
+{% if group == "Command" %}
+    /** @var \{{ projectName }}\Application\{{ entityName }}\Command\Handler\DeleteCommandHandler */
     protected $deleteCommandHandler;
-    /** @var  \{{ projectName }}\Application\{{ entityName }}\Command\Handler\DeleteManyCommandHandler */
+    /** @var \{{ projectName }}\Application\{{ entityName }}\Command\Handler\DeleteManyCommandHandler */
     protected $deleteManyCommandHandler;
     /** @var \{{ projectName }}\Application\{{ entityName }}\Command\Handler\Decorator\NewCommandHandlerDecorator */
     protected $newCommandHandlerDecorator;
-    /** @var  \{{ projectName }}\Application\{{ entityName }}\Command\Handler\Decorator\UpdateCommandHandlerDecorator */
+    /** @var \{{ projectName }}\Application\{{ entityName }}\Command\Handler\Decorator\UpdateCommandHandlerDecorator */
     protected $updateCommandHandlerDecorator;
-    /** @var  \{{ projectName }}\Application\{{ entityName }}\Command\Handler\Decorator\PathCommandHandlerDecorator */
-    protected $pathCommandHandlerDecorator;
+    /** @var \{{ projectName }}\Application\{{ entityName }}\Command\Handler\Decorator\PatchCommandHandlerDecorator */
+    protected $patchCommandHandlerDecorator;
 
- /**
+    /**
      * ActorController constructor.
      *
      * @param RequestInterface         $request
@@ -62,6 +61,7 @@ class Controller
      * @param CommandHandlerInterface  $deleteManyCommandHandler
      * @param CommandHandlerInterface  $updateCommandHandlerDecorator
      * @param CommandHandlerInterface  $newCommandHandlerDecorator
+     * @param CommandHandlerInterface  $patchCommandHandlerDecorator
      */
     public function __construct(
         RequestInterface $request,
@@ -72,7 +72,8 @@ class Controller
         CommandHandlerInterface $updateCommandHandlerDecorator,
         CommandHandlerInterface $newCommandHandlerDecorator,
         CommandHandlerInterface $patchCommandHandlerDecorator
-    ) {
+    )
+    {
         $this->request = $request;
         $this->resolver = $resolver;
         $this->responseHandler = $responseHandler;
@@ -82,30 +83,30 @@ class Controller
         $this->newCommandHandlerDecorator = $newCommandHandlerDecorator;
         $this->patchCommandHandlerDecorator = $patchCommandHandlerDecorator;
     }
-    {% elseif group == "Query" %}
+{% elseif group == "Query" %}
     /** @var RequestInterface */
     protected $request;
-    /** @var  ResolverInterface */
+    /** @var ResolverInterface */
     protected $resolver;
-    /** @var  ResponseHandlerInterface */
+    /** @var ResponseHandlerInterface */
     protected $responseHandler;
-    /** @var  \{{ projectName }}\Application\{{ entityName }}\Query\Handler\GetAllQueryHandler */
+    /** @var \{{ projectName }}\Application\{{ entityName }}\Query\Handler\GetAllQueryHandler */
     protected $getAllQueryHandler;
-    /** @var  \{ projectName }}\Application\{{ entityName }}\Query\Handler\GetByIdsQueryHandler */
+    /** @var \{ projectName }}\Application\{{ entityName }}\Query\Handler\GetByIdsQueryHandler */
     protected $getByIdsQueryHandler;
-    /** @var  \{ projectName }}\Application\{{ entityName }}\Query\Handler\GetQueryHandler */
+    /** @var \{ projectName }}\Application\{{ entityName }}\Query\Handler\GetQueryHandler */
     protected $getQueryHandler;
 
     /**
      * ActorController constructor.
      *
-     * @param RequestInterface                  $request
-     * @param ResolverInterface                 $resolver
-     * @param ResponseHandlerInterface          $responseHandler
-     * @param QueryHandlerInterface             $allQueryHandler
-     * @param QueryHandlerInterface             $getByIdsQueryHandler
-     * @param QueryHandlerInterface             $oneQueryHandler
-     * @param QueryHandlerInterface             $searchByQueryHandler
+     * @param RequestInterface         $request
+     * @param ResolverInterface        $resolver
+     * @param ResponseHandlerInterface $responseHandler
+     * @param QueryHandlerInterface    $getAllQueryHandler
+     * @param QueryHandlerInterface    $getByIdsQueryHandler
+     * @param QueryHandlerInterface    $getQueryHandler
+     * @param QueryHandlerInterface    $searchByQueryHandler
      */
     public function __construct(
         RequestInterface $request,
@@ -115,7 +116,8 @@ class Controller
         QueryHandlerInterface $getByIdsQueryHandler,
         QueryHandlerInterface $getQueryHandler,
         QueryHandlerInterface $searchByQueryHandler
-    ) {
+    )
+    {
         $this->request = $request;
         $this->resolver = $resolver;
         $this->responseHandler = $responseHandler;
@@ -125,15 +127,11 @@ class Controller
         $this->searchByQueryHandler = $searchByQueryHandler;
     }
 
-    {% include("actions/getSwaggerFile.php.twig") %}
-
-    {% endif %}
-
+{% include("actions/getSwaggerFile.php.twig") %}
+{% endif %}
 
 {% for action in controllerData %}
-
 {% if group == "Command" %}
-
 {% if action.method == "post" %}
 {% include("actions/new.php.twig") %}
 {% elseif action.method == "delete" %}
@@ -143,9 +141,7 @@ class Controller
 {% elseif action.method == "patch" %}
 {% include("actions/patch.php.twig") %}
 {% endif %}
-
 {% elseif group == "Query" %}
-
 {% if action.action == "get" %}
 {% include("actions/get.php.twig") %}
 {% elseif action.action == "getAll" %}
@@ -157,8 +153,6 @@ class Controller
 {% else %}
 {% include("actions/custom.php.twig") %}
 {% endif %}
-
 {% endif %}
 {% endfor %}
-
 }

@@ -7,18 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ODM\CouchDB\Mapping\Annotations as CouchDB;
 use Symfony\Component\Validator\Constraints as Assert;
 use Sfynx\DddBundle\Layer\Domain\Generalisation\Traits\TraitTenant;
-use Sfynx\DddBundle\Layer\Domain\Generalisation\Traits\TraitDatetime;
-use Sfynx\DddBundle\Layer\Domain\Generalisation\Traits\TraitSimple;
-use Sfynx\DddBundle\Layer\Domain\Generalisation\Traits\TraitEnabled;
-use Sfynx\DddBundle\Layer\Domain\Generalisation\Interfaces\TraitDatetimeInterface;
-use Sfynx\DddBundle\Layer\Domain\Generalisation\Interfaces\TraitSimpleInterface;
-use Sfynx\DddBundle\Layer\Domain\Generalisation\Interfaces\TraitEnabledInterface;
-use JMS\Serializer\Annotation\Since;
-
-{% for vo in valueObjects %}
-use {{ vo.type|trim("\\") }};
+{% for vo in valueObjects %}use {{ vo.type|trim("\\") }};
 {% endfor %}
-
 
 /**
  * @ORM\Entity
@@ -27,20 +17,15 @@ use {{ vo.type|trim("\\") }};
  * @ODM\Document(collection="{{ entityName }}")
  * @ODM\HasLifecycleCallbacks
  */
-//class {{ entityName }} implements TraitDatetimeInterface, TraitSimpleInterface, TraitEnabledInterface {
-class {{ entityName }} {
-
+class {{ entityName }}
+{
     use TraitTenant;
 
-    //use TraitDatetime;
-    //use TraitSimple;
-    //use TraitEnabled;
-
 {% set constructParams = "" %}
-{% for field in  fields %}
-
+{% for field in fields %}
 {% if field.type == "id" %}
 {% if field.voName is defined %}
+
     /**
      * @Since("1")
      * @ORM\Column(type="IdVO")
@@ -50,8 +35,8 @@ class {{ entityName }} {
      *
      * @CouchDB\Id(strategy="ASSIGNED", type="IdVO")
      */
-
 {% else %}
+
     /**
      * @Since("1")
      * @ORM\Column(type="integer")
@@ -61,120 +46,124 @@ class {{ entityName }} {
      *
      * @CouchDB\Id(strategy="ASSIGNED", type="integer")
      */
-
 {% endif %}
      protected $id;
-
 {% elseif field.type == "valueObject"%}
+
     /**
      * @Since("1")
      * @ORM\Embedded(class="{{ valueObjects[field.voName].type|trim("\\") }}", columnPrefix="{{ field.name|lower }}_")
      * @ODM\EmbedOne(targetDocument="{{ valueObjects[field.voName].type|trim("\\") }}")
      * @CouchDB\EmbedOne(targetDocument="{{ valueObjects[field.voName].type|trim("\\") }}")
      */
-
      protected ${{ field.name }};
 {% elseif field.type == "string" %}
+
     /**
      * @Since("1")
      * @ORM\Column(type="string")
      * @ODM\Field(type="string")
      */
-
      protected ${{ field.name }};
 {% elseif field.type == "number" %}
+
     /**
      * @Since("1")
      * @ORM\Column(type="integer")
      * @ODM\Field(type="integer")
      */
-
      protected ${{ field.name }};
-
 {% elseif field.type == "boolean" %}
+
     /**
      * @Since("1")
      * @ORM\Column(type="boolean")
      * @ODM\Field(type="boolean")
      */
-
      protected ${{ field.name }};
 {% endif %}
-
 {% endfor %}
 
+    /**
+     * Create a new instance of {{ entityName }} entity.
+     * @param int $tenantId
+{% for field in fields %}     * @param {{ field.type }} ${{ field.name }}
+{% endfor %}
+     * @return {{ entityName }}
+     */
      public static function makeInstance($tenantId, {{ constructorArgs }})
      {
          return new self($tenantId, {% for field in  fields %}${{ field.name }}{% if loop.index < fields|length %},{% endif %}{% endfor %});
      }
 
-     protected function __construct($tenantId, {{ constructorArgs }})
-     {
-
-
-{% for field in  fields %}
-    {% if field.type == "id" %}
-        {% if field.voName is defined%}
+    /**
+     * Constructor
+     * @param int $tenantId
+{% for field in fields %}     * @param {{ field.type }} ${{ field.name }}
+{% endfor %}
+     */
+    protected function __construct($tenantId, {{ constructorArgs }})
+    {
+{% for field in fields %}
+{% if field.type == "id" %}
+{% if field.voName is defined %}
         $this->{{ field.type }} = new {{ field.voName }}(${{ field.name }});
-        {% endif %}
-    {% endif %}
+{% endif %}
+{% endif %}
     $this->setTenantId($tenantId);
-    {% if field.type != "id" %}
+{% if field.type != "id" %}
         $this->set{{ field.name|ucfirst }}(${{ field.name }});
-    {% endif %}
+{% endif %}
 {% endfor %}
-}
+    }
+{% for field in fields %}
 
-{% for field in  fields %}
-    {% if field.type == "id" or field.type=="idVO" %}
-        /**
-        * get the id of entity
-        * @return {{ field.type }} $value
-        */
-        public function get{{ field.type }}() {
+{% if field.type == "id" or field.type == "idVO" %}
+    /**
+     * Get the id of entity.
+     * @return {% if field.type == "id" %}int{% else %}string{% endif %}
+     */
+    public function get{{ field.type|ucfirst }}() {
         return $this->{{ field.type }};
-        }
+    }
 
-        /**
-        * set the id of entity
-        * @return {{ entityName }}
-        */
-        public function set{{ field.name|ucfirst }}($value) {
-            $this->{{ field.name|ucfirst }} = $value;
-            return $this;
-        }
-    {% else %}
-        {% if field.type == "valueObject" %}
-            {% if valueObjects[field.voName]["name"] == field.voName %}
-                {% set namespace = valueObjects[field.voName]["type"]|split('\\') %}
-                {% set key = namespace|length - 1 %}
-                {% set namespace = namespace[key] %}
-            {% else %}
-                {% set namespace = "" %}
-            {% endif %}
-        {% else %}
-            {% set namespace = "" %}
-        {% endif %}
+    /**
+     * Set the id of entity.
+     * @return {{ entityName }}
+     */
+    public function set{{ field.name|ucfirst }}($value) {
+        $this->{{ field.name|ucfirst }} = $value;
+        return $this;
+    }
+{% else %}
+{% if field.type == "valueObject" %}
+{% if valueObjects[field.voName]["name"] == field.voName %}
+{% set namespace = valueObjects[field.voName]["type"]|split('\\') %}
+{% set key = namespace|length - 1 %}
+{% set namespace = namespace[key] %}
+{% else %}
+{% set namespace = "" %}
+{% endif %}
+{% else %}
+{% set namespace = "" %}
+{% endif %}
+    /**
+     * Get the {{ field.name }} attribute value.
+     * @return {{ field.type }} $value
+     */
+    public function get{{ field.name|ucfirst }}() {
+        return $this->{{ field.name }};
+    }
 
-        /**
-        * get the {{ field.name }} attribute value
-        * @return {{ field.type }} $value
-        */
-        public function get{{ field.name|ucfirst }}() {
-            return $this->{{ field.name }};
-        }
-
-        /**
-        * Set the {{ field.name|ucfirst }} attribute
-        * @param {{ namespace }} {{ field.type }} $value
-        * @return {{ entityName }}
-        */
-        public function set{{ field.name |ucfirst }}({{ namespace }} $value) {
-            $this->{{ field.name }} = $value;
-            return $this;
-        }
-    {% endif %}
+    /**
+     * Set the {{ field.name|ucfirst }} attribute.
+     * @param {% if namespace %}{{ namespace }} {% endif %}{{ field.type }} $value
+     * @return {{ entityName }}
+     */
+    public function set{{ field.name|ucfirst }}({% if namespace %}{{ namespace }} {% endif %}$value) {
+        $this->{{ field.name }} = $value;
+        return $this;
+    }
+{% endif %}
 {% endfor %}
-
-
 }

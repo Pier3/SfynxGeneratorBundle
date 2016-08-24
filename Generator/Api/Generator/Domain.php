@@ -76,23 +76,23 @@ class Domain
         foreach ($this->pathsToCreate as $route => $verbData) {
             foreach ($verbData as $verb => $data) {
 
-                $constructorParams = $managerArgs = "";
-                foreach ($this->entities[$data["entity"]] as $field) {
-                    $constructorParams .= "$" . $field['name'] . ",";
-                    $managerArgs .= "$" . $field['name'] . ",";
+                $constructorParams = $managerArgs = '';
+                foreach ($this->entities[$data['entity']] as $field) {
+                    $constructorParams .= '$' . $field['name'] . ', ';
+                    $managerArgs .= '$' . $field['name'] . ', ';
                 }
 
                 $parameters = [
-                    'rootDir' => $this->rootDir . "/src",
+                    'rootDir' => $this->rootDir . '/src',
                     'projectDir' => $this->projectDir,
                     'projectName' => str_replace('src/', '', $this->projectDir),
                     'actionName' => ucfirst(strtolower($data['action'])),
                     'entityName' => ucfirst(strtolower($data['entity'])),
                     'entityFields' => $this->entities[$data['entity']],
-                    'managerArgs' => trim($managerArgs, ','),
+                    'managerArgs' => trim($managerArgs, ', '),
                     'fields' => $this->entities[$data['entity']],
                     'valueObjects' => $this->valueObjects,
-                    'constructorArgs' => trim($constructorParams, ','),
+                    'constructorArgs' => trim($constructorParams, ', '),
                     'destinationPath' => $this->destinationPath,
                 ];
 
@@ -193,11 +193,11 @@ class Domain
                 'rootDir' => $this->rootDir . "/src",
                 'projectDir' => $this->projectDir,
                 'projectName' => str_replace('src/', '', $this->projectDir),
-                'managerArgs' => trim($managerArgs, ','),
+                'managerArgs' => trim($managerArgs, ', '),
                 'fields' => $this->entities[$entityName],
                 'valueObjects' => $this->valueObjects,
                 'entityName' => $entityName,
-                'constructorArgs' => trim($constructorParams, ','),
+                'constructorArgs' => trim($constructorParams, ', '),
                 'destinationPath' => $this->destinationPath,
             ];
 

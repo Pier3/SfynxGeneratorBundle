@@ -14,10 +14,18 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class UpdateCommandValidationHandler extends AbstractCommandValidationHandler
 {
+    /**
+     * Init the constraints the updating entity properties must validate
+     *
+     * @return $this
+     */
     protected function initConstraints()
     {
-        {% for field in entityFields %}
-            $this->add('{{ field.name }}',  new NotBlank());
-        {% endfor %}
+{% if entityFields %}
+        $this{% for field in entityFields %}->add('{{ field.name }}', new NotBlank()){% if loop.index < entityFields|length %}
+            {% else %};{% endif %}{% endfor %}
+{% endif %}
+
+        return $this;
     }
 }

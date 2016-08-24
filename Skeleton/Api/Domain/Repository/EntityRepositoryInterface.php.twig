@@ -3,7 +3,7 @@
 namespace {{ projectName }}\Domain\Repository;
 
 /**
- * Actor Repository interface
+ * {{ entityName }} Repository interface
  *
  * @category   {{ projectName }}
  * @package    Repository
@@ -11,5 +11,9 @@ namespace {{ projectName }}\Domain\Repository;
  */
 interface {{ entityName }}RepositoryInterface
 {
+    /**
+     * Execute the save into the database for the entity {{ entityName }}.
+     * @param \stdClass $object
+     */
     public function execute(\stdClass $object);
 }

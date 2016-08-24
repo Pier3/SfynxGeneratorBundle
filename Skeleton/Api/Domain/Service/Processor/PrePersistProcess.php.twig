@@ -4,19 +4,27 @@ namespace {{ projectName }}\Domain\Service\{{ entityName }}\Processor;
 
 use Sfynx\DddBundle\Layer\Domain\Generalisation\Processor\ProcessInterface;
 use Sfynx\DddBundle\Layer\Infrastructure\Logger\Generalisation\TraitLogger;
-use {{  projectName }}\Domain\Entity\{{ entityName }};
+use {{ projectName }}\Domain\Entity\{{ entityName }};
 
 /**
- * @package {{ projectName }}\Domain\Service\{{ entityName }}\Listener
+ * Class PrePersistProcess
+ *
+ * @category {{ projectName }}
+ * @package Domain
+ * @subpackage Service\Processor
  */
 class PrePersistProcess implements ProcessInterface
 {
     use TraitLogger;
 
+    /**
+     * Process that will be executed before the persistence.
+     * @param \stdClass $entity
+     */
     public function update($entity)
     {
         if ($entity instanceof {{ entityName }}) {
-            // $this->logger->info("pre persist {{ entityName }} with id : ".$entity->getId()->id()." \n");
+            $this->logger->info('pre persist {{ entityName }} with id: ' . $entity->getId()->id() . PHP_EOL);
         }
     }
 }

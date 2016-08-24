@@ -13,13 +13,14 @@ use Sfynx\DddBundle\Layer\Domain\Service\Generalisation\Manager\TraitSearchBy;
 use Sfynx\DddBundle\Layer\Domain\Generalisation\Processor\ProcessorInterface;
 use Sfynx\DddBundle\Layer\Domain\Generalisation\Processor\TraitProcessor;
 use Sfynx\DddBundle\Layer\Infrastructure\Logger\Generalisation\TraitLogger;
-use Sfynx\DddBundle\Layer\Domain\ValueObject\IdVO;
 use {{ projectName }}\Domain\Entity\{{ entityName }};
 
 /**
  * Class {{ entityName }}Manager
  *
- * @package
+ * @category {{ projectName }}
+ * @package Domain
+ * @subpackage Service\Manager
  */
 class {{ entityName }}Manager extends AbstractManager implements ProcessorInterface
 {
@@ -33,21 +34,20 @@ class {{ entityName }}Manager extends AbstractManager implements ProcessorInterf
     use TraitSearchBy;
 
     /**
-     * @param RepositoryFactoryInterface $factory
+     * Hydrate the entity then call the New Repository.
+{% for field in fields %}     * @param {{ field.type }} ${{ field.name }}
+{% endfor %}
+     * @return {{ entityName }}
      */
-    public function __construct(RepositoryFactoryInterface $factory) {
-        parent::__construct($factory);
-    }
-
-
-    public function create({{ constructorArgs }}) {
+    public function create({{ constructorArgs }})
+    {
         //hydrate with VO
         $entity = {{ entityName }}::makeInstance($_SERVER['HTTP_X_TENANT_ID'], {{ managerArgs }});
 
         //execute prepersist processor
         $this->executeProcess('prepersist_create', $entity);
 
-        // Persistance handler
+        // Persistence handler
         $object = new \stdClass();
         $object->entity = $entity;
         $this->factory->buildRepository(RepositoryFactoryInterface::NEW_REPOSITORY)->execute($object);
@@ -56,13 +56,19 @@ class {{ entityName }}Manager extends AbstractManager implements ProcessorInterf
         $this->executeProcess('postpersist_create', $entity);
 
         // Log handler
-        $this->logger->info("{{ entityName }} ".$entity->getId()." has been saved", array('{{ entityName|lower }}' => $entity));
+        $this->logger->info('{{ entityName }} ' . $entity->getId() . ' has been saved.', ['{{ entityName|lower }}' => $entity]);
 
         return $entity;
     }
 
-
-    public function update({{ managerArgs }}) {
+    /**
+     * Get the current entity, hydrate it with updated values and call the Update Repository.
+{% for field in fields %}     * @param {{ field.type }} ${{ field.name }}
+{% endfor %}
+     * @return {{ entityName }}
+     */
+    public function update({{ managerArgs }})
+    {
         //get {{ entityName }} by id
         $object = new \stdClass();
 {% for field in fields %}
@@ -73,12 +79,12 @@ class {{ entityName }}Manager extends AbstractManager implements ProcessorInterf
 {% endfor %}
 
         if (null === $entity) {
-        //exception
+            //todo: manage exception
         }
 
         //hydrate with VO
 {% for field in fields %}
-         $entity->set{{ field.name|capitalize }}(${{ field.name }});
+        $entity->set{{ field.name|capitalize }}(${{ field.name }});
 {% endfor %}
 
         //execute prepersist processor
@@ -92,7 +98,7 @@ class {{ entityName }}Manager extends AbstractManager implements ProcessorInterf
         $this->executeProcess('postpersist_update', $entity);
 
         // Log handler
-        $this->logger->info("{{ entityName }} ".$entity->getId()." has been saved", array('{{ entityName|lower }}' => $entity));
+        $this->logger->info('{{ entityName }} ' . $entity->getId() . ' has been saved.', ['{{ entityName|lower }}' => $entity]);
 
         return $entity;
     }

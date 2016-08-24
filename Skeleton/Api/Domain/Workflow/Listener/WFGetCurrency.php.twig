@@ -9,34 +9,53 @@ use Sfynx\CurrencyBundle\Currency\Manager\CurrencyManager;
 
 /**
  * Class WFGetCurrency
- * @package DemoApiContext\Domain\Workflow\Actor\Listener
+ *
+ * @category {{ projectName }}
+ * @package Domain
+ * @subpackage Workflow\Listener
  */
 class WFGetCurrency implements ObserverInterface
 {
+    /** @var CurrencyManager $manager */
     protected $manager;
 
+    /** @var CircuitBreaker $circuitBreaker */
     protected $circuitBreaker;
 
     const SERVICE_NAME = 'currency';
 
+    /**
+     * Constructor
+     *
+     * @param CurrencyManager $manager
+     * @param CircuitBreaker $circuitBreaker
+     */
     public function __construct(CurrencyManager $manager, CircuitBreaker $circuitBreaker)
     {
         $this->manager = $manager;
         $this->circuitBreaker = $circuitBreaker;
     }
 
+    /**
+     * Run all listener parts. Entry point of the listener.
+     * @param ObservableInterface $wfHandler
+     */
     public function update(ObservableInterface $wfHandler)
     {
         $this->getCurrency($wfHandler);
     }
 
+    /**
+     * Part of the listener that get the currency.
+     * @param ObservableInterface $wfHandler
+     */
     protected function getCurrency(ObservableInterface $wfHandler)
     {
         if ($this->circuitBreaker->isAvailable(self::SERVICE_NAME)) {
-            try{
+            try {
                 $currency = $this->manager->getLatestRatioByCurrency('USD');
                 $this->circuitBreaker->reportSuccess(self::SERVICE_NAME);
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
                 // TODO get cache value when the api connection fails
                 $this->circuitBreaker->reportFailure(self::SERVICE_NAME);
                 $currency = null;

@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandInterface;
 
 /**
- * Class UpdateCommandValidationHandler.
+ * Class PatchCommandValidationHandler.
  *
  * @category   {{ projectName }}
  * @package    Application
@@ -15,23 +15,37 @@ use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandInterface
  */
 class PatchCommandValidationHandler extends AbstractCommandValidationHandler
 {
+
+    /**
+     * Proceed to the validation of all entity's property
+     *
+     * @throws \Exception
+     * @return bool
+     */
     public function process(CommandInterface $command)
     {
-        $this->command=$command;
+        $this->command = $command;
         $this->initConstraints($command);
 
         $this->errors = $this->validator->validateValue($command->toArray(true), $this->getConstraints());
-        if (count($this->errors) === 0) {
+        if (0 === count($this->errors)) {
             return true;
         }
 
-        throw new \Exception(serialize($this->getErrors())) ;
+        throw new \Exception(serialize($this->getErrors()));
     }
 
-
-    protected function initConstraints() {
-        foreach ($this->command->toArray(true) as $field=>$value) {
+    /**
+     * Init the constraints the patching entity properties must validate
+     *
+     * @return $this
+     */
+    protected function initConstraints()
+    {
+        foreach ($this->command->toArray(true) as $field => $value) {
              $this->add($field, new NotBlank());
         }
+
+        return $this;
     }
 }

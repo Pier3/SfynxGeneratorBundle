@@ -10,28 +10,43 @@ use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Odm
 use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Odm\DeleteRepository;
 use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Odm\GetByIdsRepository;
 use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Odm\OneRepository;
+use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Odm\SearchByRepository;
 
+/**
+ * Class RepositoryFactory for entity {{ entityName }} using Odm DBMS.
+ *
+ * @category {{ entityName }}
+ * @package Domain
+ * @subpackage Service\Odm
+ */
 class RepositoryFactory implements RepositoryFactoryInterface
 {
     use TraitRepositoryFactory;
 
+    /**
+     * Build the repository depending on required action.
+     * @param string $action
+     * @throws \Exception
+     */
     public function buildRepository($action)
     {
         switch($action) {
-            case RepositoryFactoryInterface::ONE_REPOSITORY :
+            case RepositoryFactoryInterface::ONE_REPOSITORY:
                 return new OneRepository($this->manager);
-            case RepositoryFactoryInterface::ALL_REPOSITORY :
+            case RepositoryFactoryInterface::SEARCHBY_REPOSITORY:
+                return new SearchByRepository($this->manager);
+            case RepositoryFactoryInterface::ALL_REPOSITORY:
                 return new AllRepository($this->manager);
-            case RepositoryFactoryInterface::GETBYIDS_REPOSITORY :
+            case RepositoryFactoryInterface::GETBYIDS_REPOSITORY:
                 return new GetByIdsRepository($this->manager);
-            case RepositoryFactoryInterface::DELETEONE_REPOSITORY :
+            case RepositoryFactoryInterface::DELETEONE_REPOSITORY:
                 return new DeleteRepository($this->manager);
-            case RepositoryFactoryInterface::DELETEMANY_REPOSITORY :
+            case RepositoryFactoryInterface::DELETEMANY_REPOSITORY:
                 return new DeleteManyRepository($this->manager);
-            case RepositoryFactoryInterface::NEW_REPOSITORY :
-            case RepositoryFactoryInterface::UPDATE_REPOSITORY :
+            case RepositoryFactoryInterface::NEW_REPOSITORY:
+            case RepositoryFactoryInterface::UPDATE_REPOSITORY:
                 return new SaveRepository($this->manager);
-            default :
+            default:
                 throw new \Exception('Wrong key for repository');
         }
     }

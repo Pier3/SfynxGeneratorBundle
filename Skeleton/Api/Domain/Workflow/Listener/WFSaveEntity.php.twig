@@ -1,33 +1,42 @@
 <?php
 
-namespace {{  projectName }}\Domain\Workflow\{{  entityName }}\Listener;
+namespace {{ projectName }}\Domain\Workflow\{{ entityName }}\Listener;
 
 use Sfynx\DddBundle\Layer\Domain\Generalisation\Observer\ObservableInterface;
 use Sfynx\DddBundle\Layer\Domain\Generalisation\Observer\ObserverInterface;
 use Sfynx\DddBundle\Layer\Domain\Service\Generalisation\Manager\ManagerInterface;
 use Sfynx\DddBundle\Layer\Infrastructure\Logger\Generalisation\TraitLogger;
-use {{   projectName }}\Application\{{  entityName }}\Command\UpdateCommand;
-use {{   projectName }}\Application\{{  entityName }}\Command\PatchCommand;
+use {{ projectName }}\Application\{{ entityName }}\Command\UpdateCommand;
+use {{ projectName }}\Application\{{ entityName }}\Command\PatchCommand;
 
 /**
- * Class WFGenerateVOListener
+ * Class WFSaveEntity
  *
- * @package {{   projectName }}\Domain\Workflow\{{  entityName }}\Listener
+ * @category {{ projectName }}
+ * @package Domain
+ * @subpackage Workflow\Listener
  */
 class WFSaveEntity implements ObserverInterface
 {
     use TraitLogger;
 
+    /** @var ManagerInterface $manager */
     protected $manager;
 
+    /**
+     * Constructor
+     *
+     * @param ManagerInterface $manager
+     */
     public function __construct(ManagerInterface $manager)
     {
         $this->manager = $manager;
     }
 
     /**
-     * @param WFObjectEvent $event
-     *
+     * Run all listener parts. Entry point of the listener.
+     * @param ObservableInterface $wfHandler
+     * @throws \Exception
      * TODO change array with SqlQueue and test performance (end function have to be replace be the post method)
      */
     public function update(ObservableInterface $wfHandler)
@@ -36,30 +45,33 @@ class WFSaveEntity implements ObserverInterface
 {% set paramsString = "" %}
 {% for field in fields %}
         ${{ field.name }} = !empty($wfHandler->data->{{ field.name }}) ? end($wfHandler->data->{{ field.name }}) : null;
-        {% if field.type == "valueObject" and field.type != "id" %}
-            {% set ifString = ifString ~ "null == $" ~ field.name ~ "&&" %}
-        {% endif %}
-        {% set paramsString = paramsString ~ "$" ~ field.name ~ "," %}
+{% if field.type == "valueObject" and field.type != "id" %}{% set ifString = ifString ~ "null == $" ~ field.name ~ " && " %}{% endif %}
+{% set paramsString = paramsString ~ "$" ~ field.name ~ ", " %}
 {% endfor %}
-        {% set ifString = ifString|trim("&&") %}
-        {% if ifString != "" %}
+{% set ifString = ifString|trim(" && ") %}
+{% if ifString != "" %}
         if ({{ ifString }}) {
             $message = 'Some value object have not been created';
             $this->logger->error($message);
             throw new \Exception($message);
         }
-        {% endif %}
+{% endif %}
 
-        if ($wfHandler->getCommand() instanceof UpdateCommand || $wfHandler->getCommand() instanceof PatchCommand) {
-            $entityId = !empty($wfHandler->data->entityId) ? end($wfHandler->data->entityId) : null;
-            if (null === $entityId) {
-                $message = 'Id Value Object not found';
-                $this->logger->error($message);
-                throw new \Exception($message);
-            }
-            $wfHandler->data->entity[] = $this->manager->update({{ paramsString|trim(',') }});
+        $wfHandlerCommand = $wfHandler->getCommand();
+
+        //If the command is not a Patch or an Update, run creation in the manager.
+        if (!($wfHandlerCommand instanceof UpdateCommand) && !($wfHandlerCommand instanceof PatchCommand)) {
+            $wfHandler->data->entity[] = $this->manager->create({{ paramsString|trim(', ') }});
             return;
         }
-        $wfHandler->data->entity[] = $this->manager->create({{ paramsString|trim(',') }});
+
+        //Otherwise, run the update in the manager.
+        $entityId = !empty($wfHandler->data->entityId) ? end($wfHandler->data->entityId) : null;
+        if (null === $entityId) {
+            $message = 'Id Value Object not found.';
+            $this->logger->error($message);
+            throw new \Exception($message);
+        }
+        $wfHandler->data->entity[] = $this->manager->update({{ paramsString|trim(', ') }});
     }
 }

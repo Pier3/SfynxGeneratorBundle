@@ -6,15 +6,16 @@ use Sfynx\DddBundle\Layer\Domain\Generalisation\Observer\ObservableInterface;
 use Sfynx\DddBundle\Layer\Domain\Generalisation\Observer\ObserverInterface;
 use {{ projectName }}\Application\{{ entityName }}\Command\UpdateCommand;
 use {{ projectName }}\Application\{{ entityName }}\Command\PatchCommand;
-use Sfynx\DddBundle\Layer\Domain\ValueObject\IdVO;
-{% for  data in valueObjects %}
+{% for data in valueObjects %}
 use {{ projectName }}\Domain\ValueObject\{{ data.name }};
 {% endfor %}
 
 /**
  * Class WFGenerateVOListener
  *
- * @package DemoApiContext\Domain\Workflow\Actor\Listener
+ * @category {{ projectName }}
+ * @package Domain
+ * @subpackage Workflow\Listener
  *
  * TODO change all array with SqlQueue and test performance
  */
@@ -29,8 +30,12 @@ class WFGenerateVOListener implements ObserverInterface
      */
     public function update(ObservableInterface $wfHandler)
     {
-        $this{% for field in fields %}->set{{ field.name|capitalize }}($wfHandler){% if loop.index == fields|length %};{% endif %}
-            {% endfor %}
+{% if fields is empty %}
+
+{% else %}
+        $this{% for field in fields %}->set{{ field.name|capitalize }}($wfHandler){% if loop.index < fields|length %}
+            {% else %};{% endif %}{% endfor %}
+{% endif %}
     }
 {% for field in fields %}
 
@@ -53,11 +58,11 @@ class WFGenerateVOListener implements ObserverInterface
 {% for name, data in valueObjects %}
 {% if name == field.voName %}
 {% for vofield in data.fields %}
-{% set parameters = parameters ~ "$wfHandler->getCommand()->get" ~ field.name|ucfirst ~"()['"~ vofield.name ~"']," %}
+{% set parameters = parameters ~ "$wfHandler->getCommand()->get" ~ field.name|ucfirst ~"()['"~ vofield.name ~"'], " %}
 {% endfor %}
 {% endif %}
 {% endfor %}
-        $wfHandler->data->{{ field.name }}[] = new {{ field.voName }}({{ parameters|trim(',') }});
+        $wfHandler->data->{{ field.name }}[] = new {{ field.voName }}({{ parameters|trim(', ') }});
 {% else %}
         $wfHandler->data->{{ field.name }}[] = $wfHandler->getCommand()->get{{ field.name|ucfirst }}();
 {% endif %}

@@ -2,28 +2,41 @@
 
 namespace {{ projectName }}\Domain\Workflow\{{ entityName }}\Listener;
 
-
 use DddContext\Domain\Generalisation\Observer\ObservableInterface;
 use DddContext\Domain\Generalisation\Observer\ObserverInterface;
 use DddContext\Domain\Service\Generalisation\Manager\ManagerInterface;
 use DddContext\Infrastructure\Logger\Generalisation\TraitLogger;
 
+/**
+ * Class WFPublishEvent
+ *
+ * @category {{ projectName }}
+ * @package Domain
+ * @subpackage Workflow\Listener
+ */
 class WFPublishEvent implements ObserverInterface
 {
     use TraitLogger;
 
+    /** @var ManagerInterface $manager */
     protected $manager;
 
+    /**
+     * Constructor
+     *
+     * @param ManagerInterface $manager
+     */
     public function __construct(ManagerInterface $manager)
     {
         $this->manager = $manager;
     }
 
     /**
-     * @param WFObjectEvent $event
+     * Run all listener parts. Entry point of the listener.
+     * @param ObservableInterface $observable
      */
     public function update(ObservableInterface $observable)
     {
-
+        //todo: fill this method or remove it if useless.
     }
 }

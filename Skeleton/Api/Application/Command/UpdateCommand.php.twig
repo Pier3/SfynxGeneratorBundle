@@ -7,68 +7,89 @@ use Sfynx\DddBundle\Layer\Application\Generalisation\Command\AbstractCommand;
 /**
  * Class UpdateCommand.
  *
- * @category   DemoApiContext
+ * @category   {{ projectName }}
  * @package    Application
  * @subpackage Command
  */
 class UpdateCommand extends AbstractCommand
 {
 {% for field in entityFields %}
-    protected ${{ field.name}};
-{% endfor %}
+    /** @var {{ field.type }} ${{ field.name }} */
+    protected ${{ field.name }};
 
+{% endfor %}
+{% set constructorArgs = "" %}
+{% for field in entityFields %}
+{% set var = '$' ~ field.name ~ ', '  %}
+{% set constructorArgs = constructorArgs ~ var%}
+{% endfor %}
+{% set constructorArgs = constructorArgs|trim(", ") %}
     /**
-     * UpdateActorCommand constructor.
-     * @param $entityId
+     * NewCommand constructor.
+{% for field in entityFields %}
+     * @param ${{ field.name }}
+{% endfor %}
      */
     public function __construct({{ constructorArgs }})
     {
 {% for field in entityFields %}
-        $this->{{ field.name }}= ${{ field.name}};
+     $this->{{ field.name }} = ${{ field.name }};
 {% endfor %}
     }
-
-
 {% for field in  entityFields %}
-{% if field.type == "id" or field.type=="IdVO" %}
-    public function get{{ field.name|ucfirst }}() {
+
+{% if field.type == "id" or field.type == "IdVO" %}
+    /**
+     * Get the {{ field.name }} attribute value
+     * @return {% if field.type == "id" %}int{% else %}string{% endif %}
+     */
+    public function get{{ field.name|ucfirst }}()
+    {
         return $this->{{ field.name }};
     }
+
     /**
-    * Set the {{ field.name }} attribute
-    * @param  {{ field.name }} $value
+    * Set the {{ field.name|ucfirst }} attribute
+    * @param {% if field.type == "id" %}int{% else %}string{% endif %} $value
+    * @return $this
     */
-    public function set{{ field.name|ucfirst }}($value) {
+    public function set{{ field.name|ucfirst }}($value)
+    {
         $this->{{ field.name }} = $value;
+        return $this;
     }
 {% else %}
-        {% if field.type == "valueObject" %}
-            {% if valueObjects[field.voName]["name"] == field.voName %}
-                {% set namespace = valueObjects[field.voName]["type"]|split('\\') %}
-                {% set key = namespace|length - 1 %}
-                {% set namespace = namespace[key] %}
-            {% else %}
-                {% set namespace = "" %}
-            {% endif %}
-        {% else %}
-            {% set namespace = "" %}
-        {% endif %}
+{% if field.type == "valueObject" %}
+{% if valueObjects[field.voName]["name"] == field.voName %}
+{% set namespace = valueObjects[field.voName]["type"]|split('\\') %}
+{% set key = namespace|length - 1 %}
+{% set namespace = namespace[key] %}
+{% else %}
+{% set namespace = "" %}
+{% endif %}
+{% else %}
+{% set namespace = "" %}
+{% endif %}
+
     /**
-    * get the {{ field.name }} attribute value
-    * @return {{ field.type }} $value
-    */
-    public function get{{ field.name|ucfirst }}() {
-        return $this->{{ field.name }};
+     * Get the {{ field.name }} attribute value
+     * @return {{ field.type }} $value
+     */
+    public function get{{ field.name|ucfirst }}()
+    {
+        return $this->{{ field.name}};
     }
 
     /**
-    * Set the {{ field.name }} attribute
-    * @param {{ namespace }} {{ field.type }} $value
-    */
-    public function set{{ field.name|ucfirst }}({{ namespace }} $value) {
+     * Set the {{ field.name }} attribute
+     * @param {% if namespace %}{{ namespace }} {% endif %}{{ field.type }} $value
+     * @return $this
+     */
+    public function set{{ field.name|ucfirst }}({% if namespace %}{{ namespace }} {% endif %}$value)
+    {
         $this->{{ field.name }} = $value;
+        return $this;
     }
 {% endif %}
 {% endfor %}
-
 }

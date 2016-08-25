@@ -65,7 +65,7 @@ export SYMFONY_SFYNX_CONTEXT_NAME
 #
 echo ''
 echo '# Importing the entities from the Swagger file by creating all source code.'
-php "$PROJECT_NAME"/app/console sfynx:generate:ddd:api --create-all
+php "$PROJECT_NAME"/bin/generator sfynx:api --create-all
 
 phpStatus="$?"
 if [ 0 = "$phpStatus" ]

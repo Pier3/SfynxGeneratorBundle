@@ -8,7 +8,6 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class CreateRepositoryFactoryPass implements CompilerPassInterface
 {
-
     /**
      * You can modify the container here before it is dumped to PHP code.
      *
@@ -16,10 +15,11 @@ class CreateRepositoryFactoryPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-
+        // get params
         $type = $container->getParameter('database_type');
-
 {% for entityName,Vo in entities %}
+
+        // {{ entityName|upper }} entity
         $class = $container->getParameter("project.{{ projectName|lower }}.{{ entityName|lower }}.${type}.repository.factory.class");
         $id = 'project.{{ projectName|lower }}.{{ entityName|lower }}.repository.factory';
         // set service
@@ -33,9 +33,6 @@ class CreateRepositoryFactoryPass implements CompilerPassInterface
         if ('couchdb' === $type) {
             $definition->addArgument(new Reference('doctrine_couchdb.odm.default_document_manager'));
         }
-
-
 {% endfor %}
     }
-
 }

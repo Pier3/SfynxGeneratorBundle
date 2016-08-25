@@ -30,6 +30,11 @@ class Configuration implements ConfigurationInterface
                      ->end()
                      ->cannotBeEmpty()
                 ->end()
+                ->scalarNode('database_multitenant_path_file')
+                    ->isRequired()
+                    ->validate()
+                    ->cannotBeEmpty()
+                ->end()
             ->end()
         ;
         return $treeBuilder;

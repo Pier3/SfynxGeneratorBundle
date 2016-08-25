@@ -2,19 +2,21 @@
 
 namespace {{ projectName }}\InfrastructureBundle;
 
-
-use Sfynx\DddBundle\Layer\Infrastructure\Persistence\Generalisation\MultipleDatabase;
-use {{ projectName }}\InfrastructureBundle\DependencyInjection\Compiler\CreateRepositoryFactoryPass;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Sfynx\DddBundle\Layer\Infrastructure\Bundle\Traits\TraitLoadBundle;
 use {{ projectName }}\InfrastructureBundle\DependencyInjection\{{ projectName }}InfrastructureBundleExtension;
+use {{ projectName }}\InfrastructureBundle\DependencyInjection\Compiler\CreateRepositoryFactoryPass;
+
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+
 use Doctrine\DBAL\Types as ORM;
 use Doctrine\ODM\MongoDB\Types as ODM;
 use Doctrine\ODM\CouchDB\Types as CouchDB;
-use Doctrine\DBAL\Types\Type;
 
 class {{ projectName }}InfrastructureBundle extends Bundle
 {
+    use TraitLoadBundle;
+
     public function getContainerExtension()
     {
         return new {{ projectName }}InfrastructureBundleExtension();
@@ -22,26 +24,14 @@ class {{ projectName }}InfrastructureBundle extends Bundle
 
     public function boot()
     {
-        $dbDriver = $this->container->getParameter('database.driver');
-
-        if (MultipleDatabase::ORM_DATABASE_TYPE === $dbDriver) {
-            $this->loadOrmTypes();
-        }
-
-        if (MultipleDatabase::ODM_DATABASE_TYPE === $dbDriver) {
-            $this->loadOdmTypes();
-        }
-
-        if (MultipleDatabase::COUCHDB_DATABASE_TYPE === $dbDriver) {
-            $this->loadCouchDBTypes();
-        }
-
-
+        $this->loadBoot($this->container);
     }
 
     public function build(ContainerBuilder $container)
     {
         parent::build($container);
+
+        $this->loadCompilerPass($container);
         $container->addCompilerPass(new CreateRepositoryFactoryPass());
     }
 
@@ -64,11 +54,27 @@ class {{ projectName }}InfrastructureBundle extends Bundle
 
     protected function loadOdmTypes()
     {
+        if (!ODM\Type::hasType("IdVO")) {
+            ODM\Type::addType('IdVO', 'Sfynx\DddBundle\Layer\Infrastructure\EntityType\Orm\IdType');
+        }
 
+{% for name,data in valueObjects %}
+        if (!ODM\Type::hasType("{{ name }}")) {
+            ODM\Type::addType('{{ name }}', '{{ projectName }}\Infrastructure\EntityType\Orm\{{ name }}Type');
+        }
+{% endfor %}
     }
 
     protected function loadCouchDBTypes()
     {
+        if (!CouchDB\Type::hasType("IdVO")) {
+            CouchDB\Type::addType('IdVO', 'Sfynx\DddBundle\Layer\Infrastructure\EntityType\Orm\IdType');
+        }
 
+{% for name,data in valueObjects %}
+        if (!CouchDB\Type::hasType("{{ name }}")) {
+            CouchDB\Type::addType('{{ name }}', '{{ projectName }}\Infrastructure\EntityType\Orm\{{ name }}Type');
+        }
+{% endfor %}
     }
 }

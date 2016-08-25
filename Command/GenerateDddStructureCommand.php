@@ -3,9 +3,14 @@
 
 namespace Sfynx\DddGeneratorBundle\Command;
 
-use DemoApiContext\PresentationBundle\DependencyInjection\Compiler\ResettingListenersPass;
+//use DemoApiContext\PresentationBundle\DependencyInjection\Compiler\ResettingListenersPass;
+//use Sfynx\DddGeneratorBundle\Generator\Bundle\Handler\InfrastructureBundle\DependencyInjection\Compiler\CreateRepositoryFactoryPassHandler;
+//use Sfynx\DddGeneratorBundle\Generator\Bundle\Handler\PresentationBundle\Resources\ServicesHandler;
+//use Symfony\Component\Console\Input\InputOption;
+//use Symfony\Component\Console\Question\ConfirmationQuestion;
 
-use Sfynx\DddGeneratorBundle\Generator\Bundle\Handler\InfrastructureBundle\DependencyInjection\Compiler\CreateRepositoryFactoryPassHandler;
+use Sfynx\DddGeneratorBundle\Generator\Bundle\DddBundleGenerator;
+
 use Sfynx\DddGeneratorBundle\Generator\Bundle\Handler\InfrastructureBundle\DependencyInjection\InfrastructureBundleExtensionHandler;
 use Sfynx\DddGeneratorBundle\Generator\Bundle\Handler\InfrastructureBundle\InfrastructureBundleHandler;
 use Sfynx\DddGeneratorBundle\Generator\Bundle\Handler\Presentation\Coordination\ControllerHandler;
@@ -15,19 +20,16 @@ use Sfynx\DddGeneratorBundle\Generator\Bundle\Handler\PresentationBundle\Depende
 use Sfynx\DddGeneratorBundle\Generator\Bundle\Handler\PresentationBundle\DependencyInjection\Compiler\ResettingListenersPassHandler;
 use Sfynx\DddGeneratorBundle\Generator\Bundle\Handler\PresentationBundle\PresentationBundleHandler;
 use Sfynx\DddGeneratorBundle\Generator\Bundle\Handler\PresentationBundle\Resources\ControllerYmlHandler;
-use Sfynx\DddGeneratorBundle\Generator\Bundle\Handler\PresentationBundle\Resources\ServicesHandler;
+use Sfynx\DddGeneratorBundle\Generator\Bundle\Handler\InfrastructureBundle\DependencyInjection\ConfigurationHandler;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
-
-use Sfynx\DddGeneratorBundle\Generator\Bundle\Handler\InfrastructureBundle\DependencyInjection\ConfigurationHandler;
 
 class GenerateDddStructureCommand extends Command
 {
+    /** @var DddBundleGenerator */
     protected $generator;
     protected $rootDir;
     protected $bundleName;
@@ -45,108 +47,116 @@ class GenerateDddStructureCommand extends Command
             ->setHelp("Generate a ddd structure");
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
     public function interact(InputInterface $input, OutputInterface $output)
     {
         $dialog = $this->getHelper('question');
         $this->bundleName = $dialog->ask(
             $input,
             $output,
-            new Question('Enter the name of the bundle : ')
+            new Question('Enter the name of the bundle: ')
         );
 
         //set argument : destination_path
         if (isset($_SERVER['SYMFONY_SFYNX_PATH_TO_DEST_FILES'])) {
-            $destPath = $_SERVER['SYMFONY_SFYNX_PATH_TO_DEST_FILES'];
+            $destinationPath = $_SERVER['SYMFONY_SFYNX_PATH_TO_DEST_FILES'];
         } else {
-            $destPath = $dialog->ask(
+            $destinationPath = $dialog->ask(
                 $input,
                 $output,
                 new Question('destination path: ')
             );
 
-            while (!is_dir($destPath) || !is_writable($destPath)) {
+            while (!is_dir($destinationPath) || !is_writable($destinationPath)) {
                 //Set the entity name
                 $output->writeln("This directory doesn't exist or is not writable");
                 $dialog = $this->getHelper('question');
-                $destPath = $dialog->ask(
+                $destinationPath = $dialog->ask(
                     $input,
                     $output,
                     new Question('Path to swagger yml file: ')
                 );
             }
         }
-        $input->setArgument('destination-path', $destPath);
+
+        $input->setArgument('destination-path', $destinationPath);
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int|null|void
+     */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $destPath = $input->getArgument('destination-path');
-        if (null !== $destPath) {
-            $this->rootDir = $destPath;
+        $destinationPath = $input->getArgument('destination-path');
+        $creationPoint = $this->rootDir . '/' . $this->bundleName;
+
+        if (null !== $destinationPath) {
+            $this->rootDir = $destinationPath;
         }
-        mkdir($this->rootDir."/".$this->bundleName);
 
-        mkdir($this->rootDir."/".$this->bundleName."/Application");
-        mkdir($this->rootDir."/".$this->bundleName."/Application/".$this->bundleName);
-        mkdir($this->rootDir."/".$this->bundleName."/Application/".$this->bundleName."/Query");
-        mkdir($this->rootDir."/".$this->bundleName."/Application/".$this->bundleName."/Command");
+        mkdir($creationPoint);
+        mkdir($creationPoint . '/Application');
+        mkdir($creationPoint . '/Application/' . $this->bundleName);
+        mkdir($creationPoint . '/Application/' . $this->bundleName . '/Query');
+        mkdir($creationPoint . '/Application/' . $this->bundleName . '/Command');
 
-        mkdir($this->rootDir."/".$this->bundleName."/config");
+        mkdir($creationPoint . '/config');
 
-        mkdir($this->rootDir."/".$this->bundleName."/Domain");
-        mkdir($this->rootDir."/".$this->bundleName."/Domain/Entity");
-        mkdir($this->rootDir."/".$this->bundleName."/Domain/Repository");
-        mkdir($this->rootDir."/".$this->bundleName."/Domain/Service");
-        mkdir($this->rootDir."/".$this->bundleName."/Domain/Service/".$this->bundleName);
-        mkdir($this->rootDir."/".$this->bundleName."/Domain/Service/".$this->bundleName."/Factory");
-        mkdir($this->rootDir."/".$this->bundleName."/Domain/Service/".$this->bundleName."/Factory/CouchDB");
-        mkdir($this->rootDir."/".$this->bundleName."/Domain/Service/".$this->bundleName."/Factory/Odm");
-        mkdir($this->rootDir."/".$this->bundleName."/Domain/Service/".$this->bundleName."/Factory/Orm");
+        mkdir($creationPoint . '/Domain');
+        mkdir($creationPoint . '/Domain/Entity');
+        mkdir($creationPoint . '/Domain/Repository');
+        mkdir($creationPoint . '/Domain/Service');
+        mkdir($creationPoint . '/Domain/Service/' . $this->bundleName);
+        mkdir($creationPoint . '/Domain/Service/' . $this->bundleName . '/Factory');
+        mkdir($creationPoint . '/Domain/Service/' . $this->bundleName . '/Factory/CouchDB');
+        mkdir($creationPoint . '/Domain/Service/' . $this->bundleName . '/Factory/Odm');
+        mkdir($creationPoint . '/Domain/Service/' . $this->bundleName . '/Factory/Orm');
+        mkdir($creationPoint . '/Domain/Service/' . $this->bundleName . '/Manager');
+        mkdir($creationPoint . '/Domain/Service/' . $this->bundleName . '/Processor');
+        mkdir($creationPoint . '/Domain/Specification');
+        mkdir($creationPoint . '/Domain/Specification/Infrastructure');
+        mkdir($creationPoint . '/Domain/Specification/Infrastructure/' . $this->bundleName);
+        mkdir($creationPoint . '/Domain/Workflow');
+        mkdir($creationPoint . '/Domain/Workflow/' . $this->bundleName);
+        mkdir($creationPoint . '/Domain/Workflow/' . $this->bundleName.'/Handler');
+        mkdir($creationPoint . '/Domain/Workflow/' . $this->bundleName.'/Listener');
 
-        mkdir($this->rootDir."/".$this->bundleName."/Domain/Service/".$this->bundleName."/Manager");
-        mkdir($this->rootDir."/".$this->bundleName."/Domain/Service/".$this->bundleName."/Processor");
+        mkdir($creationPoint . '/Infrastructure');
+        mkdir($creationPoint . '/Infrastructure/Persistence');
+        mkdir($creationPoint . '/Infrastructure/Persistence/Repository');
+        mkdir($creationPoint . '/Infrastructure/Persistence/Repository/' . $this->bundleName);
+        mkdir($creationPoint . '/InfrastructureBundle');
+        mkdir($creationPoint . '/InfrastructureBundle/DependencyInjection');
+        mkdir($creationPoint . '/InfrastructureBundle/Resources');
 
-        mkdir($this->rootDir."/".$this->bundleName."/Domain/Specification");
-        mkdir($this->rootDir."/".$this->bundleName."/Domain/Specification/Infrastructure");
-        mkdir($this->rootDir."/".$this->bundleName."/Domain/Specification/Infrastructure/".$this->bundleName);
+        mkdir($creationPoint . '/Presentation');
+        mkdir($creationPoint . '/Presentation/Adapter');
+        mkdir($creationPoint . '/Presentation/Adapter/' . $this->bundleName);
+        mkdir($creationPoint . '/Presentation/Coordination/');
+        mkdir($creationPoint . '/Presentation/Coordination/' . $this->bundleName);
+        mkdir($creationPoint . '/Presentation/Request/');
+        mkdir($creationPoint . '/Presentation/Request/' . $this->bundleName);
 
-        mkdir($this->rootDir."/".$this->bundleName."/Domain/Workflow");
-        mkdir($this->rootDir."/".$this->bundleName."/Domain/Workflow/".$this->bundleName);
-        mkdir($this->rootDir."/".$this->bundleName."/Domain/Workflow/".$this->bundleName."/Handler");
-        mkdir($this->rootDir."/".$this->bundleName."/Domain/Workflow/".$this->bundleName."/Listener");
+        mkdir($creationPoint . '/PresentationBundle');
+        mkdir($creationPoint . '/PresentationBundle/DependencyInjection');
+        mkdir($creationPoint . '/PresentationBundle/Resources');
 
-        mkdir($this->rootDir."/".$this->bundleName."/Infrastructure");
-        mkdir($this->rootDir."/".$this->bundleName."/Infrastructure/Persistence");
-        mkdir($this->rootDir."/".$this->bundleName."/Infrastructure/Persistence/Repository");
-        mkdir($this->rootDir."/".$this->bundleName."/Infrastructure/Persistence/Repository/".$this->bundleName);
+        touch($creationPoint . '/PresentationBundle/Resources/Services.yml');
 
-        mkdir($this->rootDir."/".$this->bundleName."/InfrastructureBundle");
-        mkdir($this->rootDir."/".$this->bundleName."/InfrastructureBundle/DependencyInjection");
-        mkdir($this->rootDir."/".$this->bundleName."/InfrastructureBundle/Resources");
-
-        mkdir($this->rootDir."/".$this->bundleName."/Presentation");
-        mkdir($this->rootDir."/".$this->bundleName."/Presentation/Adapter");
-        mkdir($this->rootDir."/".$this->bundleName."/Presentation/Adapter/".$this->bundleName);
-        mkdir($this->rootDir."/".$this->bundleName."/Presentation/Coordination/");
-        mkdir($this->rootDir."/".$this->bundleName."/Presentation/Coordination/".$this->bundleName);
-        mkdir($this->rootDir."/".$this->bundleName."/Presentation/Request/");
-        mkdir($this->rootDir."/".$this->bundleName."/Presentation/Request/".$this->bundleName);
-
-        mkdir($this->rootDir."/".$this->bundleName."/PresentationBundle");
-        mkdir($this->rootDir."/".$this->bundleName."/PresentationBundle/DependencyInjection");
-        mkdir($this->rootDir."/".$this->bundleName."/PresentationBundle/Resources");
-        touch($this->rootDir."/".$this->bundleName."/PresentationBundle/Resources/Services.yml");
-        mkdir($this->rootDir."/".$this->bundleName."/PresentationBundle/Resources/config");
-        mkdir($this->rootDir."/".$this->bundleName."/PresentationBundle/Resources/config/application");
-        mkdir($this->rootDir."/".$this->bundleName."/PresentationBundle/Resources/config/route");
-
-        mkdir($this->rootDir."/".$this->bundleName."/PresentationBundle/Resources/config/public");
-        mkdir($this->rootDir."/".$this->bundleName."/PresentationBundle/Resources/config/translations");
-
+        mkdir($creationPoint . '/PresentationBundle/Resources/config');
+        mkdir($creationPoint . '/PresentationBundle/Resources/config/application');
+        mkdir($creationPoint . '/PresentationBundle/Resources/config/route');
+        mkdir($creationPoint . '/PresentationBundle/Resources/config/public');
+        mkdir($creationPoint . '/PresentationBundle/Resources/config/translations');
 
         $parameters = [
             'rootDir' => $this->rootDir,
-            'projectDir' => "src",
+            'projectDir' => 'src',
             'bundleName' => $this->bundleName
         ];
 
@@ -169,13 +179,19 @@ class GenerateDddStructureCommand extends Command
         $this->generator->execute();
     }
 
+    /**
+     * @param DddBundleGenerator $generator
+     */
     public function setGenerator($generator)
     {
-        $this->generator=$generator;
+        $this->generator = $generator;
     }
 
-    public function setRootDir($rootDir) {
+    /**
+     * @param string $rootDir
+     */
+    public function setRootDir($rootDir)
+    {
         $this->rootDir = $rootDir;
     }
-
 }

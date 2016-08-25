@@ -12,10 +12,11 @@ class DddApiGenerator
      * add handler to $handlers if it is not included. Else do nothing
      *
      * @param HandlerInterface $handler
+     * @param bool $force
      */
-    public function addHandler(HandlerInterface $handler,$force=false)
+    public function addHandler(HandlerInterface $handler, $force = false)
     {
-        if (!$this->hasHandler($handler) || $force==true) {
+        if (!$this->hasHandler($handler) || true === $force) {
             $this->handlers[] = $handler;
         }
     }
@@ -31,7 +32,8 @@ class DddApiGenerator
     }
 
 
-    public function clear() {
+    public function clear()
+    {
         $this->handlers = [];
     }
     /**
@@ -40,7 +42,8 @@ class DddApiGenerator
      * @param HandlerInterface $handler
      * @return bool
      */
-    protected function hasHandler(HandlerInterface $handler) {
+    protected function hasHandler(HandlerInterface $handler)
+    {
         $class = get_class($handler);
         foreach ($this->handlers as $handler) {
             $classIncluded = get_class($handler);
@@ -51,6 +54,4 @@ class DddApiGenerator
 
         return false;
     }
-
-
 }

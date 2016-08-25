@@ -44,7 +44,7 @@ class GenerateDddApiCommand extends Command
 
     public function setRootDir($rootDir)
     {
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+        if ('WIN' === strtoupper(substr(PHP_OS, 0, 3))) {
             $rootDir = str_replace("\\app", "", $rootDir);
         } else {
             $rootDir = str_replace("/app", "", $rootDir);

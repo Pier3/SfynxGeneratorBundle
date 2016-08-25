@@ -275,11 +275,12 @@ class Domain
                     'destinationPath' => $this->destinationPath,
                 ];
 
-            $this->generator->addHandler(new ORMRepositoryFactoryTestHandler($parameters));
-            $this->generator->addHandler(new CountryManagerTestHandler($parameters));
+                $this->generator->addHandler(new ORMRepositoryFactoryTestHandler($parameters));
+                $this->generator->addHandler(new CountryManagerTestHandler($parameters));
 
-            $this->generator->execute();
-            $this->generator->clear();
+                $this->generator->execute();
+                $this->generator->clear();
+            }
         }
     }
 }

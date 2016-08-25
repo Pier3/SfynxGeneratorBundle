@@ -5,7 +5,6 @@ echo '### Import Swagger file into new project ###'
 echo '############################################'
 echo ''
 
-
 #
 # 1. ACTION of copying the Swagger file into the asked project.
 #
@@ -56,9 +55,15 @@ echo '# Define the environment variables to bootstrap the generator.'
 #Define the environment variable setting the Swagger file path
 SYMFONY_SFYNX_PATH_TO_SWAGGER_FILE="$PROJECT_NAME"/entities.yml
 export SYMFONY_SFYNX_PATH_TO_SWAGGER_FILE
-#Define the environment variable setting the project name
-SYMFONY_SFYNX_CONTEXT_NAME="$PROJECT_NAME"
+
+#Define the environment variable setting the project name with Uppercase
+SYMFONY_SFYNX_CONTEXT_NAME=`echo $PROJECT_NAME | sed 's/\(.\)/\U\1/'`
 export SYMFONY_SFYNX_CONTEXT_NAME
+
+#Define the environment variable to set the destination of generated files
+SYMFONY_SFYNX_PATH_TO_DEST_FILES="$PROJECT_NAME"/src
+export SYMFONY_SFYNX_PATH_TO_DEST_FILES
+
 
 #
 # 3. ACTION of running the generator to generate all entities from the Swagger file.

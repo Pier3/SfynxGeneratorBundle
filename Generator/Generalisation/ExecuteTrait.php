@@ -8,7 +8,7 @@ trait ExecuteTrait
 {
     public function execute()
     {
-        $this->setSkeletonDirs($this->rootSkeletonDir.'/'.self::SKELETON_DIR);
+        $this->setSkeletonDirs($this->rootSkeletonDir. '/' . self::SKELETON_DIR);
         $targetDir = PiFileManager::getFileDirname($this->target);
         if (!file_exists(PiFileManager::getFileDirname($this->target))) {
             mkdir($targetDir, 0777, true);

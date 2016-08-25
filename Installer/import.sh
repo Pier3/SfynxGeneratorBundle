@@ -57,7 +57,7 @@ SYMFONY_SFYNX_PATH_TO_SWAGGER_FILE="$PROJECT_NAME"/entities.yml
 export SYMFONY_SFYNX_PATH_TO_SWAGGER_FILE
 
 #Define the environment variable setting the project name with Uppercase
-SYMFONY_SFYNX_CONTEXT_NAME=`echo $PROJECT_NAME | sed 's/\(.\)/\U\1/'`
+SYMFONY_SFYNX_CONTEXT_NAME=`echo "$PROJECT_NAME" | sed "s/\(.\)/\U\1/"`
 export SYMFONY_SFYNX_CONTEXT_NAME
 
 #Define the environment variable to set the destination of generated files

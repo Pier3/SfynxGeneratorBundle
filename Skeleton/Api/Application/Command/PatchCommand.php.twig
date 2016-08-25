@@ -14,7 +14,7 @@ use Sfynx\DddBundle\Layer\Application\Generalisation\Command\AbstractCommand;
 class PatchCommand extends AbstractCommand
 {
 {% for field in entityFields %}
-    /** @var {{ field.type }} ${{ field.name }} */
+    /** @var {% if field.type == "id" %}int{% elseif field.type == "IdVO" %}string{% else %}{{ field.type }}{% endif %} ${{ field.name }} */
     protected ${{ field.name }};
 
 {% endfor %}
@@ -25,15 +25,15 @@ class PatchCommand extends AbstractCommand
 {% endfor %}
 {% set constructorArgs = constructorArgs|trim(", ") %}
     /**
-     * NewCommand constructor.
+     * PatchCommand constructor.
 {% for field in entityFields %}
-     * @param ${{ field.name }}
+     * @param {% if field.type == "id" %}int{% elseif field.type == "IdVO" %}string{% else %}{{ field.type }}{% endif %} ${{ field.name }}
 {% endfor %}
      */
     public function __construct({{ constructorArgs }})
     {
 {% for field in entityFields %}
-     $this->{{ field.name }} = ${{ field.name }};
+        $this->{{ field.name }} = ${{ field.name }};
 {% endfor %}
     }
 {% for field in  entityFields %}
@@ -41,7 +41,9 @@ class PatchCommand extends AbstractCommand
 
     /**
      * Get the {{ field.name }} attribute value
-     * @return {% if field.type == "id" %}int{% else %}string{% endif %}
+     * @return {% if field.type == "id" %}int
+{% else %}string
+{% endif %}
      */
     public function get{{ field.name|ucfirst }}()
     {
@@ -73,11 +75,11 @@ class PatchCommand extends AbstractCommand
 
     /**
      * Get the {{ field.name }} attribute value
-     * @return {{ field.type }} $value
+     * @return {{ field.type }}
      */
     public function get{{ field.name|ucfirst }}()
     {
-        return $this->{{ field.name}};
+        return $this->{{ field.name }};
     }
 
     /**

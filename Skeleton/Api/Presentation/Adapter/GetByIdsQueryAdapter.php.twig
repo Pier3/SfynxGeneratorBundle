@@ -4,19 +4,18 @@ namespace {{ projectName }}\Presentation\Adapter\{{ entityName }}\Query;
 
 use Sfynx\DddBundle\Layer\Presentation\Adapter\Generalisation\AbstractGetByIdsQueryAdapter;
 use Sfynx\DddBundle\Layer\Presentation\Adapter\Generalisation\QueryAdapterInterface;
+use {{ projectName }}\Application\{{ entityName }}\Query\GetByIdsQuery;
 
 /**
- * Class OneQueryAdapter
+ * Class GetByIdsQueryAdapter.
  *
  * @category   {{ projectName }}
  * @package    Presentation
- * @subpackage Adapter
+ * @subpackage Adapter\Query
  */
 
 class GetByIdsQueryAdapter extends AbstractGetByIdsQueryAdapter implements QueryAdapterInterface
 {
-    /**
-     * @var string $queryNamespace full namespace of GetByIdsQuery
-     */
-    protected $queryNamespace = \{{ projectName }}\Application\{{ entityName }}\Query\GetByIdsQuery::class;
+    /** @var string $queryNamespace full namespace of GetByIdsQuery */
+    protected $queryNamespace = GetByIdsQuery::class;
 }

@@ -4,18 +4,17 @@ namespace {{ projectName }}\Presentation\Adapter\{{ entityName }}\Query;
 
 use Sfynx\DddBundle\Layer\Presentation\Adapter\Generalisation\QueryAdapterInterface;
 use Sfynx\DddBundle\Layer\Presentation\Adapter\Generalisation\AbstractAllQueryAdapter;
+use {{ projectName }}\Application\{{ entityName }}\Query\GetAllQuery;
 
 /**
- * Class GetAllQueryAdapter
+ * Class GetAllQueryAdapter.
  *
  * @category   {{ projectName }}
  * @package    Presentation
- * @subpackage Adapter
+ * @subpackage Adapter\Query
  */
 class GetAllQueryAdapter extends AbstractAllQueryAdapter implements QueryAdapterInterface
 {
-    /**
-     * @var string $queryNamespace full namespace of GetAll{{ entityName }}Query
-     */
-    protected $queryNamespace = \{{ projectName }}\Application\{{ entityName }}\Query\GetAllQuery::class;
+    /** @var string $queryNamespace full namespace of GetAllQuery */
+    protected $queryNamespace = GetAllQuery::class;
 }

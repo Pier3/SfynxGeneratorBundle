@@ -7,14 +7,27 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use {{ projectName }}\PresentationBundle\DependencyInjection\Compiler\ResettingListenersPass;
 use {{ projectName }}\PresentationBundle\DependencyInjection\{{ projectName }}PresentationBundleExtension;
 
+/**
+ * Class {{ projectName }}PresentationBundle.
+ *
+ * @category {{ projectName }}
+ * @package PresentationBundle
+ */
 class {{ projectName }}PresentationBundle extends Bundle
 {
+    /**
+     * {@inheritdoc}
+     */
     public function getContainerExtension()
     {
         return new {{ projectName }}PresentationBundleExtension();
     }
 
-    public function build(ContainerBuilder $container) //Enregistrement du compilerPass "RegisterListenersPass"
+    /**
+     * Registering the compilerPass "RegisterListenersPass".
+     * {@inheritdoc}
+     */
+    public function build(ContainerBuilder $container)
     {
         parent::build($container);
         $container->addCompilerPass(new ResettingListenersPass());

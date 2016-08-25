@@ -5,20 +5,29 @@ namespace {{ projectName }}\Application\{{ entityName }}\Command\Handler\Decorat
 use Sfynx\DddBundle\Layer\Application\Generalisation\Command\Handler\Decorator\AbstractCommandHandlerDecorator;
 use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandHandlerInterface;
 use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandInterface;
+use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandValidationHandlerInterface;
+use Sfynx\DddBundle\Layer\Application\Generalisation\Validation\SpecHandler\AbstractCommandSpecHandler;
 
 /**
  * Class NewCommandHandlerDecorator
  *
  * @category   {{ projectName }}
  * @package    Application
- * @subpackage Command
+ * @subpackage Command\Handler\Decorator
  */
 class NewCommandHandlerDecorator extends AbstractCommandHandlerDecorator
 {
+    /** @var CommandValidationHandlerInterface */
     protected $validationHandler;
+
+    /** @var AbstractCommandSpecHandler */
     protected $specHandler;
 
-    public function __construct(CommandHandlerInterface $commandHandler, $validationHandler, $specHandler)
+    public function __construct(
+        CommandHandlerInterface $commandHandler,
+        CommandValidationHandlerInterface $validationHandler,
+        AbstractCommandSpecHandler $specHandler
+    )
     {
         parent::__construct($commandHandler);
         $this->validationHandler = $validationHandler;

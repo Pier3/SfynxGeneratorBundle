@@ -13,10 +13,14 @@ abstract class AbstractHandler
 
     protected $parameters;
 
-    public function __construct($CommonParameters)
+    /**
+     * AbstractHandler constructor.
+     * @param $commonParameters
+     */
+    public function __construct($commonParameters)
     {
-        $this->parameters = $CommonParameters;
-        $this->rootSkeletonDir = dirname(dirname(__DIR__)).'/Skeleton';
+        $this->parameters = $commonParameters;
+        $this->rootSkeletonDir = dirname(dirname(__DIR__)) . '/Skeleton';
         $this->setTarget();
     }
 
@@ -35,7 +39,7 @@ abstract class AbstractHandler
         $this->skeletonDirs = is_array($skeletonDirs) ? $skeletonDirs : array($skeletonDirs);
     }
 
-    public function setPermissions($target, $owner = 'www-data', $group = 'www-data', $rights = 0777)
+    public function setPermissions($target, $owner = 'www-data', $group = 'www-data', $rights = '0777')
     {
         /* If you are on linux,
                there is an issue on the chown/chmod command so
@@ -43,7 +47,7 @@ abstract class AbstractHandler
            Else
                just call the php internal functions
         */
-        if (strtolower(substr(PHP_OS, 0, 3)) !== 'win') {
+        if ('win' !== strtolower(substr(PHP_OS, 0, 3))) {
             `sudo chown {$owner}:{$group} {$target}`;
             `sudo chmod {$rights} {$target}`;
         } else {
@@ -82,6 +86,7 @@ abstract class AbstractHandler
         if (!is_dir(dirname($target))) {
             mkdir(dirname($target), 0777, true);
         }
+        
         echo "#### $target\n";
         return file_put_contents($target, $this->render($template, $parameters));
     }

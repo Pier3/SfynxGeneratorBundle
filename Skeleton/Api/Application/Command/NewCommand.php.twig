@@ -37,8 +37,8 @@ class NewCommand extends AbstractCommand
     public function __construct({{ constructorArgs }})
     {
 {% for field in entityFields %}{% if field.type != "id" %}
-     $this->{{ field.name }} = ${{ field.name }};
- {% endif %}{% endfor %}
+        $this->{{ field.name }} = ${{ field.name }};
+{% endif %}{% endfor %}
     }
 {% for field in entityFields %}{% if field.type != "id" %}
 
@@ -51,7 +51,7 @@ class NewCommand extends AbstractCommand
     }
 
     /**
-     * @param mixed {{ field.type }}
+     * @param {{ field.type }}
      * @return $this
      */
     public function set{{ field.name|ucfirst }}(${{ field.name }})

@@ -53,6 +53,5 @@ class WFRetrieveEntity implements ObserverInterface
             ? end($wfHandler->data->{{ field.name }})
             : $entity->get{{ field.name|capitalize }}();
 {% endfor %}
-
     }
 }

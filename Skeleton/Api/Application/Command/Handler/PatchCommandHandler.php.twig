@@ -12,7 +12,7 @@ use Sfynx\DddBundle\Layer\Infrastructure\Exception\WorkflowException;
  *
  * @category   {{ projectName }}
  * @package    Application
- * @subpackage Command
+ * @subpackage Command\Handler
  */
 class PatchCommandHandler implements CommandHandlerInterface
 {
@@ -39,6 +39,11 @@ class PatchCommandHandler implements CommandHandlerInterface
     {
         $this->workflowHandler->process($command);
 
+        /*
+         * Todo: Find a way to ensure the property "workflowHandler->data" is an object containing the property
+         * "entity" which is a concrete instance of some abstract entity, or implementing some kind of
+         * entity interface.
+         */
         $entity = !empty($this->workflowHandler->data->entity) ? end($this->workflowHandler->data->entity) : null;
         if (null === $entity) {
             throw new WorkflowException('Entity has not been patched.');

@@ -9,6 +9,10 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
  * This is the class that loads and manages your bundle configuration
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
+ *
+ * @category {{ projectName }}
+ * @package PresentationBundle
+ * @subpackage DependencyInjection\Compiler
  */
 class ResettingListenersPass implements CompilerPassInterface
 {
@@ -21,10 +25,7 @@ class ResettingListenersPass implements CompilerPassInterface
         $tags = $container->findTaggedServiceIds('project.event_subscriber');
 
         foreach ($tags as $id => $attributes) {
-                $definition->addMethodCall(
-                        'addSubscriber',
-                        array($container->getDefinition($id))
-                );
+            $definition->addMethodCall('addSubscriber', [$container->getDefinition($id)]);
         }
     }
 }

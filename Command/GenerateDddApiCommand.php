@@ -49,6 +49,7 @@ class GenerateDddApiCommand extends Command
         } else {
             $rootDir = str_replace("/app", "", $rootDir);
         }
+
         $this->rootDir = $rootDir;
     }
 
@@ -71,6 +72,7 @@ class GenerateDddApiCommand extends Command
     public function interact(InputInterface $input, OutputInterface $output)
     {
         $dialog = $this->getHelper('question');
+
         //set argument : path_to_swagger_file
         if (isset($_SERVER['SYMFONY_SFYNX_PATH_TO_SWAGGER_FILE'])) {
             $pathToSwaggerEntityFile = $_SERVER['SYMFONY_SFYNX_PATH_TO_SWAGGER_FILE'];
@@ -140,6 +142,7 @@ class GenerateDddApiCommand extends Command
      *
      * @param InputInterface $input
      * @param OutputInterface $output
+     * @return int|null|void
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
@@ -168,7 +171,7 @@ class GenerateDddApiCommand extends Command
      * @param $input
      * @param $output
      */
-    public function parseSwaggerFile($input, $output)
+    public function parseSwaggerFile(InputInterface $input, OutputInterface $output)
     {
         $dialog = $this->getHelper('question');
         $ymlParser = new Parser();
@@ -178,7 +181,9 @@ class GenerateDddApiCommand extends Command
         $this->paths = $this->parseRoutes();
 
         foreach ($this->valueObjects as $voName => $fields) {
-            if ($input->getOption("create-all") || $dialog->ask(
+            if (
+                $input->getOption("create-all") ||
+                $dialog->ask(
                     $input,
                     $output,
                     new Question(sprintf('Do you want to create the valueObject "%s" ? [Y/n]' . PHP_EOL, $voName))
@@ -189,7 +194,9 @@ class GenerateDddApiCommand extends Command
         }
 
         foreach ($this->entities as $entityName => $fields) {
-            if ($input->getOption("create-all") || $dialog->ask(
+            if (
+                $input->getOption("create-all") ||
+                $dialog->ask(
                     $input,
                     $output,
                     new Question(sprintf('Do you want to create the entity "%s" ? [Y/n]' . PHP_EOL, $entityName))
@@ -201,10 +208,19 @@ class GenerateDddApiCommand extends Command
 
         foreach ($this->paths as $path => $verbData) {
             foreach ($verbData as $verb => $data) {
-                if ($input->getOption("create-all") || $dialog->ask(
+                if (
+                    $input->getOption("create-all") ||
+                    $dialog->ask(
                         $input,
                         $output,
-                        new Question(sprintf('Do you want create the "' . $data['action'] . '" action for route "' . $path . '"" and verb "' . $data['verb'] . '" ? [Y/n]'))
+                        new Question(
+                            sprintf(
+                                'Do you want create the %s action for route  %s  and verb %s? [Y/n]',
+                                $data['action'],
+                                $path,
+                                $data['verb']
+                            )
+                        )
                     )
                 ) {
                     $this->pathsToCreate[$path][$data["verb"]] = $data;
@@ -216,7 +232,7 @@ class GenerateDddApiCommand extends Command
     /**
      * Parse route from a parsed Swagger File
      *
-     * Create a route with needed informations
+     * Create a route with needed information
      */
     protected function parseRoutes()
     {

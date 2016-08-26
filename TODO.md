@@ -10,3 +10,4 @@
 * separate commands and queries files (manager, yml)
 * move "Entity files" in Domain, not in Application
 * dans l'entité, refaire le constructeur qui a été maj car on ne peut pas setter l'id
+* ajout d'un service Route Loader dont la fonctionnalité est de charger les fichiers routes, et ceci afin d'éviter avoir à ajouter à la main dans app/config/routin.yml les fichier

@@ -10,8 +10,13 @@ use Sfynx\DddBundle\Layer\Domain\Generalisation\Traits\TraitTenant;
 {% for vo in valueObjects %}use {{ vo.type|trim("\\") }};
 {% endfor %}
 
-
 /**
+ * Class {{ entityName }}.
+ *
+ * @category {{ projectName }}
+ * @package Domain
+ * @suubpackage Entity
+ *
  * @ORM\Entity
  * @Orm\Table(name="{{ entityName }}")
  * @ORM\HasLifecycleCallbacks
@@ -21,7 +26,6 @@ use Sfynx\DddBundle\Layer\Domain\Generalisation\Traits\TraitTenant;
 class {{ entityName }}
 {
     use TraitTenant;
-
 {% set constructParams = "" %}
 {% for field in fields %}
 {% if field.type == "id" %}
@@ -48,7 +52,7 @@ class {{ entityName }}
      * @CouchDB\Id(strategy="ASSIGNED", type="integer")
      */
 {% endif %}
-     protected $id;
+    protected $id;
 {% elseif field.type == "valueObject"%}
 
     /**
@@ -57,7 +61,7 @@ class {{ entityName }}
      * @ODM\EmbedOne(targetDocument="{{ valueObjects[field.voName].type|trim("\\") }}")
      * @CouchDB\EmbedOne(targetDocument="{{ valueObjects[field.voName].type|trim("\\") }}")
      */
-     protected ${{ field.name }};
+    protected ${{ field.name }};
 {% elseif field.type == "string" %}
 
     /**
@@ -65,7 +69,7 @@ class {{ entityName }}
      * @ORM\Column(type="string")
      * @ODM\Field(type="string")
      */
-     protected ${{ field.name }};
+    protected ${{ field.name }};
 {% elseif field.type == "number" %}
 
     /**
@@ -73,7 +77,7 @@ class {{ entityName }}
      * @ORM\Column(type="integer")
      * @ODM\Field(type="integer")
      */
-     protected ${{ field.name }};
+    protected ${{ field.name }};
 {% elseif field.type == "boolean" %}
 
     /**
@@ -81,38 +85,37 @@ class {{ entityName }}
      * @ORM\Column(type="boolean")
      * @ODM\Field(type="boolean")
      */
-     protected ${{ field.name }};
+    protected ${{ field.name }};
 {% endif %}
 {% endfor %}
 
     /**
      * Create a new instance of {{ entityName }} entity.
      * @param int $tenantId
-{% for field in fields %}     * @param {{ field.type }} ${{ field.name }}
+{% for field in fields %}     * @param {% if field.type == "id" %}int{% elseif field.type == "IdVO" %}string{% else %}{{ field.type }}{% endif %} ${{ field.name }}
 {% endfor %}
      * @return {{ entityName }}
      */
      public static function makeInstance($tenantId, {{ constructorArgs }})
      {
-         return new self($tenantId, {% for field in  fields %}${{ field.name }}{% if loop.index < fields|length %},{% endif %}{% endfor %});
+         return new self($tenantId, {% for field in fields %}${{ field.name }}{% if loop.index < fields|length %}, {% endif %}{% endfor %});
      }
 
     /**
      * Constructor
      * @param int $tenantId
-{% for field in fields %}     * @param {{ field.type }} ${{ field.name }}
+{% for field in fields %}     * @param {% if field.type == "id" %}int{% elseif field.type == "IdVO" %}string{% else %}{{ field.type }}{% endif %} ${{ field.name }}
 {% endfor %}
      */
     protected function __construct($tenantId, {{ constructorArgs }})
     {
-{% for field in  fields %}
+        $this->setTenantId($tenantId);
+{% for field in fields %}
 {% if field.type == "id" %}
 {% if field.voName is defined %}
         $this->{{ field.type }} = new {{ field.voName }}(${{ field.name }});
 {% endif %}
-{% endif %}
-        $this->setTenantId($tenantId);
-{% if field.type != "id" %}
+{% else %}
         $this->set{{ field.name|ucfirst }}(${{ field.name }});
 {% endif %}
 {% endfor %}
@@ -122,18 +125,22 @@ class {{ entityName }}
 {% if field.type == "id" or field.type == "idVO" %}
     /**
      * Get the id of entity.
-     * @return {% if field.type == "id" %}int{% else %}string{% endif %}
+     * @return {% if field.type == "id" %}int
+{% else %}string
+{% endif %}
      */
-    public function get{{ field.type|ucfirst }}() {
+    public function get{{ field.type|ucfirst }}()
+    {
         return $this->{{ field.type }};
     }
 
     /**
      * Set the id of entity.
-     * @return {{ entityName }}
+     * @return $this
      */
-    public function set{{ field.name|ucfirst }}($value) {
-        $this->{{ field.name|ucfirst }} = $value;
+    public function set{{ field.name|ucfirst }}($value)
+    {
+        $this->{{ field.name }} = $value;
         return $this;
     }
 {% else %}
@@ -150,18 +157,20 @@ class {{ entityName }}
 {% endif %}
     /**
      * Get the {{ field.name }} attribute value.
-     * @return {{ field.type }} $value
+     * @return {{ field.type }}
      */
-    public function get{{ field.name|ucfirst }}() {
+    public function get{{ field.name|ucfirst }}()
+    {
         return $this->{{ field.name }};
     }
 
     /**
      * Set the {{ field.name|ucfirst }} attribute.
      * @param {% if namespace %}{{ namespace }} {% endif %}{{ field.type }} $value
-     * @return {{ entityName }}
+     * @return $this
      */
-    public function set{{ field.name|ucfirst }}({% if namespace %}{{ namespace }} {% endif %}$value) {
+    public function set{{ field.name|ucfirst }}({% if namespace %}{{ namespace }} {% endif %}$value)
+    {
         $this->{{ field.name }} = $value;
         return $this;
     }

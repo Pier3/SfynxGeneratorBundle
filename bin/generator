@@ -47,8 +47,8 @@ $commandApi->setRootDir($rootDir);
 $app->add($commandApi);
 
 //register sfynx:structure command
-$commandBundle = $container->get('structure.generator.command');
-$commandBundle->setRootDir($rootDir);
-$app->add($commandBundle);
+//$commandBundle = $container->get('structure.generator.command');
+//$commandBundle->setRootDir($rootDir);
+//$app->add($commandBundle);
 
 $app->run();

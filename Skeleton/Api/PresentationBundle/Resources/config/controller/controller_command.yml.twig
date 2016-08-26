@@ -1,0 +1,13 @@
+services:
+    project.{{ projectName|lower }}.controller.command.{{ entityName|lower }}:
+        scope: prototype
+        class: { projectName|lower }}Context\Presentation\Coordination\{{ entityName|title }}\Command\Controller
+        arguments:
+            - @project.request.strategy
+            - @project.resolver.strategy
+            - @project.dddcontext.response.handler
+            - @project.{{ projectName|lower }}.{{ entityName|lower }}.command.new.handler.decorator
+            - @project.{{ projectName|lower }}.{{ entityName|lower }}.command.new.many.handler.decorator
+            - @project.{{ projectName|lower }}.{{ entityName|lower }}.command.update.handler.decorator
+            - @project.{{ projectName|lower }}.{{ entityName|lower }}.command.delete.handler
+            - @project.{{ projectName|lower }}.{{ entityName|lower }}.command.delete_many.handler

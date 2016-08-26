@@ -1,0 +1,331 @@
+parameters:
+    ###################
+    # DATABASE SYSTEM #
+    ###################
+
+    project.{{ projectName|lower }}.{{ entityName|lower }}.orm.repository.factory.class: {{ projectName }}Context\Domain\Service\{{ entityName|capitalize }}\Factory\Orm\RepositoryFactory
+    project.{{ projectName|lower }}.{{ entityName|lower }}.odm.repository.factory.class: {{ projectName }}Context\Domain\Service\{{ entityName|capitalize }}\Factory\Odm\RepositoryFactory
+    project.{{ projectName|lower }}.{{ entityName|lower }}.couchdb.repository.factory.class: {{ projectName }}Context\Domain\Service\{{ entityName|capitalize }}\Factory\CouchDB\RepositoryFactory
+
+    ###################
+    #      MANAGER    #
+    ###################
+
+    project.{{ projectName|lower }}.{{ entityName|lower }}.manager.command.class: {{ projectName }}Context\Domain\Service\{{ entityName|capitalize }}\Manager\Command\Manager
+
+    ####################
+    # WORKFLOW HANDLER #
+    ####################
+
+    project.{{ projectName|lower }}.{{ entityName|lower }}.new.workflow.handler.class: {{ projectName }}Context\Domain\Workflow\{{ entityName|capitalize }}\Handler\NewWFHandler
+    project.{{ projectName|lower }}.{{ entityName|lower }}.new.many.workflow.handler.class: {{ projectName }}Context\Domain\Workflow\{{ entityName|capitalize }}\Handler\NewManyWFHandler
+    project.{{ projectName|lower }}.{{ entityName|lower }}.update.workflow.handler.class: {{ projectName }}Context\Domain\Workflow\{{ entityName|capitalize }}\Handler\UpdateWFHandler
+
+    ##################
+    # WORKFLOW EVENT #
+    ##################
+
+    project.{{ projectName|lower }}.{{ entityName|lower }}.workflow.generate.valueobject.class: {{ projectName }}Context\Domain\Workflow\{{ entityName|capitalize }}\Observer\WFGenerateVOListener
+    project.{{ projectName|lower }}.{{ entityName|lower }}.workflow.generate.many.valueobject.class: {{ projectName }}Context\Domain\Workflow\{{ entityName|capitalize }}\Observer\WFGenerateManyVOListener
+    project.{{ projectName|lower }}.{{ entityName|lower }}.workflow.update.phone.valueobject.class: {{ projectName }}Context\Domain\Workflow\{{ entityName|capitalize }}\Observer\WFUpdatePhoneVOListener
+    project.{{ projectName|lower }}.{{ entityName|lower }}.workflow.currency.listener.class: {{ projectName }}Context\Domain\Workflow\{{ entityName|capitalize }}\Observer\WFGetCurrency
+    project.{{ projectName|lower }}.{{ entityName|lower }}.workflow.save.entity.class: {{ projectName }}Context\Domain\Workflow\{{ entityName|capitalize }}\Observer\WFSaveEntity
+    project.{{ projectName|lower }}.{{ entityName|lower }}.workflow.save.many.entity.class: {{ projectName }}Context\Domain\Workflow\{{ entityName|capitalize }}\Observer\WFSaveManyEntity
+    project.{{ projectName|lower }}.{{ entityName|lower }}.workflow.publish.event.class: {{ projectName }}Context\Domain\Workflow\{{ entityName|capitalize }}\Observer\WFPublishEvent
+
+    ###################
+    # COMMAND HANDLER #
+    ###################
+
+    project.{{ projectName|lower }}.{{ entityName|lower }}.command.new.handler.class: {{ projectName }}Context\Application\{{ entityName|capitalize }}\Command\Handler\NewCommandHandler
+    project.{{ projectName|lower }}.{{ entityName|lower }}.command.new.many.handler.class: {{ projectName }}Context\Application\{{ entityName|capitalize }}\Command\Handler\NewManyCommandHandler
+    project.{{ projectName|lower }}.{{ entityName|lower }}.command.update.handler.class: {{ projectName }}Context\Application\{{ entityName|capitalize }}\Command\Handler\UpdateCommandHandler
+    project.{{ projectName|lower }}.{{ entityName|lower }}.command.delete.handler.class: {{ projectName }}Context\Application\{{ entityName|capitalize }}\Command\Handler\DeleteCommandHandler
+    project.{{ projectName|lower }}.{{ entityName|lower }}.command.delete_many.handler.class: {{ projectName }}Context\Application\{{ entityName|capitalize }}\Command\Handler\DeleteManyCommandHandler
+
+    ############################
+    # COMMAND HANDLER DECORATOR#
+    ############################
+
+    project.{{ projectName|lower }}.{{ entityName|lower }}.command.new.handler.decorator.class: {{ projectName }}Context\Application\{{ entityName|capitalize }}\Command\Handler\Decorator\NewCommandHandlerDecorator
+    project.{{ projectName|lower }}.{{ entityName|lower }}.command.new.many.handler.decorator.class: {{ projectName }}Context\Application\{{ entityName|capitalize }}\Command\Handler\Decorator\NewManyCommandHandlerDecorator
+    project.{{ projectName|lower }}.{{ entityName|lower }}.command.update.handler.decorator.class: {{ projectName }}Context\Application\{{ entityName|capitalize }}\Command\Handler\Decorator\UpdateCommandHandlerDecorator
+
+    ######################
+    # VALIDATION HANDLER #
+    ######################
+
+    project.{{ projectName|lower }}.{{ entityName|lower }}.validation.new.handler.class: {{ projectName }}Context\Application\{{ entityName|capitalize }}\Command\Validation\ValidationHandler\NewCommandValidationHandler
+    project.{{ projectName|lower }}.{{ entityName|lower }}.validation.new.many.handler.class: {{ projectName }}Context\Application\{{ entityName|capitalize }}\Command\Validation\ValidationHandler\NewManyCommandValidationHandler
+    project.{{ projectName|lower }}.{{ entityName|lower }}.validation.update.handler.class: {{ projectName }}Context\Application\{{ entityName|capitalize }}\Command\Validation\ValidationHandler\UpdateCommandValidationHandler
+
+    #################
+    # SPECS HANDLER #
+    #################
+
+    project.{{ projectName|lower }}.{{ entityName|lower }}.spec.new.handler.class: {{ projectName }}Context\Application\{{ entityName|capitalize }}\Command\Validation\SpecHandler\NewCommandSpecHandler
+    project.{{ projectName|lower }}.{{ entityName|lower }}.spec.update.handler.class: {{ projectName }}Context\Application\{{ entityName|capitalize }}\Command\Validation\SpecHandler\UpdateCommandSpecHandler
+
+services:
+    ###################
+    #     MANAGER     #
+    ###################
+
+    #
+    # manager Configuration
+    # project.{{ projectName|lower }}.{{ entityName|lower }}.repository.factory service is created by CreateRepositoryFactoryPass
+    #
+    project.{{ projectName|lower }}.{{ entityName|lower }}.command.manager:
+        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.manager.command.class%
+        arguments:
+            - "@project.{{ projectName|lower }}.{{ entityName|lower }}.repository.factory"
+        calls:
+            - [setLogger, ["@project.dddcontext.logger.domain"]]
+            - [addProcess, ["prepersist_create", "@project.{{ projectName|lower }}.{{ entityName|lower }}.new.prepersist.process"]]
+            - [addProcess, ["postpersist_create", "@project.{{ projectName|lower }}.{{ entityName|lower }}.new.postpersist.process"]]
+            - [addProcess, ["prepersist_update", "@project.{{ projectName|lower }}.{{ entityName|lower }}.new.prepersist.process"]]
+            - [addProcess, ["postpersist_update", "@project.{{ projectName|lower }}.{{ entityName|lower }}.new.postpersist.process"]]
+
+    ####################
+    # WORKFLOW HANDLER #
+    ####################
+
+    #
+    # new_{{ entityName|lower }} workflow handler
+    #
+    project.{{ projectName|lower }}.{{ entityName|lower }}.new.workflow.handler:
+        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.new.workflow.handler.class%
+        calls:
+          - [addObserver, ["@project.{{ projectName|lower }}.{{ entityName|lower }}.workflow.currency.listener"]]
+          - [addObserver, ["@project.{{ projectName|lower }}.{{ entityName|lower }}.workflow.generate.valueobject"]]
+          - [addObserver, ["@project.{{ projectName|lower }}.{{ entityName|lower }}.workflow.update.phone.valueobject"]]
+          - [addObserver, ["@project.{{ projectName|lower }}.{{ entityName|lower }}.workflow.save.entity"]]
+#          - [addObserver, ["@project.{{ projectName|lower }}.{{ entityName|lower }}.workflow.publish.event"]]
+
+    #
+    # new_many_{{ entityName|lower }} workflow handler
+    #
+    project.{{ projectName|lower }}.{{ entityName|lower }}.new.many.workflow.handler:
+        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.new.many.workflow.handler.class%
+        calls:
+          - [addObserver, ["@project.{{ projectName|lower }}.{{ entityName|lower }}.workflow.currency.listener"]]
+          - [addObserver, ["@project.{{ projectName|lower }}.{{ entityName|lower }}.workflow.generate.many.valueobject"]]
+          - [addObserver, ["@project.{{ projectName|lower }}.{{ entityName|lower }}.workflow.save.many.entity"]]
+#          - [addObserver, ["@project.{{ projectName|lower }}.{{ entityName|lower }}.workflow.publish.event"]]
+
+    #
+    # update_{{ entityName|lower }} workflow handler
+    #
+    project.{{ projectName|lower }}.{{ entityName|lower }}.update.workflow.handler:
+        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.update.workflow.handler.class%
+        calls:
+          - [addObserver, ["@project.{{ projectName|lower }}.{{ entityName|lower }}.workflow.currency.listener"]]
+          - [addObserver, ["@project.{{ projectName|lower }}.{{ entityName|lower }}.workflow.generate.valueobject"]]
+          - [addObserver, ["@project.{{ projectName|lower }}.{{ entityName|lower }}.workflow.update.phone.valueobject"]]
+          - [addObserver, ["@project.{{ projectName|lower }}.{{ entityName|lower }}.workflow.save.entity"]]
+#          - [addObserver, ["@project.{{ projectName|lower }}.{{ entityName|lower }}.workflow.publish.event"]]
+
+
+    ##################
+    # WORKFLOW EVENT #
+    ##################
+
+    #
+    # new {{ entityName|lower }} Workflow generate VO listener
+    #
+    project.{{ projectName|lower }}.{{ entityName|lower }}.workflow.generate.valueobject:
+        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.workflow.generate.valueobject.class%
+
+    #
+    # new {{ entityName|lower }} Workflow generate Many VO listener
+    #
+    project.{{ projectName|lower }}.{{ entityName|lower }}.workflow.generate.many.valueobject:
+        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.workflow.generate.many.valueobject.class%
+
+    #
+    # new {{ entityName|lower }} Workflow update phone VO listener
+    #
+    project.{{ projectName|lower }}.{{ entityName|lower }}.workflow.update.phone.valueobject:
+        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.workflow.update.phone.valueobject.class%
+
+    #
+    # {{ entityName|lower }} Workflow get currency listener
+    #
+    project.{{ projectName|lower }}.{{ entityName|lower }}.workflow.currency.listener:
+        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.workflow.currency.listener.class%
+        arguments: ["@sfynx.currency.manager", "@sfynx.circuitbreaker"]
+
+    #
+    # {{ entityName|lower }} Workflow save entity with doctrine
+    #
+    project.{{ projectName|lower }}.{{ entityName|lower }}.workflow.save.entity:
+        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.workflow.save.entity.class%
+        arguments:
+            - "@project.{{ projectName|lower }}.{{ entityName|lower }}.command.manager"
+        calls:
+            - [setLogger, ["@project.dddcontext.logger.domain"]]
+
+    #
+    # {{ entityName|lower }} Workflow save Many entity with doctrine
+    #
+    project.{{ projectName|lower }}.{{ entityName|lower }}.workflow.save.many.entity:
+        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.workflow.save.many.entity.class%
+        arguments:
+            - "@project.{{ projectName|lower }}.{{ entityName|lower }}.command.manager"
+        calls:
+            - [setLogger, ["@project.dddcontext.logger.domain"]]
+
+    #
+    # {{ entityName|lower }} Workflow publish event (@TODO)
+    #
+#    project.{{ projectName|lower }}.{{ entityName|lower }}.workflow.publish.event:
+#        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.workflow.publish.event.class%
+#        arguments:
+#            - "@project.{{ projectName|lower }}.{{ entityName|lower }}.process.manager"
+#        calls:
+#            - [setLogger, ["@project.dddcontext.logger.domain"]]
+
+    ###################
+    # COMMAND HANDLER #
+    ###################
+
+    #
+    # new_{{ entityName|lower }} command handler
+    #
+    project.{{ projectName|lower }}.{{ entityName|lower }}.command.new.handler:
+        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.command.new.handler.class%
+        arguments:
+            - "@project.{{ projectName|lower }}.{{ entityName|lower }}.new.workflow.handler"
+
+    #
+    # new_{{ entityName|lower }} many command handler
+    #
+    project.{{ projectName|lower }}.{{ entityName|lower }}.command.new.many.handler:
+        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.command.new.many.handler.class%
+        arguments:
+            - "@project.{{ projectName|lower }}.{{ entityName|lower }}.new.many.workflow.handler"
+
+    #
+    # update_{{ entityName|lower }} command handler
+    #
+    project.{{ projectName|lower }}.{{ entityName|lower }}.command.update.handler:
+        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.command.update.handler.class%
+        arguments:
+          - "@project.{{ projectName|lower }}.{{ entityName|lower }}.update.workflow.handler"
+
+    #
+    # delete_{{ entityName|lower }} command handler
+    #
+    project.{{ projectName|lower }}.{{ entityName|lower }}.command.delete.handler:
+        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.command.delete.handler.class%
+        arguments: ["@project.{{ projectName|lower }}.{{ entityName|lower }}.command.manager"]
+
+    #
+    # deleteMany_{{ entityName|lower }} command handler
+    #
+    project.{{ projectName|lower }}.{{ entityName|lower }}.command.delete_many.handler:
+        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.command.delete_many.handler.class%
+        arguments: ["@project.{{ projectName|lower }}.{{ entityName|lower }}.command.manager"]
+
+
+    ############################
+    # COMMAND HANDLER DECORATOR#
+    ############################
+
+    #
+    # new_{{ entityName|lower }} command handler decorator
+    #
+    project.{{ projectName|lower }}.{{ entityName|lower }}.command.new.handler.decorator:
+        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.command.new.handler.decorator.class%
+        arguments:
+            - "@project.{{ projectName|lower }}.{{ entityName|lower }}.command.new.handler"
+            - "@project.{{ projectName|lower }}.{{ entityName|lower }}.validation.new.handler"
+            - "@project.{{ projectName|lower }}.{{ entityName|lower }}.spec.new.handler"
+
+    #
+    # new_{{ entityName|lower }} command handler decorator
+    #
+    project.{{ projectName|lower }}.{{ entityName|lower }}.command.new.many.handler.decorator:
+        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.command.new.many.handler.decorator.class%
+        arguments:
+            - "@project.{{ projectName|lower }}.{{ entityName|lower }}.command.new.many.handler"
+            - "@project.{{ projectName|lower }}.{{ entityName|lower }}.validation.new.many.handler"
+#            - "@project.{{ projectName|lower }}.{{ entityName|lower }}.spec.new.many.handler"
+
+
+    project.{{ projectName|lower }}.{{ entityName|lower }}.command.update.handler.decorator:
+        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.command.update.handler.decorator.class%
+        arguments:
+            - "@project.{{ projectName|lower }}.{{ entityName|lower }}.command.update.handler"
+            - "@project.{{ projectName|lower }}.{{ entityName|lower }}.validation.update.handler"
+            - "@project.{{ projectName|lower }}.{{ entityName|lower }}.spec.update.handler"
+
+
+    ######################
+    # VALIDATION HANDLER #
+    ######################
+
+    #
+    # new_{{ entityName|lower }} command Validation handler
+    #
+    project.{{ projectName|lower }}.{{ entityName|lower }}.validation.new.handler:
+        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.validation.new.handler.class%
+        arguments:
+            - "@project.validator.strategy"
+
+    #
+    # new_{{ entityName|lower }} command  Many Validation handler
+    #
+    project.{{ projectName|lower }}.{{ entityName|lower }}.validation.new.many.handler:
+        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.validation.new.many.handler.class%
+        arguments:
+            - "@project.validator.strategy"
+
+    #
+    # update_{{ entityName|lower }} command Validation handler
+    #
+    project.{{ projectName|lower }}.{{ entityName|lower }}.validation.update.handler:
+        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.validation.update.handler.class%
+        arguments:
+            - "@project.validator.strategy"
+
+    #################
+    # SPECS HANDLER #
+    #################
+
+    #
+    # new_{{ entityName|lower }} command spec handler
+    #
+    project.{{ projectName|lower }}.{{ entityName|lower }}.spec.new.handler:
+        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.spec.new.handler.class%
+        calls:
+            - [setObject, ["@security.authorization_checker"]]
+            - [setLogger, ["@project.dddcontext.logger.application"]]
+
+    #
+    # update_{{ entityName|lower }} command spec handler
+    #
+    project.{{ projectName|lower }}.{{ entityName|lower }}.spec.update.handler:
+        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.spec.update.handler.class%
+        calls:
+            - [setObject, ["@security.authorization_checker"]]
+            - [setLogger, ["@project.dddcontext.logger.application"]]
+
+    #################
+    #    PROCESS    #
+    #################
+
+    #
+    # Example of listener on {{ entityName|lower }}.pre.new event
+    #
+    project.{{ projectName|lower }}.{{ entityName|lower }}.new.prepersist.process:
+        class: {{ projectName }}Context\Domain\Service\{{ entityName|capitalize }}\Processor\PrePersistProcess
+        calls:
+            - [setLogger, ["@project.dddcontext.logger.domain"]]
+    #
+    # Example of listener on {{ entityName|lower }}.post.new event
+    #
+    project.{{ projectName|lower }}.{{ entityName|lower }}.new.postpersist.process:
+        class: {{ projectName }}Context\Domain\Service\{{ entityName|capitalize }}\Processor\PostPersistProcess
+        calls:
+            - [setLogger, ["@project.dddcontext.logger.domain"]]

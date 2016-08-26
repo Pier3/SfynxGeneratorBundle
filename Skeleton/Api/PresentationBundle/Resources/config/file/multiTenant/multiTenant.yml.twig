@@ -1,0 +1,40 @@
+# Be aware that YAML has indentation based scoping.
+# Code completion support is available so start typing for available options.
+multiTenant: '1.0'
+
+# This is your document metadata
+info:
+  version: "1.0.0"
+  title: MultiTenant configuration file. Permits to work with API
+
+x-tenant-id:
+  1234567:
+    name: Customer test 1
+    description: ~
+    remarks: ~
+    x-fields:
+      # database name
+      dbname:
+        name: mscore_scala1
+        encode: ~
+      # table name
+      tbname:
+        x-class:
+          {{ projectName|title }}Context\Domain\Entity\{{ entityName|title }}:
+            name: actor_1234567
+            encode: ~
+  1234566:
+    name: Customer test 2
+    description: ~
+    remarks: ~
+    x-fields:
+      # database name
+      dbname:
+        name: mscore_scala1
+        encode: ~
+      # table name
+      tbname:
+        x-class:
+          {{ projectName|title }}Context\Domain\Entity\{{ entityName|title }}:
+            name: actor_1234566
+            encode: ~

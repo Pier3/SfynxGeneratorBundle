@@ -1,0 +1,10 @@
+#
+# queries
+#
+project_get_multiTenant:
+  path: /v{_version}/multiTenant.{_format}
+  defaults: { _controller: project.{{ projectName|lower }}.controller.query.multiTenant:getMultiTenantFile }
+  methods: GET
+  requirements:
+    _format: "yml|json"
+    _version: "\d+"

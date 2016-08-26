@@ -152,7 +152,9 @@ class GenerateDddApiCommand extends Command
         $applicationGenerator = new Application($this->generator, $this->entities, $this->entitiesToCreate, $this->valueObjects, $this->valueObjectsToCreate, $this->paths, $this->pathsToCreate, $this->rootDir, $projectDir, $destinationPath, $output);
         $domainGenerator = new Domain($this->generator, $this->entities, $this->entitiesToCreate, $this->valueObjects, $this->valueObjectsToCreate, $this->paths, $this->pathsToCreate, $this->rootDir, $projectDir, $destinationPath, $output);
         $presentationGenerator = new Presentation($this->generator, $this->entities, $this->entitiesToCreate, $this->valueObjects, $this->valueObjectsToCreate, $this->paths, $this->pathsToCreate, $this->rootDir, $projectDir, $destinationPath, $output);
+
         $presentationBundleGenerator = new PresentationBundle($this->generator, $this->entities, $this->entitiesToCreate, $this->valueObjects, $this->valueObjectsToCreate, $this->paths, $this->pathsToCreate, $this->rootDir, $projectDir, $destinationPath, $output);
+
         $infrastructureGenerator = new Infrastructure($this->generator, $this->entities, $this->entitiesToCreate, $this->valueObjects, $this->valueObjectsToCreate, $this->paths, $this->pathsToCreate, $this->rootDir, $projectDir, $destinationPath, $output);
         $infrastructureBundleGenerator = new InfrastructureBundle($this->generator, $this->entities, $this->entitiesToCreate, $this->valueObjects, $this->valueObjectsToCreate, $this->paths, $this->pathsToCreate, $this->rootDir, $projectDir, $destinationPath, $output);
 

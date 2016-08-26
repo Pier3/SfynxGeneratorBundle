@@ -22,7 +22,7 @@
         "doctrine/couchdb": "@dev",
         "doctrine/couchdb-odm": "@dev",
         "stof/doctrine-extensions-bundle":"@dev",
-        "sfynx-project/tool-generator-bundle": "dev-2.8-dev"
+        "sfynx-project/tool-generator-bundle": "dev-last-version-independant-installer"
     },
     "require-dev": {
         "sensio/generator-bundle": "~3.0",

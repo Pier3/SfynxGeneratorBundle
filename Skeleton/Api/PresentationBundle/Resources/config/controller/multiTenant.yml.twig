@@ -1,0 +1,8 @@
+services:
+    project.{{ projectName|lower }}.controller.query.multiTenant:
+        scope: prototype
+        class: {{ projectName|title }}Context\Presentation\Coordination\MultiTenant\Query\Controller
+        arguments:
+            - @project.request.strategy
+            - @project.resolver.strategy
+            - @project.dddcontext.response.handler

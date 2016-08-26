@@ -88,8 +88,8 @@ abstract class AbstractHandler
         if (!is_dir(dirname($target))) {
             mkdir(dirname($target), 0777, true);
         }
-        
-        echo "#### $target\n";
+
+        echo "#### $target\n";;
         return file_put_contents($target, $this->render($template, $parameters));
     }
 }

@@ -1,8 +1,0 @@
-parameters:
-    project.listener.kernel.convert.profiler.class: DemoApiContext\Infrastructure\Request\ConvertToHtmlResponse
-
-services:
-    project.listener.kernel.convert.profiler:
-      class: %project.listener.kernel.convert.profiler.class%
-      tags:
-        - { name: kernel.event_listener, event: kernel.response, priority: 1 }

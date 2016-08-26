@@ -29,10 +29,30 @@ class {{ projectName }}PresentationBundleExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config/application'));
 {% for entity_name,Vo in entities %}
-        $loader->load('{{ entity_name|lower }}.yml');
+        $loader->load('{{ entity_name|lower }}_command.yml');
+        $loader->load('{{ entity_name|lower }}_query.yml');
 {% endfor %}
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('controllers.yml');
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config/controller'));
+{% for entity_name,Vo in entities %}
+        $loader->load('{{ entity_name|lower }}_command.yml');
+        $loader->load('{{ entity_name|lower }}_query.yml');
+{% endfor %}
+        $loader->load('multiTenant.yml');
+        $loader->load('swagger.yml');
+
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config/file/multiTenant'));
+{% for entity_name,Vo in entities %}
+        $loader->load('{{ entity_name|lower }}_multiTenant.yml');
+{% endfor %}
+    }
+
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config/route'));
+{% for entity_name,Vo in entities %}
+        $loader->load('{{ entity_name|lower }}_command.yml');
+        $loader->load('{{ entity_name|lower }}_query.yml');
+{% endfor %}
+        $loader->load('multiTenant.yml');
+        $loader->load('swagger.yml');
     }
 }

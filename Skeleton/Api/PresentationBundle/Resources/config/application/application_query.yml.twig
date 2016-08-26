@@ -1,0 +1,86 @@
+parameters:
+    ###################
+    # DATABASE SYSTEM #
+    ###################
+
+    project.{{ projectName|lower }}.{{ entityName|lower }}.orm.repository.factory.class: {{ projectName|capitalize }}Context\Domain\Service\{{ entityName|capitalize }}\Factory\Orm\RepositoryFactory
+    project.{{ projectName|lower }}.{{ entityName|lower }}.odm.repository.factory.class: {{ projectName|capitalize }}Context\Domain\Service\{{ entityName|capitalize }}\Factory\Odm\RepositoryFactory
+    project.{{ projectName|lower }}.{{ entityName|lower }}.couchdb.repository.factory.class: {{ projectName|capitalize }}Context\Domain\Service\{{ entityName|capitalize }}\Factory\CouchDB\RepositoryFactory
+
+    ###################
+    #      MANAGER    #
+    ###################
+
+    project.{{ projectName|lower }}.{{ entityName|lower }}.manager.query.class: {{ projectName|capitalize }}Context\Domain\Service\{{ entityName|capitalize }}\Manager\Query\Manager
+
+    #################
+    # QUERY HANDLER #
+    #################
+
+    project.{{ projectName|lower }}.{{ entityName|lower }}.query.getbyids.handler.class: {{ projectName|capitalize }}Context\Application\{{ entityName|capitalize }}\Query\Handler\GetByIdsQueryHandler
+    project.{{ projectName|lower }}.{{ entityName|lower }}.query.one.handler.class: {{ projectName|capitalize }}Context\Application\{{ entityName|capitalize }}\Query\Handler\OneQueryHandler
+    project.{{ projectName|lower }}.{{ entityName|lower }}.query.all.handler.class: {{ projectName|capitalize }}Context\Application\{{ entityName|capitalize }}\Query\Handler\AllQueryHandler
+
+services:
+    ###################
+    # MANAGER HANDLER #
+    ###################
+
+    #
+    # manager Configuration
+    # project.{{ projectName|lower }}.{{ entityName|lower }}.repository.factory service is created by CreateRepositoryFactoryPass
+    #
+    project.{{ projectName|lower }}.{{ entityName|lower }}.query.manager:
+        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.manager.query.class%
+        arguments:
+            - "@project.{{ projectName|lower }}.{{ entityName|lower }}.repository.factory"
+        calls:
+            - [setLogger, ["@project.dddcontext.logger.domain"]]
+            - [addProcess, ["prepersist_create", "@project.{{ projectName|lower }}.{{ entityName|lower }}.new.prepersist.process"]]
+            - [addProcess, ["postpersist_create", "@project.{{ projectName|lower }}.{{ entityName|lower }}.new.postpersist.process"]]
+            - [addProcess, ["prepersist_update", "@project.{{ projectName|lower }}.{{ entityName|lower }}.new.prepersist.process"]]
+            - [addProcess, ["postpersist_update", "@project.{{ projectName|lower }}.{{ entityName|lower }}.new.postpersist.process"]]
+
+    #################
+    # QUERY HANDLER #
+    #################
+
+    #
+    # getbyids_{{ entityName|lower }} query handler
+    #
+    project.{{ projectName|lower }}.{{ entityName|lower }}.query.getbyids.handler:
+        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.query.getbyids.handler.class%
+        arguments: ["@project.{{ projectName|lower }}.{{ entityName|lower }}.query.manager"]
+
+    #
+    # one_{{ entityName|lower }} query handler
+    #
+    project.{{ projectName|lower }}.{{ entityName|lower }}.query.one.handler:
+        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.query.one.handler.class%
+        arguments: ["@project.{{ projectName|lower }}.{{ entityName|lower }}.query.manager"]
+
+    #
+    # all_{{ entityName|lower }} query handler
+    #
+    project.{{ projectName|lower }}.{{ entityName|lower }}.query.all.handler:
+        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.query.all.handler.class%
+        arguments: ["@project.{{ projectName|lower }}.{{ entityName|lower }}.query.manager"]
+
+    #################
+    # PROCESS #
+    #################
+
+    #
+    # Example of listener on {{ entityName|lower }}.pre.new event
+    #
+    project.{{ projectName|lower }}.{{ entityName|lower }}.new.prepersist.process:
+        class: {{ projectName|capitalize }}Context\Domain\Service\{{ entityName|capitalize }}\Processor\PrePersistProcess
+        calls:
+            - [setLogger, ["@project.dddcontext.logger.domain"]]
+    #
+    # Example of listener on {{ entityName|lower }}.post.new event
+    #
+    project.{{ projectName|lower }}.{{ entityName|lower }}.new.postpersist.process:
+        class: {{ projectName|capitalize }}Context\Domain\Service\{{ entityName|capitalize }}\Processor\PostPersistProcess
+        calls:
+            - [setLogger, ["@project.dddcontext.logger.domain"]]

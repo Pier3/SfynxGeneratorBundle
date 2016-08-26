@@ -1,0 +1,10 @@
+#
+# queries
+#
+project_get_swagger:
+  path: /v{_version}/swagger.{_format}
+  defaults: { _controller: project.{{ projectName|lower }}.controller.query.swagger:getSwaggerFile }
+  methods: GET
+  requirements:
+    _format: "yml|json"
+    _version: "\d+"

@@ -75,7 +75,7 @@ class Application
         $this->output->writeln("# GENERATE APPLICATION STRUCTURE            #");
         $this->output->writeln("#############################################");
 
-        $this->generateCommands();
+        $this->generateCommands();exit;
         $this->generateQueries();
         $this->generateTests();
     }
@@ -83,16 +83,32 @@ class Application
     public function generateCommands()
     {
         foreach ($this->pathsToCreate as $route => $verbData) {
+            echo"##### " . $route;
+
             foreach ($verbData as $verb => $data) {
+
+                var_dump("Pourquoi toi, petit tu veux travailler sur moi ???? c'est a dire Application.php");exit;
+
+                /*
+                 * WORK IN PROGRESS
+                 * WORK ON FOREACH IMPROVEMENT
+                 * Just work on COMMAND here
+                 */
                 if (in_array($data["action"], ["update", "new", "delete", "patch"])) {
                     $constructorParams = $managerArgs = "";
+
                     foreach ($this->entities[$data["entity"]] as $field) {
+
                         if ($data["action"] == "new") {
+
                             $constructorParams .= "$" . $field['name'] . ",";
+
                             if ($field["type"] != "id") {
                                 $managerArgs .= "$" . $field['name'] . ",";
                             }
+
                         } else {
+
                             $constructorParams .= "$" . $field['name'] . ",";
                             $managerArgs .= "$" . $field['name'] . ",";
                         }
@@ -153,6 +169,8 @@ class Application
 
                     $this->generator->execute();
                     $this->generator->clear();
+                } else {
+                    var_dump($data);
                 }
             }
         }

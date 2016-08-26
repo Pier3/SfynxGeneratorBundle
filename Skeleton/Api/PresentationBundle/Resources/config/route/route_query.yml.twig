@@ -1,0 +1,28 @@
+#
+# queries
+#
+project_{{ entityName|lower }}_get_byids:
+  path: /v{_version}/{{ entityName|lower }}.{_format}/{entityIds}
+  defaults: { _controller: project.{{ projectName|lower }}.controller.query.{{ entityName|lower }}:getByIdsAction }
+  methods: GET
+  requirements:
+    _format: "xml|json"
+    _version: "\d+"
+    entityIds: "[-\w]+(,[-\w]+)*"
+
+project_{{ entityName|lower }}_get_limit:
+  path: /v{_version}/{{ entityName|lower }}.{_format}/{start}/{count}
+  defaults: { _controller: project.{{ projectName|lower }}.controller.query.{{ entityName|lower }}:getLimitAction, start : "0", count : "100" }
+  methods: GET
+  requirements:
+    _format: "xml|json"
+    _version: "\d+"
+
+project_{{ entityName|lower }}_get:
+  path: /v{_version}/{{ entityName|lower }}.{_format}/{entityId}
+  defaults: { _controller: project.{{ projectName|lower }}.controller.query.{{ entityName|lower }}:getAction }
+  methods: GET
+  requirements:
+    _format: "xml|json"
+    _version: "\d+"
+    entityId: "[-\w]+"

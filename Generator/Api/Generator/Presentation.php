@@ -86,31 +86,31 @@ class Presentation
                 foreach ($this->entities[$data["entity"]] as $field) {
                     $constructorParams .= "$" . $field['name'] . ",";
                 }
+
+                $parameters = [
+                    'rootDir' => $this->rootDir . "/src",
+                    'projectDir' => $this->projectDir,
+                    'projectName' => str_replace('src/', '', $this->projectDir),
+                    'actionName' => ucfirst(strtolower($data['action'])),
+                    'entityName' => ucfirst(strtolower($data['entity'])),
+                    'entityFields' => $this->entities[$data["entity"]],
+                    'destinationPath' => $this->destinationPath,
+                ];
+                $parameters['constructorArgs'] = trim($constructorParams, ',');
+
+                $this->generator->addHandler(new UpdateAdapterHandler($parameters));
+                $this->generator->addHandler(new PatchAdapterHandler($parameters));
+                $this->generator->addHandler(new NewAdapterHandler($parameters));
+                $this->generator->addHandler(new DeleteAdapterHandler($parameters));
+                $this->generator->addHandler(new DeleteManyAdapterHandler($parameters));
+                $this->generator->addHandler(new GetAllAdapterHandler($parameters));
+                $this->generator->addHandler(new GetByIdsQueryAdapterHandler($parameters));
+                $this->generator->addHandler(new SearchByQueryAdapterHandler($parameters));
+                $this->generator->addHandler(new GetAdapterHandler($parameters));
+
+                $this->generator->execute();
+                $this->generator->clear();
             }
-
-            $parameters = [
-                'rootDir' => $this->rootDir . "/src",
-                'projectDir' => $this->projectDir,
-                'projectName' => str_replace('src/', '', $this->projectDir),
-                'actionName' => ucfirst(strtolower($data['action'])),
-                'entityName' => ucfirst(strtolower($data['entity'])),
-                'entityFields' => $this->entities[$data["entity"]],
-                'destinationPath' => $this->destinationPath,
-            ];
-            $parameters['constructorArgs'] = trim($constructorParams, ',');
-
-            $this->generator->addHandler(new UpdateAdapterHandler($parameters));
-            $this->generator->addHandler(new PatchAdapterHandler($parameters));
-            $this->generator->addHandler(new NewAdapterHandler($parameters));
-            $this->generator->addHandler(new DeleteAdapterHandler($parameters));
-            $this->generator->addHandler(new DeleteManyAdapterHandler($parameters));
-            $this->generator->addHandler(new GetAllAdapterHandler($parameters));
-            $this->generator->addHandler(new GetByIdsQueryAdapterHandler($parameters));
-            $this->generator->addHandler(new SearchByQueryAdapterHandler($parameters));
-            $this->generator->addHandler(new GetAdapterHandler($parameters));
-
-            $this->generator->execute();
-            $this->generator->clear();
         }
     }
 

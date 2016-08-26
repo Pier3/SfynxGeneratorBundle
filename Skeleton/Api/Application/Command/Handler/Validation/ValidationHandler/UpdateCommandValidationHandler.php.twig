@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  *
  * @category   {{ projectName }}
  * @package    Application
- * @subpackage Command
+ * @subpackage Command\Handler\Validation\ValidationHandler
  */
 class UpdateCommandValidationHandler extends AbstractCommandValidationHandler
 {
@@ -23,6 +23,7 @@ class UpdateCommandValidationHandler extends AbstractCommandValidationHandler
     {
 {% if entityFields %}
         $this{% for field in entityFields %}->add('{{ field.name }}', new NotBlank()){% if loop.index < entityFields|length %}
+
             {% else %};{% endif %}{% endfor %}
 {% endif %}
 

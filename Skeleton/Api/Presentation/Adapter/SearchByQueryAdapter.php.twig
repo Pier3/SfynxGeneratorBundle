@@ -2,20 +2,19 @@
 
 namespace {{ projectName }}\Presentation\Adapter\{{ entityName }}\Query;
 
-use  Sfynx\DddBundle\Layer\Presentation\Adapter\Generalisation\AbstractSearchByQueryAdapter;
-use  Sfynx\DddBundle\Layer\Presentation\Adapter\Generalisation\QueryAdapterInterface;
+use Sfynx\DddBundle\Layer\Presentation\Adapter\Generalisation\AbstractSearchByQueryAdapter;
+use Sfynx\DddBundle\Layer\Presentation\Adapter\Generalisation\QueryAdapterInterface;
+use {{ projectName }}\Application\{{ entityName }}\Query\SearchByQuery;
 
 /**
- * Class OneQueryAdapter
+ * Class SearchByQueryAdapter.
  *
  * @category   {{ projectName }}
  * @package    Presentation
- * @subpackage Adapter
+ * @subpackage Adapter\Query
  */
 class SearchByQueryAdapter extends AbstractSearchByQueryAdapter implements QueryAdapterInterface
 {
-    /**
-     * @var string $SearchByQueryNamespace full namespace of SearchBy
-     */
-    protected $queryNamespace = '\{{ projectName }}\Application\{{ entityName }}\Query\SearchByQuery';
+    /** @var string $queryNamespace full namespace of SearchByQuery */
+    protected $queryNamespace = SearchByQuery::class;
 }

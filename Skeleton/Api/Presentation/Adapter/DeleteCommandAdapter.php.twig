@@ -4,18 +4,17 @@ namespace {{ projectName }}\Presentation\Adapter\{{ entityName }}\Command;
 
 use Sfynx\DddBundle\Layer\Presentation\Adapter\Generalisation\AbstractDeleteCommandAdapter;
 use Sfynx\DddBundle\Layer\Presentation\Adapter\Generalisation\CommandAdapterInterface;
+use {{ projectName }}\Application\{{ entityName }}\Command\DeleteCommand;
 
 /**
  * Class DeleteCommandAdapter.
  *
  * @category   {{ projectName }}
  * @package    Presentation
- * @subpackage Adapter
+ * @subpackage Adapter\Command
  */
 class DeleteCommandAdapter extends AbstractDeleteCommandAdapter implements CommandAdapterInterface
 {
-    /**
-     * @var string $commandNamespace full namespace of DeleteCommand
-     */
-    protected $commandNamespace = \{{ projectName }}\Application\{{ entityName }}\Command\DeleteCommand::class;
+    /** @var string $commandNamespace full namespace of DeleteCommand */
+    protected $commandNamespace = DeleteCommand::class;
 }

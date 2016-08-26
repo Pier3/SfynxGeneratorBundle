@@ -22,11 +22,12 @@ use {{ projectName }}\Domain\ValueObject\{{ data.name }};
 class WFGenerateVOListener implements ObserverInterface
 {
 {% for field in fields %}
+    /** @var {% if field.type == "id" %}int{% elseif field.type == "IdVO" %}string{% else %}{{ field.type }}{% endif %} ${{ field.name }} */
     private ${{ field.name|lower }};
-{% endfor %}
 
+{% endfor %}
     /**
-     * @param WFObjectEvent $event
+     * @param ObservableInterface $wfHandler
      */
     public function update(ObservableInterface $wfHandler)
     {
@@ -34,6 +35,7 @@ class WFGenerateVOListener implements ObserverInterface
 
 {% else %}
         $this{% for field in fields %}->set{{ field.name|capitalize }}($wfHandler){% if loop.index < fields|length %}
+
             {% else %};{% endif %}{% endfor %}
 {% endif %}
     }

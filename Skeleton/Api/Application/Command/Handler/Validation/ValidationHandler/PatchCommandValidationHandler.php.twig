@@ -2,16 +2,16 @@
 
 namespace {{ projectName }}\Application\{{ entityName }}\Command\Validation\ValidationHandler;
 
+use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandInterface;
 use Sfynx\DddBundle\Layer\Application\Generalisation\Validation\ValidationHandler\AbstractCommandValidationHandler;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandInterface;
 
 /**
  * Class PatchCommandValidationHandler.
  *
  * @category   {{ projectName }}
  * @package    Application
- * @subpackage Command
+ * @subpackage Command\Handler\Validation\ValidationHandler
  */
 class PatchCommandValidationHandler extends AbstractCommandValidationHandler
 {
@@ -19,6 +19,7 @@ class PatchCommandValidationHandler extends AbstractCommandValidationHandler
     /**
      * Proceed to the validation of all entity's property
      *
+     * @param CommandInterface $command
      * @throws \Exception
      * @return bool
      */

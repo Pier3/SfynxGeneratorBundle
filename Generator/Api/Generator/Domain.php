@@ -1,6 +1,7 @@
 <?php
 namespace Sfynx\DddGeneratorBundle\Generator\Api\Generator;
 
+use Sfynx\DddGeneratorBundle\Generator\Api\DddApiGenerator;
 use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Domain\Repository\EntityRepositoryInterfaceHandler;
 use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Domain\Service\Manager\ManagerHandler;
 use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Domain\Service\Processor\PostPersistProcessHandler;
@@ -14,31 +15,68 @@ use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Domain\Workflow\Listener\WFPu
 use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Domain\Workflow\Listener\WFRetrieveEntityHandler;
 use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Domain\Workflow\Listener\WFSaveEntityHandler;
 use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Domain\Entity\EntityHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Domain\Service\Odm\RepositoryFactoryHandler as ODMRepositoryFactoryHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Domain\Service\Orm\RepositoryFactoryHandler as ORMRepositoryFactoryHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Domain\Service\CouchDB\RepositoryFactoryHandler as COUCHDBRepositoryFactoryHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Domain\Service\Entity\Factory\Orm\CountryManagerTestHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Domain\Service\Entity\Factory\Orm\RepositoryFactoryHandler as ORMRepositoryFactoryTestHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\ValueObject\ValueObjectCompositeHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\ValueObject\ValueObjectHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\ValueObject\ValueObjectTypeCouchDBHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\ValueObject\ValueObjectTypeODMHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\ValueObject\ValueObjectTypeORMHandler;
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Domain\Service\Odm\RepositoryFactoryHandler as OdmRepositoryFactoryHandler;
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Domain\Service\Orm\RepositoryFactoryHandler as OrmRepositoryFactoryHandler;
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Domain\Service\CouchDB\RepositoryFactoryHandler as CouchDBRepositoryFactoryHandler;
+
+use Symfony\Component\Console\Output\OutputInterface;
 
 class Domain
 {
+    /** @var DddApiGenerator  */
     protected $generator;
+    /** @var array  */
     protected $entities = [];
+    /** @var array  */
     protected $entitiesToCreate = [];
+    /** @var array  */
     protected $valueObjects = [];
+    /** @var array  */
     protected $valueObjectsToCreate = [];
+    /** @var array  */
     protected $paths = [];
+    /** @var array  */
     protected $pathsToCreate = [];
+    /** @var string  */
+    protected $rootDir;
+    /** @var string  */
     protected $projectDir;
+    /** @var string */
     protected $destinationPath;
+    /** @var OutputInterface  */
+    protected $output;
+    /** @var array  */
+    protected $parameters;
+    /** @var array  */
+    protected $entitiesList;
 
-    public function __construct($generator, $entities, $entitiesToCreate, $valueObjects, $valueObjectsToCreate, $paths, $pathsToCreate, $rootDir, $projectDir, $destinationPath, $output)
-    {
+    /**
+     * Domain constructor.
+     * @param DddApiGenerator $generator
+     * @param $entities
+     * @param $entitiesToCreate
+     * @param $valueObjects
+     * @param $valueObjectsToCreate
+     * @param $paths
+     * @param $pathsToCreate
+     * @param $rootDir
+     * @param $projectDir
+     * @param $destinationPath
+     * @param OutputInterface $output
+     */
+    public function __construct(
+        DddApiGenerator $generator,
+        $entities,
+        $entitiesToCreate,
+        $valueObjects,
+        $valueObjectsToCreate,
+        $paths,
+        $pathsToCreate,
+        $rootDir,
+        $projectDir,
+        $destinationPath,
+        OutputInterface $output
+    ) {
         $this->generator = $generator;
         $this->destinationPath = $destinationPath;
         $this->output = $output;
@@ -48,21 +86,56 @@ class Domain
         $this->valueObjectsToCreate = $valueObjectsToCreate;
         $this->paths = $paths;
         $this->pathsToCreate = $pathsToCreate;
+        $this->entitiesList = $this->parseRoutes();
         $this->projectDir = $projectDir;
         $this->rootDir = $rootDir;
+
+        $this->parameters = [
+            'rootDir' => $this->rootDir . '/src',
+            'projectDir' => $this->projectDir,
+            'projectName' => str_replace('src/', '', $this->projectDir),
+            'valueObjects' => $this->valueObjects,
+            'destinationPath' => $this->destinationPath,
+        ];
     }
 
     public function generate()
     {
-        $this->output->writeln("#############################################");
-        $this->output->writeln("# GENERATE DOMAIN  STRUCTURE                #");
-        $this->output->writeln("#############################################");
+        $this->output->writeln('');
+        $this->output->writeln('##############################################');
+        $this->output->writeln('#          GENERATE DOMAIN STRUCTURE         #');
+        $this->output->writeln('##############################################');
+        $this->output->writeln('');
 
+        $this->output->writeln('### ENTITIES & REPOSITORIES INTERFACES GENERATION ###');
         $this->generateEntitiesAndRepositoriesInterfaces();
+
+        $this->output->writeln('### SERVICES GENERATION ###');
         $this->generateServices();
+
+        $this->output->writeln('### WORKFLOW GENERATION ###');
         $this->generateWorkflow();
-        $this->generateValueObject();
+
+        $this->output->writeln('### VALUE OBJECTS GENERATION ###');
+        $this->output->writeln(' - GOODLUCK, PREPARE YOUR BRAIN -');
+        //$this->generateValueObject();exit;
+
+        $this->output->writeln('### TESTS GENERATION ###');
+        $this->output->writeln(' - BE MY GUEST ... -');
         $this->generateTests();
+    }
+
+    public function parseRoutes()
+    {
+        $entities = [];
+
+        foreach ($this->pathsToCreate as $route => $verbData) {
+            foreach ($verbData as $verb => $data) {
+                $entities[] = $data;
+            }
+        }
+
+        return $entities;
     }
 
     /**
@@ -73,34 +146,25 @@ class Domain
      */
     public function generateEntitiesAndRepositoriesInterfaces()
     {
-        foreach ($this->pathsToCreate as $route => $verbData) {
-            foreach ($verbData as $verb => $data) {
+        foreach ($this->entitiesToCreate as $entityName => $fields) {
+            $this->output->writeln(' - Entity: ' . $entityName . ' -');
 
-                $constructorParams = $managerArgs = '';
-                foreach ($this->entities[$data['entity']] as $field) {
-                    $constructorParams .= '$' . $field['name'] . ', ';
-                    $managerArgs .= '$' . $field['name'] . ', ';
-                }
-
-                $parameters = [
-                    'rootDir' => $this->rootDir . '/src',
-                    'projectDir' => $this->projectDir,
-                    'projectName' => str_replace('src/', '', $this->projectDir),
-                    'actionName' => ucfirst(strtolower($data['action'])),
-                    'entityName' => ucfirst(strtolower($data['entity'])),
-                    'entityFields' => $this->entities[$data['entity']],
-                    'managerArgs' => trim($managerArgs, ', '),
-                    'fields' => $this->entities[$data['entity']],
-                    'valueObjects' => $this->valueObjects,
-                    'constructorArgs' => trim($constructorParams, ', '),
-                    'destinationPath' => $this->destinationPath,
-                ];
-
-                $this->generator->addHandler(new EntityHandler($parameters));
-                $this->generator->addHandler(new EntityRepositoryInterfaceHandler($parameters));
-                $this->generator->execute();
-                $this->generator->clear();
+            $templateStringParameters = '';
+            foreach ($fields as $fieldName => $field) {
+                $templateStringParameters .= '$' . $fieldName . ', ';
             }
+
+            $this->parameters['entityName'] = ucfirst(strtolower($entityName));
+            $this->parameters['entityFields'] = $fields;
+            $this->parameters['fields'] = $fields; //todo: unify these entityFields and fields
+            $this->parameters['constructorArgs'] = trim($templateStringParameters, ', ');
+            $this->parameters['managerArgs'] = trim($templateStringParameters, ', ');
+
+            $this->generator->addHandler(new EntityHandler($this->parameters));
+            $this->generator->addHandler(new EntityRepositoryInterfaceHandler($this->parameters));
+
+            $this->generator->execute();
+            $this->generator->clear();
         }
     }
 
@@ -116,42 +180,33 @@ class Domain
      */
     public function generateServices()
     {
-        foreach ($this->pathsToCreate as $route => $verbData) {
-            foreach ($verbData as $verb => $data) {
+        foreach ($this->entitiesToCreate as $entityName => $fields) {
+            $this->output->writeln(' - Entity: ' . $entityName . ' -');
 
-                $constructorParams = $managerArgs = "";
-                foreach ($this->entities[$data["entity"]] as $field) {
-                    $constructorParams .= "$" . $field['name'] . ",";
-                    $managerArgs .= "$" . $field['name'] . ",";
-                }
-
-                $parameters = [
-                    'rootDir' => $this->rootDir . "/src",
-                    'projectDir' => $this->projectDir,
-                    'projectName' => str_replace('src/', '', $this->projectDir),
-                    'actionName' => ucfirst(strtolower($data['action'])),
-                    'entityName' => ucfirst(strtolower($data['entity'])),
-                    'entityFields' => $this->entities[$data['entity']],
-                    'managerArgs' => trim($managerArgs, ', '),
-                    'fields' => $this->entities[$data['entity']],
-                    'valueObjects' => $this->valueObjects,
-                    'constructorArgs' => trim($constructorParams, ', '),
-                    'destinationPath' => $this->destinationPath,
-                ];
-
-                $this->generator->addHandler(new COUCHDBRepositoryFactoryHandler($parameters));
-                $this->generator->addHandler(new ODMRepositoryFactoryHandler($parameters));
-                $this->generator->addHandler(new ORMRepositoryFactoryHandler($parameters));
-
-                $this->generator->addHandler(new ManagerHandler($parameters));
-
-
-                $this->generator->addHandler(new PrePersistProcessHandler($parameters));
-                $this->generator->addHandler(new PostPersistProcessHandler($parameters));
-
-                $this->generator->execute();
-                $this->generator->clear();
+            $templateStringParameters = '';
+            foreach ($fields as $fieldName => $field) {
+                $templateStringParameters .= '$' . $fieldName . ', ';
             }
+
+            $this->parameters['entityName'] = ucfirst(strtolower($entityName));
+            $this->parameters['entityFields'] = $fields;
+            $this->parameters['fields'] = $fields; //todo: unify these entityFields and fields
+            $this->parameters['constructorArgs'] = trim($templateStringParameters, ', ');
+            $this->parameters['managerArgs'] = trim($templateStringParameters, ', ');
+
+
+            $this->generator->addHandler(new CouchDBRepositoryFactoryHandler($this->parameters));
+
+            $this->generator->addHandler(new OdmRepositoryFactoryHandler($this->parameters));
+            $this->generator->addHandler(new OrmRepositoryFactoryHandler($this->parameters));
+
+            $this->generator->addHandler(new ManagerHandler($this->parameters));
+
+            $this->generator->addHandler(new PrePersistProcessHandler($this->parameters));
+            $this->generator->addHandler(new PostPersistProcessHandler($this->parameters));
+
+            $this->generator->execute();
+            $this->generator->clear();
         }
     }
 
@@ -160,127 +215,99 @@ class Domain
      * Generate :
      * /Domain/Workflow/{entityName}/Handler/NEwWFHandler.php
      * /Domain/Workflow/{entityName}/Handler/UpdateWFHandler.php
-     * /Domain/Workflow/{entityName}/Listener/WGGenerateVOLIstener.php
+     * /Domain/Workflow/{entityName}/Listener/WGGenerateVOListener.php
      * /Domain/Workflow/{entityName}/Listener/WFGetCurrency.php
      * /Domain/Workflow/{entityName}/Listener/WFPublishEvent.php
      * /Domain/Workflow/{entityName}/Listener/WFSaveEntity.php
      *
      */
-    public function generateWorkFlow()
+    public function generateWorkflow()
     {
-        foreach ($this->entitiesToCreate as $entityName => $fields) {
+        foreach (array_keys($this->entitiesToCreate) as $entityName) {
             // Create entities
             $constructorParams = null;
             $managerArgs = null;
+
             // Create constructor params
-            $endConstructorParams = "";
-            $constructorParams = "";
+            $endConstructorParams = '';
+            $constructorParams = '';
+
             foreach ($this->entities[$entityName] as $field) {
-                if ($field['type'] == 'valueObjectId' || ($field["type"] == 'id' && isset($field["voName"]))) {
-                    $endConstructorParams = $field['voName'] . " $" . $field['name'] . " = null";
-                    $managerArgs .= "$" . $field['name'] . ",";
-                } elseif ($field["type"] == "valueObject") {
-                    $constructorParams .= $field['name'] . " $" . $field['name'] . ",";
+                $managerArgs .= '$' . $field['name'] . ', ';
+
+                if ('valueObjectId' === $field['type'] || ('id' === $field['type'] && isset($field['voName']))) {
+                    $endConstructorParams = $field['voName'] . ' $' . $field['name'] . ' = null';
                 } else {
-                    $managerArgs .= " $" . $field['name'] . ",";
-                    $constructorParams .= "$" . $field['name'] . ",";
+                    $constructorParams .=
+                        ('valueObject' === $field['type'] ? $field['name'] : '') . '$' . $field['name'] . ', ';
                 }
             }
+
             $constructorParams .= $endConstructorParams;
 
+            $this->parameters['managerArgs'] = trim($managerArgs, ', ');
+            $this->parameters['entityName'] = $entityName;
+            $this->parameters['fields'] = $this->entities[$entityName];
+            $this->parameters['constructorArgs'] = trim($constructorParams, ', ');
+            $this->parameters['destinationPath'] = $this->destinationPath;
 
-            $parameters = [
-                'rootDir' => $this->rootDir . "/src",
-                'projectDir' => $this->projectDir,
-                'projectName' => str_replace('src/', '', $this->projectDir),
-                'managerArgs' => trim($managerArgs, ', '),
-                'fields' => $this->entities[$entityName],
-                'valueObjects' => $this->valueObjects,
-                'entityName' => $entityName,
-                'constructorArgs' => trim($constructorParams, ', '),
-                'destinationPath' => $this->destinationPath,
-            ];
+            $this->generator->addHandler(new NewWFHandlerHandler($this->parameters));
+            $this->generator->addHandler(new UpdateWFHandlerHandler($this->parameters));
+            $this->generator->addHandler(new PatchWFHandlerHandler($this->parameters));
 
-            $this->generator->addHandler(new NewWFHandlerHandler($parameters));
-            $this->generator->addHandler(new UpdateWFHandlerHandler($parameters));
-            $this->generator->addHandler(new PatchWFHandlerHandler($parameters));
-
-            $this->generator->addHandler(new WFGenerateVOListenerHandler($parameters));
-            $this->generator->addHandler(new WFGetCurrencyHandler($parameters));
-            $this->generator->addHandler(new WFPublishEventHandler($parameters));
-            $this->generator->addHandler(new WFSaveEntityHandler($parameters));
-            $this->generator->addHandler(new WFRetrieveEntityHandler($parameters));
+            $this->generator->addHandler(new WFGenerateVOListenerHandler($this->parameters));
+            $this->generator->addHandler(new WFGetCurrencyHandler($this->parameters));
+            $this->generator->addHandler(new WFPublishEventHandler($this->parameters));
+            $this->generator->addHandler(new WFSaveEntityHandler($this->parameters));
+            $this->generator->addHandler(new WFRetrieveEntityHandler($this->parameters));
 
             $this->generator->execute();
             $this->generator->clear();
         }
     }
 
-    public function generateValueObject()
+    /*public function generateValueObject()
     {
         // Create valueObjects
         foreach ($this->valueObjects as $name => $voToCreate) {
-            $parameters = [
-                'rootDir' => $this->rootDir . "/src",
-                'projectDir' => $this->projectDir,
-                'voName' => str_replace('vo', 'VO', $name),
-                'projectName' => str_replace('src/', '', $this->projectDir),
-                'valueObjects' => $this->valueObjects,
-                'destinationPath' => $this->destinationPath,
-            ];
+            $constructorParams = '';
 
-            $composite = false;
+            $this->parameters['voName'] = str_replace('vo', 'VO', $name);
+            $this->parameters['fields'] = $voToCreate['fields'];
 
-            if (count($voToCreate['fields']) > 1) {
-                $composite = true;
+            $composite = (count($voToCreate['fields']) > 1);
+
+            foreach ($voToCreate['fields'] as $field) {
+                $constructorParams .= '$' . $field['name'] . ', ';
             }
 
-            $constructorParams = "";
-            $parameters['fields'] = $voToCreate['fields'];
-
-            foreach ($voToCreate["fields"] as $field) {
-                $constructorParams .= "$" . $field["name"] . ",";
-            }
-            $parameters["constructorParams"] = trim($constructorParams, ",");
+            $this->parameters['constructorParams'] = trim($constructorParams, ', ');
 
             if ($composite) {
-                $this->generator->addHandler(new ValueObjectCompositeHandler($parameters));
+                $this->generator->addHandler(new ValueObjectCompositeHandler($this->parameters));
             } else {
-                $this->generator->addHandler(new ValueObjectHandler($parameters));
+                $this->generator->addHandler(new ValueObjectHandler($this->parameters));
             }
 
-            $this->generator->addHandler(new ValueObjectTypeCouchDBHandler($parameters));
-            $this->generator->addHandler(new ValueObjectTypeODMHandler($parameters));
-            $this->generator->addHandler(new ValueObjectTypeORMHandler($parameters));
+
+
+
+            $this->generator->addHandler(new ValueObjectTypeCouchDBHandler($this->parameters));
+
+            $this->generator->addHandler(new ValueObjectTypeOdmHandler($this->parameters));
+
+            $this->generator->addHandler(new ValueObjectTypeOrmHandler($this->parameters));
+
+
+
 
             $this->generator->execute();
             $this->generator->clear();
         }
-    }
+    }*/
 
     public function generateTests()
     {
-        foreach ($this->pathsToCreate as $route => $verbData) {
-            foreach ($verbData as $verb => $data) {
-
-                $parameters = [
-                    'rootDir' => $this->rootDir . "/src",
-                    'projectDir' => $this->projectDir,
-                    'projectName' => str_replace('src/', '', $this->projectDir),
-                    'actionName' => ucfirst(strtolower($data['action'])),
-                    'entityName' => ucfirst(strtolower($data['entity'])),
-                    'entityFields' => $this->entities[$data['entity']],
-                    'fields' => $this->entities[$data['entity']],
-                    'valueObjects' => $this->valueObjects,
-                    'destinationPath' => $this->destinationPath,
-                ];
-
-                $this->generator->addHandler(new ORMRepositoryFactoryTestHandler($parameters));
-                $this->generator->addHandler(new CountryManagerTestHandler($parameters));
-
-                $this->generator->execute();
-                $this->generator->clear();
-            }
-        }
+        // TODO: make some FUN .. or tests
     }
 }

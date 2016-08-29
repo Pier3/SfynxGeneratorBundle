@@ -7,7 +7,7 @@ use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
 class DeleteManyRepositoryHandler extends AbstractHandler implements HandlerInterface
 {
-    use  ExecuteTrait;
+    use ExecuteTrait;
 
     const SKELETON_DIR = 'Api/Infrastructure/Persistence/Orm';
     const SKELETON_TPL = 'DeleteManyRepository.php.twig';

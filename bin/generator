@@ -35,9 +35,6 @@ $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../R
 $loader->load('config.yml');
 $loader->load('services.yml');
 
-$loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/Structure/config'));
-$loader->load('config.yml');
-$loader->load('services.yml');
 
 $rootDir = dirname(__DIR__);
 
@@ -45,6 +42,10 @@ $rootDir = dirname(__DIR__);
 $commandApi = $container->get('dddapi.generator.command');
 $commandApi->setRootDir($rootDir);
 $app->add($commandApi);
+
+$loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/Structure/config'));
+$loader->load('config.yml');
+$loader->load('services.yml');
 
 //register sfynx:structure command
 //$commandBundle = $container->get('structure.generator.command');

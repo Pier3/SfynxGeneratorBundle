@@ -8,13 +8,18 @@ use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
 class RepositoryFactoryHandler extends AbstractHandler implements HandlerInterface
 {
-    use  ExecuteTrait;
+    use ExecuteTrait;
 
     const SKELETON_DIR = 'Api/Domain/Service/CouchDB';
     const SKELETON_TPL = 'RepositoryFactory.php.twig';
 
     protected $targetPattern = '%s/%s/Domain/Service/%s/Factory/CouchDB/RepositoryFactory.php';
     protected $target;
+
+    protected function setTemplateName()
+    {
+        $this->templateName = self::SKELETON_TPL;
+    }
 
     protected function setTarget()
     {

@@ -13,6 +13,8 @@ abstract class AbstractHandler
 
     protected $parameters;
 
+    protected $templateName;
+
     /**
      * AbstractHandler constructor.
      * @param $commonParameters
@@ -22,9 +24,27 @@ abstract class AbstractHandler
         $this->parameters = $commonParameters;
         $this->rootSkeletonDir = dirname(dirname(__DIR__)) . '/Skeleton';
         $this->setTarget();
+        $this->setTemplateName();
+    }
+
+    public function getRootSkeletonDir()
+    {
+        return $this->rootSkeletonDir;
+    }
+
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
+
+    public function getTemplateName()
+    {
+        return $this->templateName;
     }
 
     abstract protected function setTarget();
+
+    abstract protected function setTemplateName();
 
     /**
      * Sets an array of directories to look for templates.
@@ -81,7 +101,7 @@ abstract class AbstractHandler
         ));
     }
 
-    protected function renderFile($template, $target, $parameters)
+    public function renderFile($template, $target, $parameters)
     {
         var_dump($target);die;
 
@@ -89,7 +109,7 @@ abstract class AbstractHandler
             mkdir(dirname($target), 0777, true);
         }
 
-        echo "#### $target\n";;
+        echo "    # $target\n";
         return file_put_contents($target, $this->render($template, $parameters));
     }
 }

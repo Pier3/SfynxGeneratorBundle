@@ -8,7 +8,7 @@ use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
 class RepositoryFactoryTestHandler extends AbstractHandler implements HandlerInterface
 {
-    use  ExecuteTrait;
+    use ExecuteTrait;
 
     const SKELETON_DIR = 'Api/Tests/Domain/Service/Entity/Factory/Orm';
     const SKELETON_TPL = 'RepositoryFactoryTest.php.twig';

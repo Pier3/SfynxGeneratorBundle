@@ -8,7 +8,7 @@ use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
 class EntityRepositoryInterfaceHandler extends AbstractHandler implements HandlerInterface
 {
-    use  ExecuteTrait;
+    use ExecuteTrait;
 
     const SKELETON_DIR = 'Api/Domain/Repository';
     const SKELETON_TPL = 'EntityRepositoryInterface.php.twig';
@@ -16,14 +16,18 @@ class EntityRepositoryInterfaceHandler extends AbstractHandler implements Handle
     protected $targetPattern = '%s/%s/Domain/Repository/%sRepositoryInterface.php';
     protected $target;
 
+    protected function setTemplateName()
+    {
+        $this->templateName = self::SKELETON_TPL;
+    }
+
     protected function setTarget()
     {
         $this->target = sprintf(
             $this->targetPattern,
             $this->parameters['destinationPath'],
             $this->parameters['projectDir'],
-            ucfirst($this->parameters['entityName']),
-            ucfirst($this->parameters['entityName'])
+            $this->parameters['entityName']
         );
     }
 }

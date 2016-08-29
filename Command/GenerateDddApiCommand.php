@@ -158,9 +158,14 @@ class GenerateDddApiCommand extends Command
         $infrastructureGenerator = new Infrastructure($this->generator, $this->entities, $this->entitiesToCreate, $this->valueObjects, $this->valueObjectsToCreate, $this->paths, $this->pathsToCreate, $this->rootDir, $projectDir, $destinationPath, $output);
         $infrastructureBundleGenerator = new InfrastructureBundle($this->generator, $this->entities, $this->entitiesToCreate, $this->valueObjects, $this->valueObjectsToCreate, $this->paths, $this->pathsToCreate, $this->rootDir, $projectDir, $destinationPath, $output);
 
-        $applicationGenerator->generate();
-        $domainGenerator->generate();
-        $presentationGenerator->generate();
+        echo ' # # # # # ' . __FILE__ . ':' . __LINE__ . ': Uncomment these lines after developping system.';
+
+        //$applicationGenerator->generate();
+
+        //$domainGenerator->generate();
+
+        $presentationGenerator->generate(); exit;
+
         $presentationBundleGenerator->generate();
         $infrastructureGenerator->generate();
         $infrastructureBundleGenerator->generate();
@@ -204,7 +209,8 @@ class GenerateDddApiCommand extends Command
                     new Question(sprintf('Do you want to create the entity "%s" ? [Y/n]' . PHP_EOL, $entityName))
                 )
             ) {
-                $this->entitiesToCreate[$entityName][] = $fields;
+                //Removed new dimensional array
+                $this->entitiesToCreate[$entityName] = $fields;
             }
         }
 
@@ -285,7 +291,7 @@ class GenerateDddApiCommand extends Command
         if (isset($this->config['x-entities'])) {
             foreach ($this->config['x-entities'] as $name => $data) {
                 foreach ($data['x-fields'] as $field) {
-                    $results[$name][] = $field;
+                    $results[$name][$field['name']] = $field;
                 }
             }
         }

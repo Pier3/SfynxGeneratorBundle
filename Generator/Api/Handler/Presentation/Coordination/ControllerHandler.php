@@ -8,7 +8,7 @@ use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
 class ControllerHandler extends AbstractHandler implements HandlerInterface
 {
-    use  ExecuteTrait;
+    use ExecuteTrait;
 
     const SKELETON_DIR = 'Api/Presentation/Coordination/';
     const SKELETON_TPL = 'Controller.php.twig';
@@ -16,14 +16,19 @@ class ControllerHandler extends AbstractHandler implements HandlerInterface
     protected $targetPattern = '%s/%s/Presentation/Coordination/%s/%s/Controller.php';
     protected $target;
 
+    protected function setTemplateName()
+    {
+        $this->templateName = sprintf(self::SKELETON_TPL, $this->parameters['actionName']);
+    }
+
     protected function setTarget()
     {
         $this->target = sprintf(
             $this->targetPattern,
             $this->parameters['destinationPath'],
             $this->parameters['projectDir'],
-            ucfirst($this->parameters['entityName']),
-            ucfirst($this->parameters['group'])
+            $this->parameters['entityName'],
+            $this->parameters['group']
         );
     }
 }

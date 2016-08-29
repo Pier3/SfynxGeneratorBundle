@@ -2,13 +2,51 @@
 
 namespace {{ projectName }}\Application\{{ entityName }}\Command\Handler\Decorator;
 
+use Sfynx\DddBundle\Layer\Application\Generalisation\Command\Handler\Decorator\AbstractCommandHandlerDecorator;
+use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandHandlerInterface;
+use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandInterface;
+use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandValidationHandlerInterface;
+use Sfynx\DddBundle\Layer\Application\Generalisation\Validation\SpecHandler\AbstractCommandSpecHandler;
+
 /**
  * Class PatchCommandHandlerDecorator
  *
  * @category   {{ projectName }}
  * @package    Application
  * @subpackage Command\Handler\Decorator
+ *
+ * @todo: Same as NewCommandHandlerDecorator and UpdateCommandHandlerDecorator. Please make an abstract or a trait.
  */
-class PatchCommandHandlerDecorator extends NewCommandHandlerDecorator
+class PatchCommandHandlerDecorator extends AbstractCommandHandlerDecorator
 {
+    /** @var CommandValidationHandlerInterface */
+    protected $validationHandler;
+
+    /** @var AbstractCommandSpecHandler */
+    protected $specHandler;
+
+    public function __construct(
+        CommandHandlerInterface $commandHandler,
+        CommandValidationHandlerInterface $validationHandler,
+        AbstractCommandSpecHandler $specHandler
+    )
+    {
+        parent::__construct($commandHandler);
+        $this->validationHandler = $validationHandler;
+        $this->specHandler = $specHandler;
+    }
+
+    /**
+     * Method to decorate (override)
+     *
+     * @param CommandInterface $command
+     * @return mixed
+     */
+    public function process(CommandInterface $command)
+    {
+        $this->validationHandler->process($command);
+        $this->specHandler->process();
+
+        return $this->commandHandler->process($command);
+    }
 }

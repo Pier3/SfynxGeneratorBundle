@@ -8,13 +8,18 @@ use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
 class PostPersistProcessHandler extends AbstractHandler implements HandlerInterface
 {
-    use  ExecuteTrait;
+    use ExecuteTrait;
 
     const SKELETON_DIR = 'Api/Domain/Service/Processor';
-    const SKELETON_TPL = 'ProPersistsProcess.php.twig';
+    const SKELETON_TPL = 'PostPersistsProcess.php.twig';
 
     protected $targetPattern = '%s/%s/Domain/Service/%s/Processor/PostPersistProcess.php';
     protected $target;
+
+    protected function setTemplateName()
+    {
+        $this->templateName = self::SKELETON_TPL;
+    }
 
     protected function setTarget()
     {
@@ -22,7 +27,7 @@ class PostPersistProcessHandler extends AbstractHandler implements HandlerInterf
             $this->targetPattern,
             $this->parameters['destinationPath'],
             $this->parameters['projectDir'],
-            ucfirst($this->parameters['entityName'])
+            $this->parameters['entityName']
         );
     }
 }

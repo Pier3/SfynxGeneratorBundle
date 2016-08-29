@@ -8,13 +8,18 @@ use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
 class UpdateWFHandlerHandler extends AbstractHandler implements HandlerInterface
 {
-    use  ExecuteTrait;
+    use ExecuteTrait;
 
     const SKELETON_DIR = 'Api/Domain/Workflow/Handler';
     const SKELETON_TPL = 'UpdateWFHandler.php.twig';
 
     protected $targetPattern = '%s/%s/Domain/Workflow/%s/Handler/UpdateWFHandler.php';
     protected $target;
+
+    protected function setTemplateName()
+    {
+        $this->templateName = self::SKELETON_TPL;
+    }
 
     protected function setTarget()
     {

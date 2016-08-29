@@ -7,15 +7,20 @@ use Sfynx\DddGeneratorBundle\Generator\Generalisation\AbstractHandler;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\HandlerInterface;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
-class UpdateCommandValidationHandler extends AbstractHandler implements HandlerInterface
+class CommandValidationHandler extends AbstractHandler implements HandlerInterface
 {
-    use  ExecuteTrait;
+    use ExecuteTrait;
 
     const SKELETON_DIR = 'Api/Application/Command/Handler/Validation/ValidationHandler';
-    const SKELETON_TPL = 'UpdateCommandValidationHandler.php.twig';
+    const SKELETON_TPL = '%sCommandValidationHandler.php.twig';
 
-    protected $targetPattern = '%s/%s/Application/%s/Command/Validation/ValidationHandler/UpdateCommandValidationHandler.php';
+    protected $targetPattern = '%s/%s/Application/%s/Command/Validation/ValidationHandler/%sCommandValidationHandler.php';
     protected $target;
+
+    protected function setTemplateName()
+    {
+        $this->templateName = sprintf(self::SKELETON_TPL, $this->parameters['actionName']);
+    }
 
     protected function setTarget()
     {
@@ -23,7 +28,8 @@ class UpdateCommandValidationHandler extends AbstractHandler implements HandlerI
             $this->targetPattern,
             $this->parameters['destinationPath'],
             $this->parameters['projectDir'],
-            ucfirst($this->parameters['entityName'])
+            $this->parameters['entityName'],
+            $this->parameters['actionName']
         );
     }
 }

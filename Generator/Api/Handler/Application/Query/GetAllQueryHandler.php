@@ -8,7 +8,7 @@ use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
 class GetAllQueryHandler extends AbstractHandler implements HandlerInterface
 {
-    use  ExecuteTrait;
+    use ExecuteTrait;
 
     const SKELETON_DIR = 'Api/Application/Query';
     const SKELETON_TPL = 'GetAllQuery.php.twig';

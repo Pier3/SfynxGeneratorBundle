@@ -8,7 +8,7 @@ use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
 class CountryTestHandler extends AbstractHandler implements HandlerInterface
 {
-    use  ExecuteTrait;
+    use ExecuteTrait;
 
     const SKELETON_DIR = 'Api/Tests/Domain/Entity';
     const SKELETON_TPL = 'EntityTestHandler.php.twig';

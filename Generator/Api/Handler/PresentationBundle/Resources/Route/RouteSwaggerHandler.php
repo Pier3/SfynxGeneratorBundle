@@ -8,7 +8,7 @@ use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
 class RouteSwaggerHandler extends AbstractHandler implements HandlerInterface
 {
-    use  ExecuteTrait;
+    use ExecuteTrait;
 
     const SKELETON_DIR = 'Api/PresentationBundle/Resources/config/route';
     const SKELETON_TPL = 'swagger.yml.twig';

@@ -8,7 +8,7 @@ use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
 class ResettingListenersPassHandler extends AbstractHandler implements HandlerInterface
 {
-    use  ExecuteTrait;
+    use ExecuteTrait;
 
     const SKELETON_DIR = 'Api/PresentationBundle/DependencyInjection/Compiler';
     const SKELETON_TPL = 'ResettingListenersPass.php.twig';

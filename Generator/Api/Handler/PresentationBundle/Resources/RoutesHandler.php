@@ -8,7 +8,7 @@ use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
 class RoutesHandler extends AbstractHandler implements HandlerInterface
 {
-    use  ExecuteTrait;
+    use ExecuteTrait;
 
     const SKELETON_DIR = 'Api/PresentationBundle/Resources/routes';
     const SKELETON_TPL = 'routes.php.twig';

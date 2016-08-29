@@ -8,7 +8,7 @@ use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
 class ControllerCommandTestHandler extends AbstractHandler implements HandlerInterface
 {
-    use  ExecuteTrait;
+    use ExecuteTrait;
 
     const SKELETON_DIR = 'Api/Tests/Presentation/Coordination/Entity/Command';
     const SKELETON_TPL = 'ControllerTest.php.twig';

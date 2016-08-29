@@ -8,7 +8,7 @@ use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
 class ManagerHandler extends AbstractHandler implements HandlerInterface
 {
-    use  ExecuteTrait;
+    use ExecuteTrait;
 
     const SKELETON_DIR = 'Api/Domain/Service/Manager';
     const SKELETON_TPL = 'Manager.php.twig';
@@ -16,14 +16,19 @@ class ManagerHandler extends AbstractHandler implements HandlerInterface
     protected $targetPattern = '%s/%s/Domain/Service/%s/Manager/%sManager.php';
     protected $target;
 
+    protected function setTemplateName()
+    {
+        $this->templateName = self::SKELETON_TPL;
+    }
+
     protected function setTarget()
     {
         $this->target = sprintf(
             $this->targetPattern,
             $this->parameters['destinationPath'],
             $this->parameters['projectDir'],
-            ucfirst($this->parameters['entityName']),
-            ucfirst($this->parameters['entityName'])
+            $this->parameters['entityName'],
+            $this->parameters['entityName']
         );
     }
 }

@@ -9,12 +9,12 @@ class {{ voName }}Type extends StringType
 {
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
-        return (string) $value;
+        return (string)$value;
     }
 
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        $className = $this->getNamespace().'\\'.$this->getName();
+        $className = $this->getNamespace() . '\\' . $this->getName();
 
         return new $className($value);
     }

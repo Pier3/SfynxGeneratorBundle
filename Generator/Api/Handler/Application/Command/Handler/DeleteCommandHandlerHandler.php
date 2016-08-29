@@ -8,13 +8,18 @@ use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
 class DeleteCommandHandlerHandler extends AbstractHandler implements HandlerInterface
 {
-    use  ExecuteTrait;
+    use ExecuteTrait;
 
     const SKELETON_DIR = 'Api/Application/Command/Handler';
     const SKELETON_TPL = 'DeleteCommandHandler.php.twig';
 
     protected $targetPattern = '%s/%s/Application/%s/Command/Handler/DeleteCommandHandler.php';
     protected $target;
+
+    protected function setTemplateName()
+    {
+        $this->templateName = self::SKELETON_TPL;
+    }
 
     protected function setTarget()
     {

@@ -8,13 +8,18 @@ use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
 class ValueObjectHandler extends AbstractHandler implements HandlerInterface
 {
-    use  ExecuteTrait;
+    use ExecuteTrait;
 
     const SKELETON_DIR = 'Api/Application/ValueObject';
     const SKELETON_TPL = 'ValueObject.php.twig';
 
     protected $targetPattern = '%s/%s/Domain/ValueObject/%s.php';
     protected $target;
+
+    protected function setTemplateName()
+    {
+        $this->templateName = self::SKELETON_TPL;
+    }
 
     protected function setTarget()
     {

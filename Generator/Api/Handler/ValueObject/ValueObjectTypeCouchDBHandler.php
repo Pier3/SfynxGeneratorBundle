@@ -8,13 +8,18 @@ use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
 class ValueObjectTypeCouchDBHandler extends AbstractHandler implements HandlerInterface
 {
-    use  ExecuteTrait;
+    use ExecuteTrait;
 
     const SKELETON_DIR = 'Api/Infrastructure/EntityType';
     const SKELETON_TPL = 'CouchDB.php.twig';
 
     protected $targetPattern = '%s/%s/Infrastructure/EntityType/CouchDB/%sType.php';
     protected $target;
+
+    protected function setTemplateName()
+    {
+        $this->templateName = self::SKELETON_TPL;
+    }
 
     protected function setTarget()
     {

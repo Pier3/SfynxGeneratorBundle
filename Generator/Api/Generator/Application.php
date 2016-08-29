@@ -1,61 +1,103 @@
 <?php
 namespace Sfynx\DddGeneratorBundle\Generator\Api\Generator;
 
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Adapter\SearchByAdapterHandler;
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Application\Entity\Command\CommandTestHandler;
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Application\Entity\Command\Handler\CommandHandlerTestHandler;
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Application\Entity\Command\Handler\Decorator\{
+    CommandHandlerDecoratorTestHandler
+};
+
+use Symfony\Component\Console\Output\OutputInterface;
+
+//Commands
+use Sfynx\DddGeneratorBundle\Generator\Api\DddApiGenerator;
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Command\CommandHandler;
 use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Command\DeleteCommandHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Command\Handler\Decorator\NewCommandHandlerDecoratorHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Command\Handler\Decorator\PatchCommandHandlerDecoratorHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Command\Handler\Decorator\UpdateCommandHandlerDecoratorHandler;
+//Command Handlers
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Command\Handler\CommandHandlerHandler;
 use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Command\Handler\DeleteCommandHandlerHandler;
 use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Command\Handler\DeleteManyCommandHandlerHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Command\Handler\NewCommandHandlerHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Command\Handler\PatchCommandHandlerHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Command\Handler\UpdateCommandHandlerHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Command\NewCommandHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Command\PatchCommandHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Command\UpdateCommandHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Command\Validation\SpecHandler\NewCommandSpecHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Command\Validation\SpecHandler\PatchCommandSpecHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Command\Validation\SpecHandler\UpdateCommandSpecHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Command\Validation\ValidationHandler\NewCommandValidationHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Command\Validation\ValidationHandler\PatchCommandValidationHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Command\Validation\ValidationHandler\UpdateCommandValidationHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Query\CustomQueryHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Query\GetAllQueryHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Query\GetByIdsHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Query\GetQueryHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Query\Handler\GetAllQueryHandlerHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Query\Handler\GetByIdsHandlerHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Query\Handler\GetQueryHandlerHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Query\Handler\SearchByQueryHandlerHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Query\SearchByQueryHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Application\Entity\Command\Handler\Decorator\NewCommandHandlerDecoratorTestHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Application\Entity\Command\Handler\Decorator\PatchCommandHandlerDecoratorTestHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Application\Entity\Command\Handler\Decorator\UpdateCommandHandlerDecoratorTestHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Application\Entity\Command\Handler\DeleteCommandHandlerTestHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Application\Entity\Command\DeleteCommandTestHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Application\Entity\Command\Handler\DeleteManyCommandHandlerTestHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Application\Entity\Command\Handler\NewCommandHandlerTestHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Application\Entity\Command\Handler\PatchCommandHandlerTestHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Application\Entity\Command\Handler\UpdateCommandHandlerTestHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Application\Entity\Command\NewCommandTestHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Application\Entity\Command\UpdateCommandTestHandler;
-use Tests\Application\Country\Application\Country\Command\Validation\NewCommandValidationHandlerTest;
+//Command Handler Decorators
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Command\Handler\Decorator\CommandHandlerDecoratorHandler;
+//Command Validation SpecHandlers
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Command\Validation\SpecHandler\CommandSpecHandler;
+//Command Validation ValidationHandlers
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Command\Validation\ValidationHandler\{
+    CommandValidationHandler
+};
+
+// Use for the Query and QueryHandler
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Query\Handler\QueryHandlerHandler;
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Query\QueryHandler;
+
+// Tests
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Application\Entity\Command\Handler\{
+    DeleteCommandHandlerTestHandler
+};
+
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Application\Entity\Command\Handler\{
+    DeleteManyCommandHandlerTestHandler
+};
 
 class Application
 {
-    protected $generator;
-    protected $entities = [];
-    protected $entitiesToCreate = [];
-    protected $valueObjects = [];
-    protected $valueObjectsToCreate = [];
-    protected $paths = [];
-    protected $pathsToCreate = [];
-    protected $projectDir;
-    protected $destinationPath;
+    const COMMANDS_LIST = ['update', 'new', 'delete', 'patch'];
+    const QUERIES_LIST = ['get', 'getAll', 'searchBy', 'getByIds'];
 
-    public function __construct($generator, $entities, $entitiesToCreate, $valueObjects, $valueObjectsToCreate, $paths, $pathsToCreate, $rootDir, $projectDir, $destinationPath, $output)
-    {
+    /** @var DddApiGenerator  */
+    protected $generator;
+    /** @var array  */
+    protected $entities = [];
+    /** @var array  */
+    protected $entitiesToCreate = [];
+    /** @var array  */
+    protected $valueObjects = [];
+    /** @var array  */
+    protected $valueObjectsToCreate = [];
+    /** @var array  */
+    protected $paths = [];
+    /** @var array  */
+    protected $pathsToCreate = [];
+    /** @var string  */
+    protected $rootDir;
+    /** @var string  */
+    protected $projectDir;
+    /** @var string */
+    protected $destinationPath;
+    /** @var OutputInterface  */
+    protected $output;
+    /** @var array  */
+    protected $parameters;
+    /** @var array  */
+    protected $commandsQueriesList;
+
+    /**
+     * Application constructor.
+     * @param DddApiGenerator $generator
+     * @param $entities
+     * @param $entitiesToCreate
+     * @param $valueObjects
+     * @param $valueObjectsToCreate
+     * @param $paths
+     * @param $pathsToCreate
+     * @param $rootDir
+     * @param $projectDir
+     * @param $destinationPath
+     * @param OutputInterface $output
+     */
+    public function __construct(
+        DddApiGenerator $generator,
+        $entities,
+        $entitiesToCreate,
+        $valueObjects,
+        $valueObjectsToCreate,
+        $paths,
+        $pathsToCreate,
+        $rootDir,
+        $projectDir,
+        $destinationPath,
+        OutputInterface $output
+    ) {
         $this->generator = $generator;
         $this->destinationPath = $destinationPath;
         $this->output = $output;
@@ -65,245 +107,181 @@ class Application
         $this->valueObjectsToCreate = $valueObjectsToCreate;
         $this->paths = $paths;
         $this->pathsToCreate = $pathsToCreate;
+        $this->commandsQueriesList = $this->parseRoutes();
         $this->projectDir = $projectDir;
         $this->rootDir = $rootDir;
+
+        $this->parameters = [
+            'rootDir' => $this->rootDir . '/src',
+            'projectDir' => $this->projectDir,
+            'projectName' => str_replace('src/', '', $this->projectDir),
+            'valueObjects' => $this->valueObjects,
+            'destinationPath' => $this->destinationPath,
+        ];
     }
 
     public function generate()
     {
-        $this->output->writeln("#############################################");
-        $this->output->writeln("# GENERATE APPLICATION STRUCTURE            #");
-        $this->output->writeln("#############################################");
+        $this->output->writeln('');
+        $this->output->writeln('##############################################');
+        $this->output->writeln('#       GENERATE APPLICATION STRUCTURE       #');
+        $this->output->writeln('##############################################');
+        $this->output->writeln('');
 
-        $this->generateCommands();exit;
+        $this->output->writeln('### COMMANDS GENERATION ###');
+        $this->generateCommands();
+        $this->output->writeln('### QUERIES GENERATION ###');
         $this->generateQueries();
+        $this->output->writeln('### TESTS GENERATION ###');
         $this->generateTests();
+    }
+
+    public function parseRoutes()
+    {
+        $routes = ['commands' => [], 'queries' => []];
+
+        foreach ($this->pathsToCreate as $route => $verbData) {
+            foreach ($verbData as $verb => $data) {
+                in_array($data['action'], self::COMMANDS_LIST)
+                    ? $routes['commands'][] = $data
+                    : $routes['queries'][] = $data;
+            }
+        }
+
+        return $routes;
     }
 
     public function generateCommands()
     {
-        foreach ($this->pathsToCreate as $route => $verbData) {
-            echo"##### " . $route;
+        foreach ($this->commandsQueriesList['commands'] as $data) {
+            $constructorParams = '';
+            $managerArgs = '';
 
-            foreach ($verbData as $verb => $data) {
+            //$this->parameters['actionName'] = ucfirst(strtolower($data['action']));
+            $this->parameters['actionName'] = ucfirst($data['action']);
+            $this->parameters['entityName'] = ucfirst(strtolower($data['entity']));
+            $this->parameters['entityFields'] = $this->entities[$data['entity']];
+            $this->parameters['fields'] = $this->entities[$data['entity']]; //todo: unify these entityFields and fields
 
-                var_dump("Pourquoi toi, petit tu veux travailler sur moi ???? c'est a dire Application.php");exit;
+            $this->output->writeln(' - ' . $this->parameters['actionName'] . ' - ');
 
-                /*
-                 * WORK IN PROGRESS
-                 * WORK ON FOREACH IMPROVEMENT
-                 * Just work on COMMAND here
-                 */
-                if (in_array($data["action"], ["update", "new", "delete", "patch"])) {
-                    $constructorParams = $managerArgs = "";
+            foreach ($this->entities[$data['entity']] as $field) {
+                $constructorParams .= '$' . $field['name'] . ', ';
 
-                    foreach ($this->entities[$data["entity"]] as $field) {
-
-                        if ($data["action"] == "new") {
-
-                            $constructorParams .= "$" . $field['name'] . ",";
-
-                            if ($field["type"] != "id") {
-                                $managerArgs .= "$" . $field['name'] . ",";
-                            }
-
-                        } else {
-
-                            $constructorParams .= "$" . $field['name'] . ",";
-                            $managerArgs .= "$" . $field['name'] . ",";
-                        }
-                    }
-
-                    $parameters = [
-                        'rootDir' => $this->rootDir . "/src",
-                        'projectDir' => $this->projectDir,
-                        'projectName' => str_replace('src/', '', $this->projectDir),
-                        'actionName' => ucfirst(strtolower($data['action'])),
-                        'entityName' => ucfirst(strtolower($data['entity'])),
-                        'entityFields' => $this->entities[$data['entity']],
-                        'managerArgs' => trim($managerArgs, ', '),
-                        'fields' => $this->entities[$data['entity']],
-                        'valueObjects' => $this->valueObjects,
-                        'constructorArgs' => trim($constructorParams, ', '),
-                        'destinationPath' => $this->destinationPath,
-                    ];
-
-                    // Command
-                    $this->generator->addHandler(new UpdateCommandHandler($parameters));
-                    // Decorator
-                    $this->generator->addHandler(new UpdateCommandHandlerDecoratorHandler($parameters));
-                    // Handler
-                    $this->generator->addHandler(new UpdateCommandHandlerHandler($parameters));
-                    // SpecHandler
-                    $this->generator->addHandler(new UpdateCommandSpecHandler($parameters));
-                    // ValidationHandler
-                    $this->generator->addHandler(new UpdateCommandValidationHandler($parameters));
-
-                    // Command
-                    $this->generator->addHandler(new NewCommandHandler($parameters));
-                    // Decorator
-                    $this->generator->addHandler(new NewCommandHandlerDecoratorHandler($parameters));
-                    // Handler
-                    $this->generator->addHandler(new NewCommandHandlerHandler($parameters));
-                    // SpecHandler
-                    $this->generator->addHandler(new NewCommandSpecHandler($parameters));
-                    // ValidationHandler
-                    $this->generator->addHandler(new NewCommandValidationHandler($parameters));
-
-                    // Command
-                    $this->generator->addHandler(new DeleteCommandHandler($parameters));
-                    // Handler
-                    $this->generator->addHandler(new DeleteManyCommandHandlerHandler($parameters));
-                    $this->generator->addHandler(new DeleteCommandHandlerHandler($parameters));
-
-                    // Command
-                    $this->generator->addHandler(new PatchCommandHandler($parameters));
-                    // Decorator
-                    $this->generator->addHandler(new PatchCommandHandlerDecoratorHandler($parameters));
-                    // Handler
-                    $this->generator->addHandler(new PatchCommandHandlerHandler($parameters));
-                    // SpecHandler
-                    $this->generator->addHandler(new PatchCommandSpecHandler($parameters));
-                    // ValidationHandler
-                    $this->generator->addHandler(new PatchCommandValidationHandler($parameters));
-
-                    $this->generator->execute();
-                    $this->generator->clear();
-                } else {
-                    var_dump($data);
+                if (('new' === $data['action'] && 'id' !== $field['type']) || ('new' !== $data['action'])) {
+                    $managerArgs .= '$' . $field['name'] . ', ';
                 }
             }
+
+            $this->parameters['constructorArgs'] = trim($constructorParams, ', ');
+            $this->parameters['managerArgs'] = trim($managerArgs, ', ');
+
+            if ('Delete' !== $this->parameters['actionName']) {
+                // Command
+                $this->generator->addHandler(new CommandHandler($this->parameters));
+                // Decorator
+                $this->generator->addHandler(new CommandHandlerDecoratorHandler($this->parameters));
+                // Handler
+                $this->generator->addHandler(new CommandHandlerHandler($this->parameters));
+                // SpecHandler
+                $this->generator->addHandler(new CommandSpecHandler($this->parameters));
+                // ValidationHandler
+                $this->generator->addHandler(new CommandValidationHandler($this->parameters));
+            } else {
+                // Command
+                $this->generator->addHandler(new DeleteCommandHandler($this->parameters));
+                // Handler
+                $this->generator->addHandler(new DeleteManyCommandHandlerHandler($this->parameters));
+                $this->generator->addHandler(new DeleteCommandHandlerHandler($this->parameters));
+            }
+
+            $this->generator->execute();
+            $this->generator->clear();
         }
     }
 
     public function generateQueries()
     {
-        foreach ($this->pathsToCreate as $route => $verbData) {
-            foreach ($verbData as $verb => $data) {
+        foreach ($this->commandsQueriesList['queries'] as $data) {
+            $templateStringParameters = '';
 
-                if (in_array($data["action"], ["get", "getAll", "searchBy", "getByIds"])) {
-                    $constructorParams = $managerArgs = "";
-                    foreach ($this->entities[$data["entity"]] as $field) {
-                        $constructorParams .= "$" . $field['name'] . ",";
-                        $managerArgs .= "$" . $field['name'] . ",";
-                    }
+            //$this->parameters['actionName'] = ucfirst(strtolower($data['action']));
+            $this->parameters['actionName'] = ucfirst($data['action']);
+            $this->parameters['entityName'] = ucfirst(strtolower($data['entity']));
+            $this->parameters['entityFields'] = $this->entities[$data['entity']];
+            $this->parameters['fields'] = $this->entities[$data['entity']]; //todo: unify these entityFields and fields
 
-                    $parameters = [
-                        'rootDir' => $this->rootDir . "/src",
-                        'projectDir' => $this->projectDir,
-                        'projectName' => str_replace('src/', '', $this->projectDir),
-                        'actionName' => ucfirst(strtolower($data['action'])),
-                        'entityName' => ucfirst(strtolower($data['entity'])),
-                        'entityFields' => $this->entities[$data['entity']],
-                        'managerArgs' => trim($managerArgs, ', '),
-                        'fields' => $this->entities[$data['entity']],
-                        'valueObjects' => $this->valueObjects,
-                        'constructorArgs' => trim($constructorParams, ', '),
-                        'destinationPath' => $this->destinationPath,
-                    ];
+            $this->output->writeln(' - ' . $this->parameters['actionName'] . ' - ');
 
-                    $this->generator->addHandler(new GetAllQueryHandler($parameters));
-                    $this->generator->addHandler(new GetAllQueryHandlerHandler($parameters));
-
-
-                    $this->generator->addHandler(new GetQueryHandler($parameters));
-                    $this->generator->addHandler(new GetQueryHandlerHandler($parameters));
-
-                    $this->generator->addHandler(new GetByIdsHandler($parameters));
-                    $this->generator->addHandler(new GetByIdsHandlerHandler($parameters));
-
-
-                    $this->generator->addHandler(new SearchByQueryHandler($parameters));
-                    $this->generator->addHandler(new SearchByQueryHandlerHandler($parameters));
-
-                    $this->generator->execute();
-                    $this->generator->clear();
+            if (in_array($data['action'], self::QUERIES_LIST)) {
+                foreach ($this->entities[$data['entity']] as $field) {
+                    $templateStringParameters .= '$' . $field['name'] . ', ';
                 }
             }
+
+            $this->parameters['constructorArgs'] = trim($templateStringParameters, ', ');
+            $this->parameters['managerArgs'] = trim($templateStringParameters, ', ');
+
+            $this->generator->addHandler(new QueryHandler($this->parameters));
+            $this->generator->addHandler(new QueryHandlerHandler($this->parameters));
+
+            $this->generator->execute();
+            $this->generator->clear();
         }
     }
 
-    public function generateTests() {
-        foreach ($this->pathsToCreate as $route => $verbData) {
-            foreach ($verbData as $verb => $data) {
-                if (in_array($data["action"], ["update", "new", "delete", "patch"])) {
-                    $constructorParams = $managerArgs = "";
-                    foreach ($this->entities[$data["entity"]] as $field) {
-                        if ($data["action"] == "new") {
-                            $constructorParams .= "$" . $field['name'] . ",";
-                            if ($field["type"] != "id") {
-                                $managerArgs .= "$" . $field['name'] . ",";
-                            }
-                        } else {
-                            $constructorParams .= "$" . $field['name'] . ",";
-                            $managerArgs .= "$" . $field['name'] . ",";
-                        }
-                    }
+    public function generateTests()
+    {
+        foreach ($this->commandsQueriesList['commands'] as $data) {
+            $constructorParams = '';
+            $managerArgs = '';
 
-                    $parameters = [
-                        'rootDir' => $this->rootDir . "/src",
-                        'projectDir' => $this->projectDir,
-                        'projectName' => str_replace('src/', '', $this->projectDir),
-                        'actionName' => ucfirst(strtolower($data['action'])),
-                        'entityName' => ucfirst(strtolower($data['entity'])),
-                        'entityFields' => $this->entities[$data['entity']],
-                        'managerArgs' => trim($managerArgs, ', '),
-                        'fields' => $this->entities[$data['entity']],
-                        'valueObjects' => $this->valueObjects,
-                        'constructorArgs' => trim($constructorParams, ', '),
-                        'destinationPath' => $this->destinationPath,
+            //$this->parameters['actionName'] = ucfirst(strtolower($data['action']));
+            $this->parameters['actionName'] = ucfirst($data['action']);
+            $this->parameters['entityName'] = ucfirst(strtolower($data['entity']));
+            $this->parameters['entityFields'] = $this->entities[$data['entity']];
+            $this->parameters['fields'] = $this->entities[$data['entity']]; //todo: unify these entityFields and fields
 
-                    ];
+            $this->output->writeln(' - ' . $this->parameters['actionName'] . ' - ');
 
-                    // Command
-                    $this->generator->addHandler(new UpdateCommandTestHandler($parameters));
-                    // Decorator
-                    $this->generator->addHandler(new UpdateCommandHandlerDecoratorTestHandler($parameters));
-                    // Handler
-                    $this->generator->addHandler(new UpdateCommandHandlerTestHandler($parameters));
+            foreach ($this->entities[$data['entity']] as $field) {
+                $constructorParams .= '$' . $field['name'] . ', ';
 
-                    // Command
-                    $this->generator->addHandler(new NewCommandTestHandler($parameters));
-                    // Decorator
-                    $this->generator->addHandler(new NewCommandHandlerDecoratorTestHandler($parameters));
-                    // Handler
-                    $this->generator->addHandler(new NewCommandHandlerTestHandler($parameters));
-
-                    // Command
-                    $this->generator->addHandler(new DeleteCommandTestHandler($parameters));
-                    // Handler
-                    $this->generator->addHandler(new DeleteManyCommandHandlerTestHandler($parameters));
-                    $this->generator->addHandler(new DeleteCommandHandlerTestHandler($parameters));
-
-
-                    // Command
-                    $this->generator->addHandler(new PatchCommandHandlerTestHandler($parameters));
-                    // Decorator
-                    $this->generator->addHandler(new PatchCommandHandlerDecoratorTestHandler($parameters));
-                    // Handler
-                    $this->generator->addHandler(new PatchCommandHandlerTestHandler($parameters));
-                    // SpecHandler
-
-                    /*
-                    $this->generator->addHandler(new GetAllQueryHandler($parameters));
-                    $this->generator->addHandler(new GetAllQueryHandlerHandler($parameters));
-
-
-                    $this->generator->addHandler(new GetQueryHandler($parameters));
-                    $this->generator->addHandler(new GetQueryHandlerHandler($parameters));
-
-                    $this->generator->addHandler(new GetByIdsHandler($parameters));
-                    $this->generator->addHandler(new GetByIdsHandlerHandler($parameters));
-
-
-                    $this->generator->addHandler(new SearchByQueryHandler($parameters));
-                    $this->generator->addHandler(new SearchByQueryHandlerHandler($parameters));
-                    */
-
-                    $this->generator->execute();
-                    $this->generator->clear();
+                if (('new' === $data['action'] && 'id' !== $field['type']) || ('new' !== $data['action'])) {
+                    $managerArgs .= '$' . $field['name'] . ', ';
                 }
             }
+
+            $this->parameters['constructorArgs'] = trim($constructorParams, ', ');
+            $this->parameters['managerArgs'] = trim($managerArgs, ', ');
+
+            if ('Delete' !== $this->parameters['actionName']) {
+                // Command
+                $this->generator->addHandler(new CommandTestHandler($this->parameters));
+                // Decorator
+                $this->generator->addHandler(new CommandHandlerDecoratorTestHandler($this->parameters));
+                // Handler
+                $this->generator->addHandler(new CommandHandlerTestHandler($this->parameters));
+
+                // Todo : create SpecHandler Test
+                //$this->generator->addHandler(new CommandSpecTestHandler($this->parameters));
+
+                // Todo : create ValidationHandler Test
+                //$this->generator->addHandler(new CommandValidationTestHandler($this->parameters));
+            } else {
+                // Command
+                $this->generator->addHandler(new DeleteCommandHandlerTestHandler($this->parameters));
+                // Handler
+                $this->generator->addHandler(new DeleteManyCommandHandlerTestHandler($this->parameters));
+                $this->generator->addHandler(new DeleteCommandHandlerTestHandler($this->parameters));
+            }
+
+            $this->generator->execute();
+            $this->generator->clear();
         }
+
+        // TODO : do tests for queries, like commands
+        //foreach ($this->commandsQueriesList['queries'] as $data) {
+        //}
     }
 }

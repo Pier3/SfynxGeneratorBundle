@@ -8,7 +8,7 @@ use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
 class PresentationBundleExtensionHandler extends AbstractHandler implements HandlerInterface
 {
-    use  ExecuteTrait;
+    use ExecuteTrait;
 
     const SKELETON_DIR = 'Api/PresentationBundle/DependencyInjection';
     const SKELETON_TPL = 'PresentationBundleExtension.php.twig';

@@ -8,13 +8,18 @@ use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
 class WFPublishEventHandler extends AbstractHandler implements HandlerInterface
 {
-    use  ExecuteTrait;
+    use ExecuteTrait;
 
     const SKELETON_DIR = 'Api/Domain/Workflow/Listener';
     const SKELETON_TPL = 'WFPublishEvent.php.twig';
 
     protected $targetPattern = '%s/%s/Domain/Workflow/%s/Listener/WFPublishEvent.php';
     protected $target;
+
+    protected function setTemplateName()
+    {
+        $this->templateName = self::SKELETON_TPL;
+    }
 
     protected function setTarget()
     {

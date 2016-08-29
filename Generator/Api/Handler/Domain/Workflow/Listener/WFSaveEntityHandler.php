@@ -8,13 +8,18 @@ use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
 class WFSaveEntityHandler extends AbstractHandler implements HandlerInterface
 {
-    use  ExecuteTrait;
+    use ExecuteTrait;
 
     const SKELETON_DIR = 'Api/Domain/Workflow/Listener';
     const SKELETON_TPL = 'WFSaveEntity.php.twig';
 
     protected $targetPattern = '%s/%s/Domain/Workflow/%s/Listener/WFSaveEntity.php';
     protected $target;
+
+    protected function setTemplateName()
+    {
+        $this->templateName = self::SKELETON_TPL;
+    }
 
     protected function setTarget()
     {

@@ -6,15 +6,20 @@ use Sfynx\DddGeneratorBundle\Generator\Generalisation\AbstractHandler;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\HandlerInterface;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
-class PatchCommandHandlerHandler extends AbstractHandler implements HandlerInterface
+class CommandHandlerHandler extends AbstractHandler implements HandlerInterface
 {
-    use  ExecuteTrait;
+    use ExecuteTrait;
 
     const SKELETON_DIR = 'Api/Application/Command/Handler';
-    const SKELETON_TPL = 'PatchCommandHandler.php.twig';
+    const SKELETON_TPL = '%sCommandHandler.php.twig';
 
-    protected $targetPattern = '%s/%s/Application/%s/Command/Handler/PatchCommandHandler.php';
+    protected $targetPattern = '%s/%s/Application/%s/Command/Handler/%sCommandHandler.php';
     protected $target;
+
+    protected function setTemplateName()
+    {
+        $this->templateName = sprintf(self::SKELETON_TPL, $this->parameters['actionName']);
+    }
 
     protected function setTarget()
     {
@@ -22,7 +27,8 @@ class PatchCommandHandlerHandler extends AbstractHandler implements HandlerInter
             $this->targetPattern,
             $this->parameters['destinationPath'],
             $this->parameters['projectDir'],
-            ucfirst($this->parameters['entityName'])
+            $this->parameters['entityName'],
+            $this->parameters['actionName']
         );
     }
 }

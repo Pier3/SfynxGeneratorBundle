@@ -8,7 +8,7 @@ use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
 class UpdateCommandAdapterTestHandler extends AbstractHandler implements HandlerInterface
 {
-    use  ExecuteTrait;
+    use ExecuteTrait;
 
     const SKELETON_DIR = 'Api/Tests/Presentation/Adapter/Entity/Command';
     const SKELETON_TPL = 'UpdateCommandAdapterTest.php.twig';

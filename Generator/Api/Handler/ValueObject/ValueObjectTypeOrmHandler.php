@@ -6,15 +6,20 @@ use Sfynx\DddGeneratorBundle\Generator\Generalisation\AbstractHandler;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\HandlerInterface;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
-class ValueObjectTypeORMHandler extends AbstractHandler implements HandlerInterface
+class ValueObjectTypeOrmHandler extends AbstractHandler implements HandlerInterface
 {
-    use  ExecuteTrait;
+    use ExecuteTrait;
 
     const SKELETON_DIR = 'Api/Infrastructure/EntityType';
     const SKELETON_TPL = 'Orm.php.twig';
 
     protected $targetPattern = '%s/%s/Infrastructure/EntityType/Orm/%sType.php';
     protected $target;
+
+    protected function setTemplateName()
+    {
+        $this->templateName = self::SKELETON_TPL;
+    }
 
     protected function setTarget()
     {

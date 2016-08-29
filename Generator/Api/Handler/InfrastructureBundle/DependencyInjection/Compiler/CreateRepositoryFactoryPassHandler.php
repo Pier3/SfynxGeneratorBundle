@@ -8,7 +8,7 @@ use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
 class CreateRepositoryFactoryPassHandler extends AbstractHandler implements HandlerInterface
 {
-    use  ExecuteTrait;
+    use ExecuteTrait;
 
     const SKELETON_DIR = 'Api/InfrastructureBundle/DependencyInjection/Compiler';
     const SKELETON_TPL = 'CreateRepositoryFactoryPass.php.twig';

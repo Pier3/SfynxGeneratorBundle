@@ -5,159 +5,22 @@ namespace {{ projectName }}\Presentation\Coordination\{{ entityName }}\{{ group 
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Resolver\ResolverInterface;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Request\RequestInterface;
 use Sfynx\DddBundle\Layer\Presentation\Response\Generalisation\ResponseHandlerInterface;
+use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\{{ group }}HandlerInterface;
 use Symfony\Component\HttpFoundation\Response;
-{% if group == "Query" %}
-use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\QueryHandlerInterface;
-use {{ projectName }}\Presentation\Adapter\{{ entityName }}\Query\GetAllQueryAdapter;
-use {{ projectName }}\Presentation\Adapter\{{ entityName }}\Query\GetQueryAdapter;
-use {{ projectName }}\Presentation\Request\{{ entityName }}\Query\GetAllRequest;
-use {{ projectName }}\Presentation\Request\{{ entityName }}\Query\GetRequest;
-use {{ projectName }}\Application\{{ entityName }}\Query\Handler\GetAllQueryHandler;
-use {{ projectName }}\Application\{{ entityName }}\Query\Handler\GetByIdsQueryHandler;
-use {{ projectName }}\Application\{{ entityName }}\Query\Handler\GetQueryHandler;
-{% else %}
-use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandHandlerInterface;
-use {{ projectName }}\Presentation\Adapter\{{ entityName }}\Command\UpdateCommandAdapter;
-use {{ projectName }}\Presentation\Adapter\{{ entityName }}\Command\NewCommandAdapter;
-use {{ projectName }}\Presentation\Request\{{ entityName }}\Command\UpdateRequest;
-use {{ projectName }}\Presentation\Request\{{ entityName }}\Command\NewRequest;
-use {{ projectName }}\Application\{{ entityName }}\Command\Handler\DeleteCommandHandler;
-use {{ projectName }}\Application\{{ entityName }}\Command\Handler\DeleteManyCommandHandler;
-use {{ projectName }}\Application\{{ entityName }}\Command\Handler\NewCommandHandlerDecorator;
-use {{ projectName }}\Application\{{ entityName }}\Command\Handler\UpdateCommandHandlerDecorator;
-use {{ projectName }}\Application\{{ entityName }}\Command\Handler\PatchCommandHandlerDecorator;
-{% endif %}
 
+{% for commandQueryResponsibilitySegregation in controllerData %}
+use {{ projectName }}\Presentation\Adapter\{{ entityName }}\{{ group }}\{{ commandQueryResponsibilitySegregation.action|ucfirst }}{{ group }}Adapter;
+use {{ projectName }}\Presentation\Adapter\{{ entityName }}\{{ group }}\{{ commandQueryResponsibilitySegregation.action|ucfirst }}{{ group }}Handler;
+
+{% endfor %}
 /**
+ * Class Controller
+ *
  * @category   {{ projectName }}
  * @package    Presentation
  * @subpackage Coordination\{{ group }}
  */
 class Controller
 {
-{% if group == "Command" %}
-    /** @var DeleteCommandHandler */
-    protected $deleteCommandHandler;
-
-    /** @var DeleteManyCommandHandler */
-    protected $deleteManyCommandHandler;
-
-    /** @var NewCommandHandlerDecorator */
-    protected $newCommandHandlerDecorator;
-
-    /** @var UpdateCommandHandlerDecorator */
-    protected $updateCommandHandlerDecorator;
-
-    /** @var PatchCommandHandlerDecorator */
-    protected $patchCommandHandlerDecorator;
-
-    /**
-     * ActorController constructor.
-     *
-     * @param RequestInterface         $request
-     * @param ResolverInterface        $resolver
-     * @param ResponseHandlerInterface $responseHandler
-     * @param CommandHandlerInterface  $deleteCommandHandler
-     * @param CommandHandlerInterface  $deleteManyCommandHandler
-     * @param CommandHandlerInterface  $updateCommandHandlerDecorator
-     * @param CommandHandlerInterface  $newCommandHandlerDecorator
-     * @param CommandHandlerInterface  $patchCommandHandlerDecorator
-     */
-    public function __construct(
-        RequestInterface $request,
-        ResolverInterface $resolver,
-        ResponseHandlerInterface $responseHandler,
-        CommandHandlerInterface $deleteCommandHandler,
-        CommandHandlerInterface $deleteManyCommandHandler,
-        CommandHandlerInterface $updateCommandHandlerDecorator,
-        CommandHandlerInterface $newCommandHandlerDecorator,
-        CommandHandlerInterface $patchCommandHandlerDecorator
-    )
-    {
-        $this->request = $request;
-        $this->resolver = $resolver;
-        $this->responseHandler = $responseHandler;
-        $this->deleteCommandHandler = $deleteCommandHandler;
-        $this->deleteManyCommandHandler = $deleteManyCommandHandler;
-        $this->updateCommandHandlerDecorator = $updateCommandHandlerDecorator;
-        $this->newCommandHandlerDecorator = $newCommandHandlerDecorator;
-        $this->patchCommandHandlerDecorator = $patchCommandHandlerDecorator;
-    }
-{% elseif group == "Query" %}
-    /** @var RequestInterface */
-    protected $request;
-
-    /** @var ResolverInterface */
-    protected $resolver;
-
-    /** @var ResponseHandlerInterface */
-    protected $responseHandler;
-
-    /** @var GetAllQueryHandler */
-    protected $getAllQueryHandler;
-
-    /** @var GetByIdsQueryHandler */
-    protected $getByIdsQueryHandler;
-
-    /** @var GetQueryHandler */
-    protected $getQueryHandler;
-
-    /**
-     * ActorController constructor.
-     *
-     * @param RequestInterface         $request
-     * @param ResolverInterface        $resolver
-     * @param ResponseHandlerInterface $responseHandler
-     * @param QueryHandlerInterface    $getAllQueryHandler
-     * @param QueryHandlerInterface    $getByIdsQueryHandler
-     * @param QueryHandlerInterface    $getQueryHandler
-     * @param QueryHandlerInterface    $searchByQueryHandler
-     */
-    public function __construct(
-        RequestInterface $request,
-        ResolverInterface $resolver,
-        ResponseHandlerInterface $responseHandler,
-        QueryHandlerInterface $getAllQueryHandler,
-        QueryHandlerInterface $getByIdsQueryHandler,
-        QueryHandlerInterface $getQueryHandler,
-        QueryHandlerInterface $searchByQueryHandler
-    )
-    {
-        $this->request = $request;
-        $this->resolver = $resolver;
-        $this->responseHandler = $responseHandler;
-        $this->getAllQueryHandler = $getAllQueryHandler;
-        $this->getQueryHandler = $getQueryHandler;
-        $this->getByIdsQueryHandler = $getByIdsQueryHandler;
-        $this->searchByQueryHandler = $searchByQueryHandler;
-    }
-
-{% include("actions/getSwaggerFile.php.twig") %}
-{% endif %}
-
-{% for action in controllerData %}
-{% if group == "Command" %}
-{% if action.method == "post" %}
-{% include("actions/new.php.twig") %}
-{% elseif action.method == "delete" %}
-{% include("actions/delete.php.twig") %}
-{% elseif action.method == "put" %}
-{% include("actions/update.php.twig") %}
-{% elseif action.method == "patch" %}
-{% include("actions/patch.php.twig") %}
-{% endif %}
-{% elseif group == "Query" %}
-{% if action.action == "get" %}
-{% include("actions/get.php.twig") %}
-{% elseif action.action == "getAll" %}
-{% include("actions/getAll.php.twig") %}
-{% elseif action.action == "getByIds" %}
-{% include("actions/getByIds.php.twig") %}
-{% elseif action.action == "searchBy" %}
-{% include("actions/searchBy.php.twig") %}
-{% else %}
-{% include("actions/custom.php.twig") %}
-{% endif %}
-{% endif %}
-{% endfor %}
+{% include('controllerClass.php.twig')%}
 }

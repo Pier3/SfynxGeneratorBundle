@@ -5,7 +5,7 @@
      * <code>
      * </code>
      */
-    public function {{ action.action }}Action()
+    public function {{ action }}Action()
     {
         $adapter = new NewCommandAdapter();
         $command = $adapter->createCommandFromRequest(new NewRequest($this->request, $this->resolver));

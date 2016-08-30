@@ -1,7 +1,7 @@
     /**
      * @return Response
      */
-    public function {{ action.action }}Action()
+    public function {{ action }}Action()
     {
         $adapter = new SearchByQueryAdapter();
         $query = $adapter->createQueryFromRequest(new SearchByRequest($this->request, $this->resolver));

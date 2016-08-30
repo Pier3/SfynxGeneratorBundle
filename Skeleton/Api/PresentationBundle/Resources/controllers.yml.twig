@@ -1,0 +1,18 @@
+services:
+{% for ? in ? %}
+{% for commandQueryResponsibilitySegregation in controllerData %}
+    project.{{ projectName|lower }}.controller.{{ group|lower }}.{{ entity|lower }}:
+        scope: prototype
+        class: {{ projectName }}\Presentation\Coordination\{{ entity }}\{{ group }}\Controller
+        arguments:
+            - @project.request.strategy
+            - @project.resolver.strategy
+            - @project.dddcontext.response.handler
+            - @project.{{ projectName|lower }}.{{ entity|lower }}.{{ group|lower }}.{{ commandQueryResponsibilitySegregation.action|lower }}.handler
+{% if loop.last %}
+
+
+{% endif %}
+{% endfor %}
+{% endfor %}
+{% endfor %}

@@ -160,9 +160,9 @@ class GenerateDddApiCommand extends Command
 
         echo ' # # # # # ' . __FILE__ . ':' . __LINE__ . ': Uncomment these lines after developping system.';
 
-        //$applicationGenerator->generate();
+        $applicationGenerator->generate();
 
-        //$domainGenerator->generate();
+        $domainGenerator->generate();
 
         $presentationGenerator->generate(); exit;
 

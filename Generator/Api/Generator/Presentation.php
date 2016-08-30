@@ -7,41 +7,32 @@ use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Adapter\Query\AdapterHandler 
 use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Adapter\DeleteAdapterHandler;
 use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Adapter\DeleteManyAdapterHandler;
 
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Infrastructure\Persistence\TraitEntityNameHandler;
 use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Presentation\Coordination\ControllerHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\PresentationBundle\Resources\ControllersHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Request\DeleteManyRequestHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Request\DeleteRequestHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Request\GetAllRequestHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Request\GetByIdsRequestHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Request\GetRequestHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Request\NewRequestHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Request\PatchRequestHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Request\SearchByRequestHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Request\UpdateRequestHandler;
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Request\RequestHandler;
 
-
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Adapter\Entity\Command\DeleteCommandAdapterTestHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Adapter\Entity\Command\NewCommandAdapterTestHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Adapter\Entity\Command\PatchCommandAdapterTestHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Adapter\Entity\Command\UpdateCommandAdapterTestHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Coordination\Entity\Command\ControllerCommandTestHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Coordination\Entity\Query\ControllerQueryTestHandler;
-
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Request\Entity\Command\DeleteRequestTestHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Request\Entity\Command\NewRequestTestHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Request\Entity\Command\PatchRequestTestHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Request\Entity\Command\UpdateRequestTestHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Request\Entity\Query\GetAllRequestTestHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Request\Entity\Query\GetRequestTestHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Request\Entity\Query\SearchByRequestTestHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\TraitVerifyResolverHandler;
+//use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Adapter\Entity\Command\DeleteCommandAdapterTestHandler;
+//use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Adapter\Entity\Command\NewCommandAdapterTestHandler;
+//use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Adapter\Entity\Command\PatchCommandAdapterTestHandler;
+//use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Adapter\Entity\Command\UpdateCommandAdapterTestHandler;
+//use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Coordination\Entity\Command\ControllerCommandTestHandler;
+//use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Coordination\Entity\Query\ControllerQueryTestHandler;
+//use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Request\Entity\Command\DeleteRequestTestHandler;
+//use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Request\Entity\Command\NewRequestTestHandler;
+//use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Request\Entity\Command\PatchRequestTestHandler;
+//use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Request\Entity\Command\UpdateRequestTestHandler;
+//use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Request\Entity\Query\GetAllRequestTestHandler;
+//use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Request\Entity\Query\GetRequestTestHandler;
+//use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Request\Entity\Query\SearchByRequestTestHandler;
+//use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\TraitVerifyResolverHandler;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class Presentation
 {
     const COMMANDS_LIST = ['update', 'new', 'delete', 'patch'];
     const QUERIES_LIST = ['get', 'getAll', 'searchBy', 'getByIds', 'findByName'];
+
+    const COMMAND = 'Command';
+    const QUERY = 'Query';
 
     /** @var DddApiGenerator  */
     protected $generator;
@@ -69,6 +60,8 @@ class Presentation
     protected $parameters;
     /** @var array  */
     protected $commandsQueriesList;
+    /** @var array */
+    protected $entitiesGroups;
 
     /**
      * Domain constructor.
@@ -128,15 +121,14 @@ class Presentation
         $this->output->writeln('');
 
         $this->output->writeln('### COMMAND ADAPTERS GENERATION ###');
-        //$this->generateCommandsAdapter();
+        $this->generateCommandsAdapter();
         $this->output->writeln('### QUERY ADAPTERS GENERATION ###');
-        //$this->generateQueriesAdapter();
-        $this->output->writeln('### COORDINATION GENERATION ###');
-        $this->generateCoordination();
-        exit;
-        $this->output->writeln('### ENTITIES & REPOSITORIES INTERFACES GENERATION ###');
+        $this->generateQueriesAdapter();
+        $this->output->writeln('### COORDINATION CONTROLLERS GENERATION ###');
+        $this->generateCoordinationControllers();
+        $this->output->writeln('### REQUESTS GENERATION ###');
         $this->generateRequest();
-        $this->output->writeln('### ENTITIES & REPOSITORIES INTERFACES GENERATION ###');
+        $this->output->writeln('### TESTS GENERATION ###');
         $this->generateTests();
     }
 
@@ -146,16 +138,20 @@ class Presentation
 
         foreach ($this->pathsToCreate as $route => $verbData) {
             foreach ($verbData as $verb => $data) {
-
                 $elements = $data;
                 $elements['route'] = $route;
                 $elements['verb'] = $verb;
 
+                //Sort by entities and by group (command/query)
+                $group = (in_array($data['action'], self::COMMANDS_LIST)) ? self::COMMAND : self::QUERY;
+                $this->entitiesGroups[$data['entity']][$group][] = $elements;
+
+                //Sort by group
                 if (in_array($data['action'], self::COMMANDS_LIST)) {
-                    $elements['group'] = 'Command';
+                    $elements['group'] = self::COMMAND;
                     $routes['commands'][] = $elements;
                 } else {
-                    $elements['group'] = 'Query';
+                    $elements['group'] = self::QUERY;
                     $routes['queries'][] = $elements;
                 }
             }
@@ -167,26 +163,16 @@ class Presentation
     public function generateCommandsAdapter()
     {
         foreach ($this->commandsQueriesList['commands'] as $data) {
-            $constructorParams = '';
-
-            foreach ($this->entities[$data['entity']] as $field) {
-                $constructorParams .= '$' . $field['name'] . ', ';
-            }
-
             $this->parameters['actionName'] = ucfirst($data['action']);
             $this->parameters['entityName'] = ucfirst($data['entity']);
             $this->parameters['entityFields'] = $this->entities[$data['entity']];
+            $this->parameters['constructorArgs'] = $this->buildConstructorParamsString($data['entity']);
 
-            $this->parameters['constructorArgs'] = trim($constructorParams, ', ');
-
-            $this->generator->addHandler(new AdapterCommandHandler($this->parameters));
-
-            $this->generator->execute();
-            $this->generator->clear();
+            $this->generator->addHandler(new AdapterCommandHandler($this->parameters), true);
         }
 
-        $this->generator->addHandler(new DeleteAdapterHandler($this->parameters));
-        $this->generator->addHandler(new DeleteManyAdapterHandler($this->parameters));
+        $this->generator->addHandler(new DeleteAdapterHandler($this->parameters), true);
+        $this->generator->addHandler(new DeleteManyAdapterHandler($this->parameters), true);
 
         $this->generator->execute();
         $this->generator->clear();
@@ -195,189 +181,60 @@ class Presentation
     public function generateQueriesAdapter()
     {
         foreach ($this->commandsQueriesList['queries'] as $data) {
-            $constructorParams = '';
-
-            foreach ($this->entities[$data['entity']] as $field) {
-                $constructorParams .= '$' . $field['name'] . ', ';
-            }
-
             $this->parameters['actionName'] = ucfirst($data['action']);
             $this->parameters['entityName'] = ucfirst($data['entity']);
             $this->parameters['entityFields'] = $this->entities[$data['entity']];
+            $this->parameters['constructorArgs'] = $this->buildConstructorParamsString($data['entity']);
 
-            $this->parameters['constructorArgs'] = trim($constructorParams, ', ');
-
-            $this->generator->addHandler(new AdapterQueryHandler($this->parameters));
-
-            $this->generator->execute();
-            $this->generator->clear();
+            $this->generator->addHandler(new AdapterQueryHandler($this->parameters), true);
         }
+        $this->generator->execute();
+        $this->generator->clear();
     }
 
-        /*
-    public function generateCoordination()
+    public function generateCoordinationControllers()
     {
-        foreach ($this->pathsToCreate as $route => $verbData) {
-            foreach ($verbData as $verb => $data) {
-                $controllers[$data['controller']][] = ['action' => $data['action'], 'path' => $route, 'method' => $verb, 'entityName' => $data['entity']];
-            }
+        foreach ($this->entitiesGroups as $entityName => $entityGroups) {
+            $this->parameters['entityName'] = $entityName;
+
+            //Command part
+            $this->addCQRSCoordinationToGenerator($entityGroups, self::COMMAND);
+
+            //Query part
+            $this->addCQRSCoordinationToGenerator($entityGroups, self::QUERY);
         }
 
-        foreach ($controllers as $controller => $data) {
-            $parametersQuery = [
-                'rootDir' => $this->rootDir . '/src',
-                'projectDir' => $this->projectDir,
-                'projectName' => str_replace('src/', '', $this->projectDir),
-                'controllerName' => $controller,
-                'group' => 'Query',
-                'destinationPath' => $this->destinationPath,
-            ];
-
-            $parametersCommand = [
-                'rootDir' => $this->rootDir . '/src',
-                'projectDir' => $this->projectDir,
-                'projectName' => str_replace('src/', '', $this->projectDir),
-                'controllerName' => $controller,
-                'group' => 'Command',
-                'destinationPath' => $this->destinationPath,
-            ];
-
-            foreach ($data as $action) {
-
-                if (in_array($action['action'], ['put', 'delete', 'update', 'new', 'patch'])) {
-                    $parametersCommand['controllerData'][] = $action;
-                    $parametersCommand['entityName'] = $action['entityName'];
-
-                    $this->generator->addHandler(new ControllerHandler($parametersCommand));
-                    $this->generator->execute();
-                    $this->generator->clear();
-
-                } else {
-                    $parametersQuery['controllerData'][] = $action;
-                    $parametersQuery['entityName'] = $action['entityName'];
-
-                    $this->generator->addHandler(new ControllerHandler($parametersQuery));
-                    $this->generator->execute();
-                    $this->generator->clear();
-
-                }
-
-                $controllerToCreate[$controller][$action['entityName']] = true;
-            }
-
-            $controllersToCreate[] = $controllerToCreate;
-        }
-
-
-        foreach ($controllersToCreate as $controller => $entities) {
-            $parameters = [
-                'rootDir' => $this->rootDir . '/src',
-                'projectDir' => $this->projectDir,
-                'projectName' => str_replace('src/', '', $this->projectDir),
-                'controllers' => $controllersToCreate[$controller],
-                'destinationPath' => $this->destinationPath,
-            ];
-
-            $this->generator->addHandler(new ControllersHandler($parameters));
-
-            $this->generator->execute();
-            $this->generator->clear();
-        }
-    }*/
-
-
-    public function generateCoordination()
-    {
-        //TODO: WIP: Fix this
-
-        $controllerData = [];
-        foreach ($this->commandsQueriesList['commands'] as $data) {
-            $controllerData[] = [
-                'action' => $data['action'],
-                'path' => $data['route'],
-                'method' => $data['verb'],
-                'entityName' => $data['entity']
-            ];
-        }
-
-        foreach ($this->commandsQueriesList['commands'] as $data) {
-            $this->parameters['controllerName'] = $data['controller'];
-            $this->parameters['controllerData'] = $controllerData;
-            $this->parameters['entityName'] = $data['entity'];
-            $this->parameters['group'] = $data['group'];
-            $this->parameters['actionName'] = $data['action'];
-
-            $this->generator->addHandler(new ControllerHandler($this->parameters));
-            $this->generator->execute();
-            $this->generator->clear();
-            $controllerToCreate[$data['controller']][$data['entity']] = true;
-        }
-
-        die(var_dump($controllerToCreate));
-
-        /*
-        $controllersToCreate[] = $controllerToCreate;
-
-
-        //Generate controllers.yml
-        foreach ($controllersToCreate as $controller => $entities) {
-            $this->parameters = [
-                'rootDir' => $this->rootDir . '/src',
-                'projectDir' => $this->projectDir,
-                'projectName' => str_replace('src/', '', $this->projectDir),
-                'controllers' => $controllersToCreate[$controller],
-                'destinationPath' => $this->destinationPath,
-            ];
-
-            $this->generator->addHandler(new ControllersHandler($this->parameters));
-
-            $this->generator->execute();
-            $this->generator->clear();
-        }
-        */
+        $this->generator->execute();
+        $this->generator->clear();
     }
 
     public function generateRequest()
     {
-        foreach ($this->pathsToCreate as $route => $verbData) {
-            foreach ($verbData as $verb => $data) {
-                $constructorParams = '';
-                foreach ($this->entities[$data['entity']] as $field) {
-                    $constructorParams .= "$" . $field['name'] . ',';
-                }
+        foreach ($this->entitiesGroups as $entityName => $entityGroups) {
+            $this->parameters['entityName'] = $entityName;
+            $this->parameters['constructorArgs'] = $this->buildConstructorParamsString($entityName);
+            $this->parameters['entityFields'] = $this->entities[$entityName];
 
-                $this->parameters = [
-                    'rootDir' => $this->rootDir . '/src',
-                    'projectDir' => $this->projectDir,
-                    'projectName' => str_replace('src/', '', $this->projectDir),
-                    'actionName' => ucfirst($data['action']),
-                    'entityName' => ucfirst($data['entity']),
-                    'entityFields' => $this->entities[$data['entity']],
-                    'destinationPath' => $this->destinationPath,
-                ];
-                $this->parameters['constructorArgs'] = trim($constructorParams, ',');
-            }
+            //Command Part
+            $this->addCQRSRequestToGenerator($entityGroups, self::COMMAND);
 
-            $this->generator->addHandler(new UpdateRequestHandler($this->parameters));
-            $this->generator->addHandler(new NewRequestHandler($this->parameters));
-            $this->generator->addHandler(new DeleteRequestHandler($this->parameters));
-            $this->generator->addHandler(new DeleteManyRequestHandler($this->parameters));
-            $this->generator->addHandler(new GetAllRequestHandler($this->parameters));
-            $this->generator->addHandler(new SearchByRequestHandler($this->parameters));
-            $this->generator->addHandler(new GetByIdsRequestHandler($this->parameters));
-            $this->generator->addHandler(new GetRequestHandler($this->parameters));
-            $this->generator->addHandler(new PatchRequestHandler($this->parameters));
-
-            $this->generator->execute();
-            $this->generator->clear();
+            //Query Part
+            $this->addCQRSRequestToGenerator($entityGroups, self::QUERY);
         }
+
+        $this->generator->execute();
+        $this->generator->clear();
     }
 
     public function generateTests()
     {
+        //TODO: Big todo => to review for refactoring.
+        /*
         foreach ($this->pathsToCreate as $route => $verbData) {
             foreach ($verbData as $verb => $data) {
-                $controllers[$data['controller']][] = ['action' => $data['action'], 'path' => $route, 'method' => $verb, 'entityName' => $data['entity']];
+                $controllers[$data['controller']][] = [
+                    'action' => $data['action'], 'path' => $route, 'method' => $verb, 'entityName' => $data['entity']
+                ];
 
                 $this->parameters = [
                     'rootDir' => $this->rootDir . '/src',
@@ -405,7 +262,7 @@ class Presentation
                         'projectDir' => $this->projectDir,
                         'projectName' => str_replace('src/', '', $this->projectDir),
                         'controllerName' => $controller,
-                        'group' => 'Query',
+                        'group' => self::QUERY,
                         'destinationPath' => $this->destinationPath,
                     ];
 
@@ -414,7 +271,7 @@ class Presentation
                         'projectDir' => $this->projectDir,
                         'projectName' => str_replace('src/', '', $this->projectDir),
                         'controllerName' => $controller,
-                        'group' => 'Command',
+                        'group' => self::COMMAND,
                         'destinationPath' => $this->destinationPath,
                     ];
 
@@ -462,5 +319,58 @@ class Presentation
         $this->generator->addHandler(New TraitVerifyResolverHandler($this->parameters));
         $this->generator->execute();
         $this->generator->clear();
+        */
+    }
+
+    /**
+     * @param string $entityName Name of the entity to parse all attributes in order to build a valid constructor
+     *                           signature.
+     * @return string
+     */
+    private function buildConstructorParamsString($entityName)
+    {
+        $constructorParamsString = '';
+        foreach ($this->entities[$entityName] as $field) {
+            $constructorParamsString .= '$' . $field['name'] . ', ';
+        }
+
+        return trim($constructorParamsString, ', ');
+    }
+
+    /**
+     * @param array $entityGroups
+     * @param string $group
+     */
+    private function addCQRSCoordinationToGenerator($entityGroups, $group)
+    {
+        //Set the parameter $group to its good value (might be a reset)
+        $this->parameters['group'] = $group;
+
+        //Reset the controllerData list
+        $this->parameters['controllerData'] = [];
+
+        //Fetch all controllerData for the given group (Command or Query)
+        foreach ($entityGroups[$group] as $entityCommandData) {
+            $this->parameters['controllerData'][] = $entityCommandData;
+        }
+
+        //Add the Handler, then execute it for generate the file, and finally, clear the handlers generator's stack.
+        $this->generator->addHandler(new ControllerHandler($this->parameters), true);
+    }
+
+    /**
+     * @param array $entityGroups
+     * @param string $group
+     */
+    private function addCQRSRequestToGenerator($entityGroups, $group)
+    {
+        //Set the parameter $group to its good value (might be a reset)
+        $this->parameters['group'] = $group;
+
+        //Fetch all actionName and add the handler for this actionName
+        foreach ($entityGroups[$group] as $data) {
+            $this->parameters['actionName'] = ucfirst($data['action']);
+            $this->generator->addHandler(new RequestHandler($this->parameters), true);
+        }
     }
 }

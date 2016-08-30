@@ -18,7 +18,7 @@ class ControllerHandler extends AbstractHandler implements HandlerInterface
 
     protected function setTemplateName()
     {
-        $this->templateName = sprintf(self::SKELETON_TPL, $this->parameters['actionName']);
+        $this->templateName = self::SKELETON_TPL;
     }
 
     protected function setTarget()

@@ -6,15 +6,20 @@ use Sfynx\DddGeneratorBundle\Generator\Generalisation\AbstractHandler;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\HandlerInterface;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
-class CustomRequestHandler extends AbstractHandler implements HandlerInterface
+class RequestHandler extends AbstractHandler implements HandlerInterface
 {
     use ExecuteTrait;
 
     const SKELETON_DIR = 'Api/Presentation/Request';
-    const SKELETON_TPL = 'CustomRequest.php.twig';
+    const SKELETON_TPL = '%sRequest.php.twig';
 
-    protected $targetPattern = '%s/%s/Presentation/Request/%s/Query/%sRequest.php';
+    protected $targetPattern = '%s/%s/Presentation/Request/%s/%s/%sRequest.php';
     protected $target;
+
+    protected function setTemplateName()
+    {
+        $this->templateName = sprintf(self::SKELETON_TPL, $this->parameters['actionName']);
+    }
 
     protected function setTarget()
     {
@@ -23,7 +28,8 @@ class CustomRequestHandler extends AbstractHandler implements HandlerInterface
             $this->parameters['destinationPath'],
             $this->parameters['projectDir'],
             ucfirst($this->parameters['entityName']),
-            ucfirst($this->parameters['actionName'])
+            $this->parameters['group'],
+            $this->parameters['actionName']
         );
     }
 }

@@ -5,7 +5,7 @@
      * <code>
      * </code>
      */
-    public function {{ action.action }}Action()
+    public function {{ action }}Action()
     {
         $adapter = new PatchCommandAdapter();
         $command = $adapter->createCommandFromRequest(new PatchRequest($this->request, $this->resolver));

@@ -1,7 +1,7 @@
     /**
      * @return Response
      */
-    public function {{ action.action }}Action()
+    public function {{ action }}Action()
     {
         $adapter = new DeleteCommandAdapter();
         $command = $adapter->createCommandFromRequest(new DeleteRequest($this->request, $this->resolver));

@@ -16,13 +16,18 @@ class ResettingListenersPassHandler extends AbstractHandler implements HandlerIn
     protected $targetPattern = '%s/%s/PresentationBundle/DependencyInjection/Compiler/ResettingListenersPass.php';
     protected $target;
 
+    protected function setTemplateName()
+    {
+        $this->templateName = self::SKELETON_TPL;
+    }
+
     protected function setTarget()
     {
         $this->target = sprintf(
             $this->targetPattern,
             $this->parameters['destinationPath'],
             $this->parameters['projectDir'],
-            ucfirst($this->parameters['projectName'])
+            $this->parameters['projectName']
         );
     }
 }

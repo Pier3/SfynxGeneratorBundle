@@ -11,16 +11,17 @@ parameters:
     #      MANAGER    #
     ###################
 
-    project.{{ projectName|lower }}.{{ entityName|lower }}.manager.query.class: {{ projectName|capitalize }}Context\Domain\Service\{{ entityName|capitalize }}\Manager\Query\Manager
+    project.{{ projectName|lower }}.{{ entityName|lower }}.manager.{{ group|lower }}.class: {{ projectName|capitalize }}Context\Domain\Service\{{ entityName|capitalize }}\Manager\{{ group }}\Manager
 
     #################
     # QUERY HANDLER #
     #################
+{% for commandQueryResponsibilitySegregation in controllerData %}
+    project.{{ projectName|lower }}.{{ entityName|lower }}.{{ group|lower }}.{{ commandQueryResponsibilitySegregation.action|lower }}.handler.class: {{ projectName|capitalize }}Context\Application\{{ entityName|capitalize }}\{{ group }}\Handler\{{ commandQueryResponsibilitySegregation.action }}{{ group }}Handle
+{% if loop.last %}
 
-    project.{{ projectName|lower }}.{{ entityName|lower }}.query.getbyids.handler.class: {{ projectName|capitalize }}Context\Application\{{ entityName|capitalize }}\Query\Handler\GetByIdsQueryHandler
-    project.{{ projectName|lower }}.{{ entityName|lower }}.query.one.handler.class: {{ projectName|capitalize }}Context\Application\{{ entityName|capitalize }}\Query\Handler\OneQueryHandler
-    project.{{ projectName|lower }}.{{ entityName|lower }}.query.all.handler.class: {{ projectName|capitalize }}Context\Application\{{ entityName|capitalize }}\Query\Handler\AllQueryHandler
-
+{% endif %}
+{% endfor %}
 services:
     ###################
     # MANAGER HANDLER #
@@ -31,7 +32,7 @@ services:
     # project.{{ projectName|lower }}.{{ entityName|lower }}.repository.factory service is created by CreateRepositoryFactoryPass
     #
     project.{{ projectName|lower }}.{{ entityName|lower }}.query.manager:
-        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.manager.query.class%
+        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.manager.{{ group }}.class%
         arguments:
             - "@project.{{ projectName|lower }}.{{ entityName|lower }}.repository.factory"
         calls:
@@ -44,28 +45,18 @@ services:
     #################
     # QUERY HANDLER #
     #################
+{% for commandQueryResponsibilitySegregation in controllerData %}
 
     #
-    # getbyids_{{ entityName|lower }} query handler
+    # {{ commandQueryResponsibilitySegregation.action|lower }} {{ entityName|lower }} {{ group }} handler
     #
-    project.{{ projectName|lower }}.{{ entityName|lower }}.query.getbyids.handler:
-        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.query.getbyids.handler.class%
-        arguments: ["@project.{{ projectName|lower }}.{{ entityName|lower }}.query.manager"]
+    project.{{ projectName|lower }}.{{ entityName|lower }}.{{ group|lower }}.{{ commandQueryResponsibilitySegregation.action|lower }}.handler:
+        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.{{ group|lower }}.{{ commandQueryResponsibilitySegregation.action|lower }}.handler.class%
+        arguments: ["@project.{{ projectName|lower }}.{{ entityName|lower }}.{{ group|lower }}.manager"]
+{% if loop.last %}
 
-    #
-    # one_{{ entityName|lower }} query handler
-    #
-    project.{{ projectName|lower }}.{{ entityName|lower }}.query.one.handler:
-        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.query.one.handler.class%
-        arguments: ["@project.{{ projectName|lower }}.{{ entityName|lower }}.query.manager"]
-
-    #
-    # all_{{ entityName|lower }} query handler
-    #
-    project.{{ projectName|lower }}.{{ entityName|lower }}.query.all.handler:
-        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.query.all.handler.class%
-        arguments: ["@project.{{ projectName|lower }}.{{ entityName|lower }}.query.manager"]
-
+{% endif %}
+{% endfor %}
     #################
     # PROCESS #
     #################

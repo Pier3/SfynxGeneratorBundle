@@ -164,10 +164,12 @@ class GenerateDddApiCommand extends Command
 
         $domainGenerator->generate();
 
-        $presentationGenerator->generate(); exit;
+        $presentationGenerator->generate();
 
         $presentationBundleGenerator->generate();
+
         $infrastructureGenerator->generate();
+        exit;
         $infrastructureBundleGenerator->generate();
     }
 

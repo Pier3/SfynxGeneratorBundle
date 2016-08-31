@@ -16,6 +16,11 @@ class RouteMultiTenantHandler extends AbstractHandler implements HandlerInterfac
     protected $targetPattern = '%s/%s/PresentationBundle/Resources/config/route/multiTenant.yml';
     protected $target;
 
+    protected function setTemplateName()
+    {
+        $this->templateName = self::SKELETON_TPL;
+    }
+
     protected function setTarget()
     {
         $this->target = sprintf(

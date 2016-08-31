@@ -8,13 +8,13 @@ use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Tra
 use stdClass;
 
 /**
- * Class GetRepository
+ * Class {{ actionName }}Repository
  *
  * @category   {{ projectName }}
  * @package    Infrastructure
  * @subpackage Repository
  */
-class GetRepository extends AbstractOneRepository implements {{ entityName }}RepositoryInterface
+class {{ actionName }}Repository extends AbstractOneRepository implements {{ entityName }}RepositoryInterface
 {
     use TraitEntityName;
 }

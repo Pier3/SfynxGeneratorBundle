@@ -6,15 +6,20 @@ use Sfynx\DddGeneratorBundle\Generator\Generalisation\AbstractHandler;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\HandlerInterface;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
-class ControllerCommandHandler extends AbstractHandler implements HandlerInterface
+class ControllerHandler extends AbstractHandler implements HandlerInterface
 {
     use ExecuteTrait;
 
     const SKELETON_DIR = 'Api/PresentationBundle/Resources/config/controller';
-    const SKELETON_TPL = 'controller_command.yml.twig';
+    const SKELETON_TPL = 'controller.yml.twig';
 
-    protected $targetPattern = '%s/%s/PresentationBundle/Resources/config/controller/%s_command.yml';
+    protected $targetPattern = '%s/%s/PresentationBundle/Resources/config/controller/%s_%s.yml';
     protected $target;
+
+    protected function setTemplateName()
+    {
+        $this->templateName = sprintf(self::SKELETON_TPL, strtolower($this->parameters['group']));
+    }
 
     protected function setTarget()
     {
@@ -22,7 +27,8 @@ class ControllerCommandHandler extends AbstractHandler implements HandlerInterfa
             $this->targetPattern,
             $this->parameters['destinationPath'],
             $this->parameters['projectDir'],
-            strtolower($this->parameters['entityName'])
+            $this->parameters['entityName'],
+            strtolower($this->parameters['group'])
         );
     }
 }

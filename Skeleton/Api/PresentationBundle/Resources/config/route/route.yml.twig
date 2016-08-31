@@ -1,0 +1,18 @@
+#
+# {{ group|lower }}
+#
+{% for commandQueryResponsibilitySegregation in controllerData %}
+project_{{ entityName|lower }}_get_byids:
+  path: /v{_version}/{{ entityName|lower }}.{_format}/{entityIds}
+  defaults: { _controller: project.{{ projectName|lower }}.controller.{{ group|lower }}.{{ entityName|lower }}:{{ commandQueryResponsibilitySegregation.action }}Action }
+  methods: {{ commandQueryResponsibilitySegregation.action|upper }}
+  requirements:
+    _format: "xml|json"
+    _version: "\d+"
+{% if 'query' == group|lower %}
+    entityIds: "[-\w]+(,[-\w]+)*"
+{% endif %}
+{% if not loop.last %}
+
+{% endif %}
+{% endfor %}

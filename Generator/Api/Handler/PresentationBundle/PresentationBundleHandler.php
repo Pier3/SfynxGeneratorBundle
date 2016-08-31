@@ -16,13 +16,18 @@ class PresentationBundleHandler extends AbstractHandler implements HandlerInterf
     protected $targetPattern = '%s/%s/PresentationBundle/%sPresentationBundle.php';
     protected $target;
 
+    protected function setTemplateName()
+    {
+        $this->templateName = self::SKELETON_TPL;
+    }
+
     protected function setTarget()
     {
         $this->target = sprintf(
             $this->targetPattern,
             $this->parameters['destinationPath'],
             $this->parameters['projectDir'],
-            ucfirst($this->parameters['projectName'])
+            $this->parameters['projectName']
         );
     }
 }

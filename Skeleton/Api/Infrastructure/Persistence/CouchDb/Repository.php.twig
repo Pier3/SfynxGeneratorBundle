@@ -2,20 +2,19 @@
 
 namespace {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\CouchDb;
 
+use Sfynx\DddBundle\Layer\Infrastructure\Persistence\Generalisation\CouchDb\AbstractOneRepository;
 use {{ projectName }}\Domain\Repository\{{ entityName }}RepositoryInterface;
-use Sfynx\DddBundle\Layer\Infrastructure\Persistence\Generalisation\CouchDb\AbstractAllRepository;
 use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\TraitEntityName;
+use stdClass;
 
 /**
- * Class GetAllRepository
+ * Class {{ actionName }}Repository
  *
  * @category   {{ projectName }}
  * @package    Infrastructure
  * @subpackage Repository
  */
-class GetAllRepository extends AbstractAllRepository implements {{ entityName }}RepositoryInterface
+class {{ actionName }}Repository extends AbstractOneRepository implements {{ entityName }}RepositoryInterface
 {
     use TraitEntityName;
-
-
 }

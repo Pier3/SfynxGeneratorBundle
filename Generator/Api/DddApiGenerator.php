@@ -22,7 +22,8 @@ class DddApiGenerator
     }
 
     /**
-     * call execute method in all handlers
+     * Call execute method in all handlers
+     * @return $this;
      */
     public function execute()
     {
@@ -30,6 +31,8 @@ class DddApiGenerator
             $handler->execute();
             $this->shiftHandler();
         }
+
+        return $this;
     }
 
 

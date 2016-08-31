@@ -44,7 +44,7 @@ class GenerateDddApiCommand extends Command
 
     public function setRootDir($rootDir)
     {
-        if ('WIN' === strtoupper(substr(PHP_OS, 0, 3))) {
+        if (0 === stripos(PHP_OS, 'WIN')) {
             $rootDir = str_replace("\\app", "", $rootDir);
         } else {
             $rootDir = str_replace("/app", "", $rootDir);
@@ -161,11 +161,8 @@ class GenerateDddApiCommand extends Command
         echo ' # # # # # ' . __FILE__ . ':' . __LINE__ . ': Uncomment these lines after developping system.';
 
         $applicationGenerator->generate();
-
         $domainGenerator->generate();
-
         $presentationGenerator->generate();
-
         $presentationBundleGenerator->generate();
 
         $infrastructureGenerator->generate();

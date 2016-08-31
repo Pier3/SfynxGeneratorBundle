@@ -16,6 +16,11 @@ class ControllerSwaggerHandler extends AbstractHandler implements HandlerInterfa
     protected $targetPattern = '%s/%s/PresentationBundle/Resources/config/controller/swagger.yml';
     protected $target;
 
+    protected function setTemplateName()
+    {
+        $this->templateName = self::SKELETON_TPL;
+    }
+
     protected function setTarget()
     {
         $this->target = sprintf(

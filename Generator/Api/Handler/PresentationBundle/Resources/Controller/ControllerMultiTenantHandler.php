@@ -16,6 +16,11 @@ class ControllerMultiTenantHandler extends AbstractHandler implements HandlerInt
     protected $targetPattern = '%s/%s/PresentationBundle/Resources/config/controller/multiTenant.yml';
     protected $target;
 
+    protected function setTemplateName()
+    {
+        $this->templateName = self::SKELETON_TPL;
+    }
+
     protected function setTarget()
     {
         $this->target = sprintf(

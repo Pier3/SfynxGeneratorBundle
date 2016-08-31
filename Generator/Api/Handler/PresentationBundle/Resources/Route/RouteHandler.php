@@ -6,15 +6,20 @@ use Sfynx\DddGeneratorBundle\Generator\Generalisation\AbstractHandler;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\HandlerInterface;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
-class RouteQueryHandler extends AbstractHandler implements HandlerInterface
+class RouteHandler extends AbstractHandler implements HandlerInterface
 {
     use ExecuteTrait;
 
     const SKELETON_DIR = 'Api/PresentationBundle/Resources/config/route';
-    const SKELETON_TPL = 'route_query.yml.twig';
+    const SKELETON_TPL = 'route.yml.twig';
 
-    protected $targetPattern = '%s/%s/PresentationBundle/Resources/config/route/%s_query.yml';
+    protected $targetPattern = '%s/%s/PresentationBundle/Resources/config/route/%s_%s.yml';
     protected $target;
+
+    protected function setTemplateName()
+    {
+        $this->templateName = sprintf(self::SKELETON_TPL, strtolower($this->parameters['group']));
+    }
 
     protected function setTarget()
     {
@@ -22,7 +27,8 @@ class RouteQueryHandler extends AbstractHandler implements HandlerInterface
             $this->targetPattern,
             $this->parameters['destinationPath'],
             $this->parameters['projectDir'],
-            strtolower($this->parameters['entityName'])
+            $this->parameters['entityName'],
+            strtolower($this->parameters['group'])
 
         );
     }

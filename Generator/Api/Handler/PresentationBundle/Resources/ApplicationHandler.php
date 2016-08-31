@@ -16,13 +16,18 @@ class ApplicationHandler extends AbstractHandler implements HandlerInterface
     protected $targetPattern = '%s/%s/PresentationBundle/Resources/config/application/%s.yml';
     protected $target;
 
+    protected function setTemplateName()
+    {
+        $this->templateName = self::SKELETON_TPL;
+    }
+
     protected function setTarget()
     {
         $this->target = sprintf(
             $this->targetPattern,
             $this->parameters['destinationPath'],
             $this->parameters['projectDir'],
-            strtolower($this->parameters['entityName'])
+            $this->parameters['entityName']
         );
     }
 }

@@ -15,6 +15,11 @@ class TraitEntityNameHandler extends AbstractHandler implements HandlerInterface
     protected $targetPattern = '%s/%s/Infrastructure/Persistence/Repository/%s/TraitEntityName.php';
     protected $target;
 
+    protected function setTemplateName()
+    {
+        $this->templateName = self::SKELETON_TPL;
+    }
+
     protected function setTarget()
     {
         $this->target = sprintf(

@@ -71,7 +71,7 @@ export SYMFONY_SFYNX_PATH_TO_DEST_FILES
 echo ''
 echo '# Importing the entities from the Swagger file by creating all source code.'
 #php "$PROJECT_NAME"/bin/generator sfynx:api --create-all
-php tt/SfynxGeneratorBundle/bin/generator sfynx:api --create-all
+php ${0%/Installer/import.sh}/bin/generator sfynx:api --create-all
 
 phpStatus="$?"
 if [ 0 = "$phpStatus" ]

@@ -27,7 +27,7 @@ class {{ entityName }}
 {
     use TraitTenant;
 {% set constructParams = "" %}
-{% for field in fields %}
+{% for field in entityFields %}
 {% if field.type == "id" %}
 {% if field.voName is defined %}
 
@@ -92,25 +92,25 @@ class {{ entityName }}
     /**
      * Create a new instance of {{ entityName }} entity.
      * @param int $tenantId
-{% for field in fields %}     * @param {% if field.type == "id" %}int{% elseif field.type == "IdVO" %}string{% else %}{{ field.type }}{% endif %} ${{ field.name }}
+{% for field in entityFields %}     * @param {% if field.type == "id" %}int{% elseif field.type == "IdVO" %}string{% else %}{{ field.type }}{% endif %} ${{ field.name }}
 {% endfor %}
      * @return {{ entityName }}
      */
      public static function makeInstance($tenantId, {{ constructorArgs }})
      {
-         return new self($tenantId, {% for field in fields %}${{ field.name }}{% if loop.index < fields|length %}, {% endif %}{% endfor %});
+         return new self($tenantId, {% for field in entityFields %}${{ field.name }}{% if loop.index < entityFields|length %}, {% endif %}{% endfor %});
      }
 
     /**
      * Constructor
      * @param int $tenantId
-{% for field in fields %}     * @param {% if field.type == "id" %}int{% elseif field.type == "IdVO" %}string{% else %}{{ field.type }}{% endif %} ${{ field.name }}
+{% for field in entityFields %}     * @param {% if field.type == "id" %}int{% elseif field.type == "IdVO" %}string{% else %}{{ field.type }}{% endif %} ${{ field.name }}
 {% endfor %}
      */
     protected function __construct($tenantId, {{ constructorArgs }})
     {
         $this->setTenantId($tenantId);
-{% for field in fields %}
+{% for field in entityFields %}
 {% if field.type == "id" %}
 {% if field.voName is defined %}
         $this->{{ field.type }} = new {{ field.voName }}(${{ field.name }});
@@ -120,7 +120,7 @@ class {{ entityName }}
 {% endif %}
 {% endfor %}
     }
-{% for field in fields %}
+{% for field in entityFields %}
 
 {% if field.type == "id" or field.type == "idVO" %}
     /**

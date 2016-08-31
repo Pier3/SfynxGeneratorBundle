@@ -21,7 +21,7 @@ use {{ projectName }}\Domain\ValueObject\{{ data.name }};
  */
 class WFGenerateVOListener implements ObserverInterface
 {
-{% for field in fields %}
+{% for field in entityFields %}
     /** @var {% if field.type == "id" %}int{% elseif field.type == "IdVO" %}string{% else %}{{ field.type }}{% endif %} ${{ field.name }} */
     private ${{ field.name|lower }};
 
@@ -31,15 +31,15 @@ class WFGenerateVOListener implements ObserverInterface
      */
     public function update(ObservableInterface $wfHandler)
     {
-{% if fields is empty %}
+{% if entityFields is empty %}
 
 {% else %}
-        $this{% for field in fields %}->set{{ field.name|capitalize }}($wfHandler){% if loop.index < fields|length %}
+        $this{% for field in entityFields %}->set{{ field.name|capitalize }}($wfHandler){% if loop.index < entityFields|length %}
 
             {% else %};{% endif %}{% endfor %}
 {% endif %}
     }
-{% for field in fields %}
+{% for field in entityFields %}
 
     /**
      * @param ObservableInterface $wfHandler

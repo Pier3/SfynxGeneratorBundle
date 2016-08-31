@@ -48,7 +48,7 @@ class WFRetrieveEntity implements ObserverInterface
 
         $entity = $this->manager->find($entityId);
 
-{% for field in fields %}
+{% for field in entityFields %}
         $wfHandler->data->{{ field.name }}[0] = (!empty(end($wfHandler->data->{{ field.name }})))
             ? end($wfHandler->data->{{ field.name }})
             : $entity->get{{ field.name|capitalize }}();

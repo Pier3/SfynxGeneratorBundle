@@ -35,14 +35,14 @@ class {{ entityName }}Manager extends AbstractManager implements ProcessorInterf
 
     /**
      * Hydrate the entity then call the New Repository.
-{% for field in fields %}     * @param {{ field.type }} ${{ field.name }}
+{% for field in entityFields %}     * @param {{ field.type }} ${{ field.name }}
 {% endfor %}
      * @return {{ entityName }}
      */
     public function create({{ constructorArgs }})
     {
         //hydrate with VO
-        $entity = {{ entityName }}::makeInstance($_SERVER['HTTP_X_TENANT_ID'], {{ managerArgs }});
+        $entity = {{ entityName }}::makeInstance($_SERVER['HTTP_X_TENANT_ID'], {{ constructorArgs }});
 
         //execute prepersist processor
         $this->executeProcess('prepersist_create', $entity);
@@ -63,15 +63,15 @@ class {{ entityName }}Manager extends AbstractManager implements ProcessorInterf
 
     /**
      * Get the current entity, hydrate it with updated values and call the Update Repository.
-{% for field in fields %}     * @param {{ field.type }} ${{ field.name }}
+{% for field in entityFields %}     * @param {{ field.type }} ${{ field.name }}
 {% endfor %}
      * @return {{ entityName }}
      */
-    public function update({{ managerArgs }})
+    public function update({{ constructorArgs }})
     {
         //get {{ entityName }} by id
         $object = new \stdClass();
-{% for field in fields %}
+{% for field in entityFields %}
 {% if field.type == "id" %}
         $object->entityId = ${{ field.name }}->id();
         $entity = $this->factory->buildRepository(RepositoryFactoryInterface::ONE_REPOSITORY)->execute($object);
@@ -83,7 +83,7 @@ class {{ entityName }}Manager extends AbstractManager implements ProcessorInterf
         }
 
         //hydrate with VO
-{% for field in fields %}
+{% for field in entityFields %}
         $entity->set{{ field.name|capitalize }}(${{ field.name }});
 {% endfor %}
 

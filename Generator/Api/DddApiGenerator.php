@@ -28,6 +28,7 @@ class DddApiGenerator
     {
         foreach ($this->handlers as $handler) {
             $handler->execute();
+            $this->shiftHandler();
         }
     }
 
@@ -36,6 +37,19 @@ class DddApiGenerator
     {
         $this->handlers = [];
     }
+
+    public function isCleared()
+    {
+        return ($this->handlers === []);
+    }
+
+    public function shiftHandler()
+    {
+        if (!$this->isCleared()) {
+            array_shift($this->handlers);
+        }
+    }
+
     /**
      * return true if $handler is already in $handlers. false if it's not
      *

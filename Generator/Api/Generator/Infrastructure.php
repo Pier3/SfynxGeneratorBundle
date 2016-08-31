@@ -1,36 +1,78 @@
 <?php
 namespace Sfynx\DddGeneratorBundle\Generator\Api\Generator;
 
+use Symfony\Component\Console\Output\OutputInterface;
+use Sfynx\DddGeneratorBundle\Generator\Api\DddApiGenerator;
 
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Infrastructure\Persistence\Orm\DeleteManyRepositoryHandler as IPDeleteManyRepositoryHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Infrastructure\Persistence\Orm\DeleteRepositoryHandler as IPDeleteRepositoryHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Infrastructure\Persistence\Orm\GetAllRepositoryHandler as IPGetAllRepositoryHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Infrastructure\Persistence\Orm\GetByIdsRepositoryHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Infrastructure\Persistence\Orm\GetRepositoryHandler as IPGetRepositoryHandler;
-
-
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Infrastructure\Persistence\Odm\DeleteManyRepositoryHandler as IPODMDeleteManyRepositoryHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Infrastructure\Persistence\Odm\DeleteRepositoryHandler as IPODMDeleteRepositoryHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Infrastructure\Persistence\Odm\GetAllRepositoryHandler as IPODMGetAllRepositoryHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Infrastructure\Persistence\Odm\GetRepositoryHandler as IPODMGetRepositoryHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Infrastructure\Persistence\Odm\GetIdsRepositoryHandler as IPODMGetIdsRepositoryHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Infrastructure\Persistence\Orm\SearchByRepositoryHandler;
 use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Infrastructure\Persistence\TraitEntityNameHandler;
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Infrastructure\Persistence\Orm\RepositoryHandler as OrmRepositoryHandler;
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Infrastructure\Persistence\Odm\RepositoryHandler as OdmRepositoryHandler;
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Infrastructure\Persistence\CouchDb\RepositoryHandler as CouchDbRepositoryHandler;
 
 class Infrastructure
 {
-    protected $generator;
-    protected $entities = [];
-    protected $entitiesToCreate = [];
-    protected $valueObjects = [];
-    protected $valueObjectsToCreate = [];
-    protected $paths = [];
-    protected $pathsToCreate = [];
-    protected $projectDir;
-    protected $destinationPath;
+    const COMMANDS_LIST = ['update', 'new', 'delete', 'patch'];
+    const QUERIES_LIST = ['get', 'getAll', 'searchBy', 'getByIds', 'findByName'];
 
-    public function __construct($generator, $entities, $entitiesToCreate, $valueObjects, $valueObjectsToCreate, $paths, $pathsToCreate, $rootDir, $projectDir, $destinationPath, $output)
-    {
+    const COMMAND = 'Command';
+    const QUERY = 'Query';
+
+    /** @var DddApiGenerator  */
+    protected $generator;
+    /** @var array  */
+    protected $entities = [];
+    /** @var array  */
+    protected $entitiesToCreate = [];
+    /** @var array  */
+    protected $valueObjects = [];
+    /** @var array  */
+    protected $valueObjectsToCreate = [];
+    /** @var array  */
+    protected $paths = [];
+    /** @var array  */
+    protected $pathsToCreate = [];
+    /** @var string  */
+    protected $rootDir;
+    /** @var string  */
+    protected $projectDir;
+    /** @var string */
+    protected $destinationPath;
+    /** @var OutputInterface  */
+    protected $output;
+    /** @var array  */
+    protected $parameters;
+    /** @var array  */
+    protected $commandsQueriesList;
+    /** @var array */
+    protected $entitiesGroups;
+
+    /**
+     * Domain constructor.
+     * @param DddApiGenerator $generator
+     * @param $entities
+     * @param $entitiesToCreate
+     * @param $valueObjects
+     * @param $valueObjectsToCreate
+     * @param $paths
+     * @param $pathsToCreate
+     * @param $rootDir
+     * @param $projectDir
+     * @param $destinationPath
+     * @param OutputInterface $output
+     */
+    public function __construct(
+        DddApiGenerator $generator,
+        $entities,
+        $entitiesToCreate,
+        $valueObjects,
+        $valueObjectsToCreate,
+        $paths,
+        $pathsToCreate,
+        $rootDir,
+        $projectDir,
+        $destinationPath,
+        OutputInterface $output
+    ) {
         $this->generator = $generator;
         $this->destinationPath = $destinationPath;
         $this->output = $output;
@@ -40,82 +82,119 @@ class Infrastructure
         $this->valueObjectsToCreate = $valueObjectsToCreate;
         $this->paths = $paths;
         $this->pathsToCreate = $pathsToCreate;
+        $this->commandsQueriesList = $this->parseRoutes();
         $this->projectDir = $projectDir;
         $this->rootDir = $rootDir;
+
+        $this->parameters = [
+            'rootDir' => $this->rootDir . '/src',
+            'projectDir' => $this->projectDir,
+            'projectName' => str_replace('src/', '', $this->projectDir),
+            'valueObjects' => $this->valueObjects,
+            'destinationPath' => $this->destinationPath,
+        ];
+    }
+
+    public function parseRoutes()
+    {
+        $routes = ['commands' => [], 'queries' => []];
+
+        foreach ($this->pathsToCreate as $route => $verbData) {
+            foreach ($verbData as $verb => $data) {
+                $elements = $data;
+                $elements['route'] = $route;
+                $elements['verb'] = $verb;
+
+                //Sort by entities and by group (command/query)
+                $group = (in_array($data['action'], self::COMMANDS_LIST)) ? self::COMMAND : self::QUERY;
+                $this->entitiesGroups[$data['entity']][$group][] = $elements;
+
+                //Sort by group
+                if (in_array($data['action'], self::COMMANDS_LIST)) {
+                    $elements['group'] = self::COMMAND;
+                    $routes['commands'][] = $elements;
+                } else {
+                    $elements['group'] = self::QUERY;
+                    $routes['queries'][] = $elements;
+                }
+            }
+        }
+
+        return $routes;
     }
 
     public function generate()
     {
-        $this->output->writeln("#############################################");
-        $this->output->writeln("# GENERATE INFRASTRUCTURE STRUCTURE         #");
-        $this->output->writeln("#############################################");
+        $this->output->writeln('');
+        $this->output->writeln('##############################################');
+        $this->output->writeln('#     GENERATE INFRASTRUCTURE STRUCTURE      #');
+        $this->output->writeln('##############################################');
+        $this->output->writeln('');
 
+        $this->output->writeln('### PERSISTENCE GENERATION ###');
         $this->generatePersistence();
     }
 
-    /**
-     *
-     * Generate :
-     * /Infrastructure/Persistence/Odm/CustomRepository.php
-     * /Infrastructure/Persistence/Odm/DeleteManyRepository.php
-     * /Infrastructure/Persistence/Odm/DeleteRepository.php
-     * /Infrastructure/Persistence/Odm/GetAllRepository.php
-     * /Infrastructure/Persistence/Odm/GetRepository.php
-     * /Infrastructure/Persistence/Odm/SearchByRepository.php
-     *
-     *
-     * /Infrastructure/Persistence/Orm/DeleteManyRepository.php
-     * /Infrastructure/Persistence/Orm/DeleteRepository.php
-     * /Infrastructure/Persistence/Orm/GetAllRepository.php
-     * /Infrastructure/Persistence/Orm/GetRepository.php
-     */
     public function generatePersistence()
     {
+        foreach ($this->entitiesGroups as $entityName => $entityGroups) {
+            $this->parameters['entityName'] = $entityName;
+            $this->parameters['constructorArgs'] = $this->buildConstructorParamsString($entityName);
+            $this->parameters['entityFields'] = $this->entities[$entityName];
 
-        foreach ($this->pathsToCreate as $route => $verbData) {
-            foreach ($verbData as $verb => $data) {
+            //Command Part
+            $this->addCQRSRepositoriesToGenerator($entityGroups, self::COMMAND);
 
-                $constructorParams = $managerArgs = "";
-                foreach ($this->entities[$data["entity"]] as $field) {
-                    $constructorParams .= "$" . $field['name'] . ",";
-                    $managerArgs .= "$" . $field['name'] . ",";
-                }
+            //Query Part
+            $this->addCQRSRepositoriesToGenerator($entityGroups, self::QUERY);
 
-                $parameters = [
-                    'rootDir' => $this->rootDir . "/src",
-                    'projectDir' => $this->projectDir,
-                    'projectName' => str_replace('src/', '', $this->projectDir),
-                    'actionName' => ucfirst(strtolower($data['action'])),
-                    'entityName' => ucfirst(strtolower($data['entity'])),
-                    'entityFields' => $this->entities[$data['entity']],
-                    'managerArgs' => trim($managerArgs, ','),
-                    'fields' => $this->entities[$data['entity']],
-                    'valueObjects' => $this->valueObjects,
-                    'constructorArgs' => trim($constructorParams, ','),
-                    'destinationPath' => $this->destinationPath,
-                ];
+            $this->generator->addHandler(new TraitEntityNameHandler($this->parameters), true);
+        }
 
-                $this->generator->addHandler(new IPDeleteManyRepositoryHandler($parameters));
-                $this->generator->addHandler(new IPODMDeleteManyRepositoryHandler($parameters));
-
-                $this->generator->addHandler(new IPDeleteRepositoryHandler($parameters));
-                $this->generator->addHandler(new IPODMDeleteRepositoryHandler($parameters));
-
-                $this->generator->addHandler(new IPGetAllRepositoryHandler($parameters));
-                $this->generator->addHandler(new IPODMGetAllRepositoryHandler($parameters));
-
-                $this->generator->addHandler(new IPGetRepositoryHandler($parameters));
-                $this->generator->addHandler(new IPODMGetRepositoryHandler($parameters));
-
-                $this->generator->addHandler(new GetByIdsRepositoryHandler($parameters));
-
-                $this->generator->addHandler(new SearchByRepositoryHandler($parameters));
-
-                $this->generator->addHandler(new TraitEntityNameHandler($parameters));
-
+        do {
+            try {
                 $this->generator->execute();
                 $this->generator->clear();
+            } catch (\Exception $e) {
+                fwrite(STDERR, 'Exception occurs: ' . $e->getMessage() . '.');
+                $this->generator->shiftHandler();
+            } catch (\Error $e) {
+                fwrite(STDERR, 'Error occurs: ' . $e->getMessage() . '.');
+                $this->generator->shiftHandler();
             }
+        } while (!$this->generator->isCleared());
+    }
+
+    /**
+     * @param string $entityName Name of the entity to parse all attributes in order to build a valid constructor
+     *                           signature.
+     * @return string
+     */
+    private function buildConstructorParamsString($entityName)
+    {
+        $constructorParamsString = '';
+        foreach ($this->entities[$entityName] as $field) {
+            $constructorParamsString .= '$' . $field['name'] . ', ';
+        }
+
+        return trim($constructorParamsString, ', ');
+    }
+
+    /**
+     * @param array $entityGroups
+     * @param string $group
+     */
+    private function addCQRSRepositoriesToGenerator($entityGroups, $group)
+    {
+        //Set the parameter $group to its good value (might be a reset)
+        $this->parameters['group'] = $group;
+
+        //Fetch all actionName and add the handler for this actionName
+        foreach ($entityGroups[$group] as $data) {
+            $this->parameters['actionName'] = ucfirst($data['action']);
+            $this->generator->addHandler(new OrmRepositoryHandler($this->parameters), true);
+            $this->generator->addHandler(new OdmRepositoryHandler($this->parameters), true);
+            $this->generator->addHandler(new CouchDbRepositoryHandler($this->parameters), true);
         }
     }
 }

@@ -1,0 +1,20 @@
+<?php
+
+namespace {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\CouchDb;
+
+use Sfynx\DddBundle\Layer\Infrastructure\Persistence\Generalisation\CouchDb\AbstractOneRepository;
+use {{ projectName }}\Domain\Repository\{{ entityName }}RepositoryInterface;
+use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\TraitEntityName;
+use stdClass;
+
+/**
+ * Class GetRepository
+ *
+ * @category   {{ projectName }}
+ * @package    Infrastructure
+ * @subpackage Repository
+ */
+class GetRepository extends AbstractOneRepository implements {{ entityName }}RepositoryInterface
+{
+    use TraitEntityName;
+}

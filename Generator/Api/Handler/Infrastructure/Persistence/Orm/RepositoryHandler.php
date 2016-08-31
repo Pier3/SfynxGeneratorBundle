@@ -5,15 +5,20 @@ use Sfynx\DddGeneratorBundle\Generator\Generalisation\AbstractHandler;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\HandlerInterface;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
-class DeleteManyRepositoryHandler extends AbstractHandler implements HandlerInterface
+class RepositoryHandler extends AbstractHandler implements HandlerInterface
 {
     use ExecuteTrait;
 
     const SKELETON_DIR = 'Api/Infrastructure/Persistence/Orm';
-    const SKELETON_TPL = 'DeleteManyRepository.php.twig';
+    const SKELETON_TPL = '%sRepository.php.twig';
 
-    protected $targetPattern = '%s/%s/Infrastructure/Persistence/Repository/%s/Orm/DeleteManyRepository.php';
+    protected $targetPattern = '%s/%s/Infrastructure/Persistence/Repository/%s/Orm/%sRepository.php';
     protected $target;
+
+    protected function setTemplateName()
+    {
+        $this->templateName = sprintf(self::SKELETON_TPL, $this->parameters['actionName']);
+    }
 
     protected function setTarget()
     {
@@ -21,7 +26,8 @@ class DeleteManyRepositoryHandler extends AbstractHandler implements HandlerInte
             $this->targetPattern,
             $this->parameters['destinationPath'],
             $this->parameters['projectDir'],
-            ucfirst($this->parameters['entityName'])
+            $this->parameters['entityName'],
+            $this->parameters['actionName']
         );
     }
 }

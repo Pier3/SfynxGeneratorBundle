@@ -1,0 +1,90 @@
+<?php
+
+namespace {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\CouchDb;
+
+use Sfynx\DddBundle\Layer\Infrastructure\Persistence\Generalisation\Interpreter\AndExpression;
+use Sfynx\DddBundle\Layer\Infrastructure\Persistence\Generalisation\Interpreter\ExpressionInterface;
+use Sfynx\DddBundle\Layer\Infrastructure\Persistence\Generalisation\Interpreter\LikeExpression;
+use Sfynx\DddBundle\Layer\Infrastructure\Persistence\Generalisation\Interpreter\OrExpression;
+use Sfynx\DddBundle\Layer\Infrastructure\Persistence\Generalisation\Interpreter\SimpleExpression;
+use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\TraitEntityName;
+use {{ projectName }}\Domain\Repository\{{ entityName }}RepositoryInterface;
+use Sfynx\DddBundle\Layer\Infrastructure\Persistence\Generalisation\CouchDb\AbstractRepository;
+use stdClass;
+
+/**
+ * Class SearchByRepository
+ *
+ * @category   {{ projectName }}
+ * @package    Infrastructure
+ * @subpackage Repository
+ */
+class SearchByRepository extends AbstractRepository implements {{ entityName }}RepositoryInterface
+{
+    use TraitEntityName;
+
+ /**
+     * @param stdClass $oObject
+     * @return mixed|null
+     */
+    public function execute(stdClass $oObject)
+    {
+        return $this->searchBy($oObject->criterias);
+    }
+
+    /**
+    * @param array $oCriteria
+    * @return mixed|null
+    */
+    protected function searchBy(array $oCriteria)
+    {
+        /** @var EntityManager $em */
+        $em = $this->_em;
+        $qb = $em->createQueryBuilder();
+
+        $qb->select('a') ->from($this->_entityName, 'a');
+        $dql=$this->createInterpreterObject($oCriteria,$qb);
+
+
+        $dql = $this->createInterpreterObject($oCriteria);
+
+        $qb->where($dql->interpret());
+
+        $query = $qb->getQuery();
+        $result = $query->getResult();
+
+        if (empty($result)) {
+            return null;
+        }
+
+    return $result;
+    }
+
+    public function createInterpreterObject($criterias)
+    {
+        if (!array_key_exists('field', $criterias)) { //composé
+            $key = key($criterias);
+            $value1 = current($criterias)[0];
+            $value2 = current($criterias)[1];
+            return $this->interpreterExpressionFactory($key, $this->createInterpreterObject($value1), $this->createInterpreterObject($value2) );
+        } else { //simple
+            return new SimpleExpression(
+                $criterias['field'],
+                $criterias['operator'],
+                $criterias['value']
+            );
+        }
+    }
+
+    public function interpreterExpressionFactory($key, ExpressionInterface $value1, ExpressionInterface $value2)
+    {
+        switch (strtolower($key)) {
+            case 'and' :
+                return new AndExpression($value1, $value2);
+            case 'or' :
+                 return new OrExpression($value1, $value2);
+            case 'like' :
+                return new LikeExpression($value1, $value2);
+        }
+    }
+}

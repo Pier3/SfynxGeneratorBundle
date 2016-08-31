@@ -1,0 +1,19 @@
+<?php
+
+namespace {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\CouchDb;
+
+use {{ projectName }}\Domain\Repository\{{ entityName }}RepositoryInterface;
+use  Sfynx\DddBundle\Layer\Infrastructure\Persistence\Generalisation\CouchDb\AbstractGetByIdsRepository;
+use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\TraitEntityName;
+
+/**
+ * Class GetByIdsRepository
+ *
+ * @category   {{ projectName }}
+ * @package    Infrastructure
+ * @subpackage Repository
+ */
+class GetByIdsRepository extends AbstractGetByIdsRepository implements {{ entityName }}RepositoryInterface
+{
+    use TraitEntityName;
+}

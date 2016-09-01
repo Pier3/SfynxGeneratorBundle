@@ -85,8 +85,6 @@ class Domain extends LayerAbstract
     public function generateEntitiesAndRepositoriesInterfaces()
     {
         foreach ($this->entitiesToCreate as $entityName => $fields) {
-            $this->output->writeln(' - Entity: ' . $entityName . ' -');
-
             $this->parameters['entityName'] = ucfirst(strtolower($entityName));
             $this->parameters['entityFields'] = $fields;
             $this->parameters['constructorArgs'] = $this->buildConstructorParamsString($entityName);
@@ -104,13 +102,6 @@ class Domain extends LayerAbstract
     public function generateServices()
     {
         foreach ($this->entitiesToCreate as $entityName => $fields) {
-            $this->output->writeln(' - Entity: ' . $entityName . ' -');
-
-            $templateStringParameters = '';
-            foreach ($fields as $fieldName => $field) {
-                $templateStringParameters .= '$' . $fieldName . ', ';
-            }
-
             $this->parameters['entityName'] = ucfirst(strtolower($entityName));
             $this->parameters['entityFields'] = $fields;
             $this->parameters['constructorArgs'] = $this->buildConstructorParamsString($entityName);

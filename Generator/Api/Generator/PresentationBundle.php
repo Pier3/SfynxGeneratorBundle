@@ -114,7 +114,9 @@ class PresentationBundle
         $this->output->writeln('######################################################');
         $this->output->writeln('');
 
-//        $this->generateBundle();
+        $this->output->writeln('### BUNDLE GENERATION ###');
+        $this->generateBundle();
+        $this->output->writeln('### RESOURCES CONFIGURATION GENERATION ###');
         $this->generateResourcesConfiguration();
     }
 
@@ -158,8 +160,7 @@ class PresentationBundle
         $this->generator->addHandler(new PBConfigurationHandler($this->parameters));
         $this->generator->addHandler(new PBResettingListenersPass($this->parameters));
 
-        $this->generator->execute();
-        $this->generator->clear();
+        $this->generator->execute()->clear();
     }
 
 
@@ -184,8 +185,7 @@ class PresentationBundle
         $this->generator->addHandler(new ControllerMultiTenantHandler($this->parameters));
         $this->generator->addHandler(new ControllerSwaggerHandler($this->parameters));
 
-        $this->generator->execute();
-        $this->generator->clear();
+        $this->generator->execute()->clear();
     }
 
     /**

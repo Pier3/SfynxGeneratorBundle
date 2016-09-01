@@ -1,0 +1,24 @@
+<?php
+
+namespace {{ projectName }}\Application\{{ entityName }}\Command\Validation\SpecHandler;
+
+use Sfynx\DddBundle\Layer\Application\Generalisation\Validation\SpecHandler\AbstractCommandSpecHandler;
+use Sfynx\SpecificationBundle\Specification\Logical\TrueSpec;
+
+/**
+ * Class DeleteCommandSpecHandler.
+ *
+ * @category   {{ projectName }}
+ * @package    Application
+ * @subpackage Command\Handler\Validation\SpecHandler
+ */
+class DeleteCommandSpecHandler extends AbstractCommandSpecHandler
+{
+    /**
+     * @return TrueSpec
+     */
+    public function initSpecifications()
+    {
+        return new TrueSpec();
+    }
+}

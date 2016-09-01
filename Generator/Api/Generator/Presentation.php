@@ -62,7 +62,6 @@ class Presentation extends LayerAbstract
             $this->parameters['entityName'] = ucfirst($data['entity']);
             $this->parameters['entityFields'] = $this->entities[$data['entity']];
 
-            $this->output->writeln(' - Entity: ' . $this->parameters['entityName'] . ' -');
             $this->generator->addHandler(new AdapterCommandHandler($this->parameters), true);
         }
 
@@ -79,7 +78,6 @@ class Presentation extends LayerAbstract
             $this->parameters['entityName'] = ucfirst($data['entity']);
             $this->parameters['entityFields'] = $this->entities[$data['entity']];
 
-            $this->output->writeln(' - Entity: ' . $this->parameters['entityName'] . ' -');
             $this->generator->addHandler(new AdapterQueryHandler($this->parameters), true);
         }
         $this->generator->execute()->clear();
@@ -91,8 +89,6 @@ class Presentation extends LayerAbstract
     public function generateCoordinationControllers()
     {
         foreach ($this->entitiesGroups as $entityName => $entityGroups) {
-            $this->output->writeln(' - Entity: ' . $entityName . ' -');
-
             $this->parameters['entityName'] = $entityName;
 
             $this->addCQRSCoordinationToGenerator($entityGroups, self::COMMAND)
@@ -108,8 +104,6 @@ class Presentation extends LayerAbstract
     public function generateRequest()
     {
         foreach ($this->entitiesGroups as $entityName => $entityGroups) {
-            $this->output->writeln(' - Entity: ' . $entityName . ' -');
-
             $this->parameters['entityName'] = $entityName;
             $this->parameters['entityFields'] = $this->entities[$entityName];
 

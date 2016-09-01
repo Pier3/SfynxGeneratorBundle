@@ -1,0 +1,32 @@
+<?php
+
+namespace {{ projectName }}\Application\{{ entityName }}\Command\Validation\ValidationHandler;
+
+use Sfynx\DddBundle\Layer\Application\Generalisation\Validation\ValidationHandler\AbstractCommandValidationHandler;
+use Symfony\Component\Validator\Constraints\NotBlank;
+
+/**
+ * Class DeleteCommandValidationHandler.
+ *
+ * @category   {{ projectName }}
+ * @package    Application
+ * @subpackage Command\Handler\Validation\ValidationHandler
+ */
+class DeleteCommandValidationHandler extends AbstractCommandValidationHandler
+{
+    /**
+     * Init the constraints the creating entity properties must validate
+     *
+     * @return $this
+     */
+    protected function initConstraints()
+    {
+{% if entityFields %}
+        $this{% for field in entityFields %}{% if field.type !="id" %}->add('{{ field.name }}', new NotBlank()){% if loop.index < entityFields|length %}
+
+            {% else %};{% endif %}{% endif %}{% endfor %}
+{% endif %}
+
+        return $this;
+    }
+}

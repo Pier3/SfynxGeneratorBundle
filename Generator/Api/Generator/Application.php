@@ -67,8 +67,6 @@ class Application extends LayerAbstract
             $this->parameters['entityFields'] = $this->entities[$data['entity']];
             $this->parameters['constructorArgs'] = $this->buildConstructorParamsString($data['entity']);
 
-            $this->output->writeln(' - ' . $this->parameters['actionName'] . ' - ');
-
             // Command
             $this->generator->addHandler(new CommandHandler($this->parameters), true);
             // Decorator
@@ -93,8 +91,6 @@ class Application extends LayerAbstract
             $this->parameters['actionName'] = ucfirst($data['action']);
             $this->parameters['entityName'] = ucfirst(strtolower($data['entity']));
             $this->parameters['entityFields'] = $this->entities[$data['entity']];
-
-            $this->output->writeln(' - ' . $this->parameters['actionName'] . ' - ');
 
             $this->generator->addHandler(new QueryHandler($this->parameters), true);
             $this->generator->addHandler(new QueryHandlerHandler($this->parameters), true);

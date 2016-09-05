@@ -7,6 +7,9 @@
         "psr-4": { "": "src/" },
         "classmap": [ "app/AppKernel.php", "app/AppCache.php" ]
     },
+    "provide" : {
+        "ext-mongo": "*"
+    },
     "require": {
         "php": ">=7.0",
         "symfony/symfony": "2.8.*",

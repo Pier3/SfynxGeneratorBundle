@@ -1,19 +1,19 @@
 <?php
 
-namespace Sfynx\DddGeneratorBundle\Generator\Api\Handler\ValueObject;
+namespace Sfynx\DddGeneratorBundle\Generator\Api\Handler\Domain\ValueObject;
 
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\AbstractHandler;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\HandlerInterface;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
-class ValueObjectTypeOdmHandler extends AbstractHandler implements HandlerInterface
+class ValueObjectTypeOrmHandler extends AbstractHandler implements HandlerInterface
 {
     use ExecuteTrait;
 
     const SKELETON_DIR = 'Api/Infrastructure/EntityType';
-    const SKELETON_TPL = 'Odm.php.twig';
+    const SKELETON_TPL = 'Orm.php.twig';
 
-    protected $targetPattern = '%s/%s/Infrastructure/EntityType/Odm/%sType.php';
+    protected $targetPattern = '%s/%s/Infrastructure/EntityType/Orm/%sType.php';
     protected $target;
 
     protected function setTemplateName()

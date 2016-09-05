@@ -20,11 +20,10 @@ class SfynxGeneratorApplication extends Application
     protected function getCommandName(InputInterface $input)
     {
         //sfynx:generate:ddd:api
-        //sfynx:generate:ddd:bundle
 
-        $available = ['sfynx:api', 'sfynx:bundle'];
+        $available = ['sfynx:api'];
         $arg = $input->getFirstArgument();
-        if(!in_array($arg, $available) ||'sfynx:api' === $arg) {
+        if (!in_array($arg, $available) ||'sfynx:api' === $arg) {
             // default argument : we don't want to provide the name of the command by default
             $inputDefinition = $this->getDefinition();
             $inputDefinition->setArguments();

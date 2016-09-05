@@ -13,7 +13,7 @@ class CommandHandlerDecoratorTestHandler extends AbstractHandler implements Hand
     const SKELETON_DIR = 'Api/Tests/Application/Entity/Command/Handler/Decorator';
     const SKELETON_TPL = '%sCommandHandlerDecoratorTest.php.twig';
 
-    protected $targetPattern = '%s/%s/Tests/Application/Entity/Command/Handler/Decorator/%sCommandHandlerDecoratorTest.php';
+    protected $targetPattern = '%s/%s/Tests/Application/%s/Handler/Decorator/%sCommandHandlerDecoratorTest.php';
     protected $target;
 
     protected function setTemplateName()

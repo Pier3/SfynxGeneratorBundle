@@ -1,20 +1,26 @@
 <?php
 
-namespace Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Adapter\Entity\Command;
+namespace Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Domain\Service\Entity\Manager;
 
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\AbstractHandler;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\HandlerInterface;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
-class DeleteCommandAdapterTestHandler extends AbstractHandler implements HandlerInterface
+class ManagerTestHandler extends AbstractHandler implements HandlerInterface
 {
     use ExecuteTrait;
 
-    const SKELETON_DIR = 'Api/Tests/Presentation/Adapter/Entity/Command';
-    const SKELETON_TPL = 'DeleteCommandAdapterTest.php.twig';
+    const SKELETON_DIR = 'Api/Tests/Domain/Service/Entity/Manager';
+    const SKELETON_TPL = 'ManagerTest.php.twig';
 
-    protected $targetPattern = '%s/%s/Tests/Presentation/Adapter/%s/Command/DeleteCommandAdapterTest.php';
+    protected $targetPattern = '%s/%s/Tests/Domain/Service/%s/Manager/%sManagerTest.php';
     protected $target;
+
+    protected function setTemplateName()
+    {
+        $this->templateName = sprintf(self::SKELETON_TPL);
+    }
+
 
     protected function setTarget()
     {
@@ -23,7 +29,7 @@ class DeleteCommandAdapterTestHandler extends AbstractHandler implements Handler
             $this->parameters['destinationPath'],
             $this->parameters['projectDir'],
             ucfirst($this->parameters['entityName']),
-            ucfirst($this->parameters['actionName'])
+            ucfirst($this->parameters['entityName'])
         );
     }
 }

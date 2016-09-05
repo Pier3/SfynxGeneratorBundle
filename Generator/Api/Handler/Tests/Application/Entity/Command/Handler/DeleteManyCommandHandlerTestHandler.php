@@ -13,7 +13,7 @@ class DeleteManyCommandHandlerTestHandler extends AbstractHandler implements Han
     const SKELETON_DIR = 'Api/Tests/Application/Entity/Command/Handler';
     const SKELETON_TPL = 'DeleteManyCommandHandlerTest.php.twig';
 
-    protected $targetPattern = '%s/%s/Tests/Application/Entity/Command/Handler/DeleteManyCommandHandlerTest.php';
+    protected $targetPattern = '%s/%s/Tests/Application/%s/Handler/DeleteManyCommandHandlerTest.php';
     protected $target;
 
     protected function setTemplateName()

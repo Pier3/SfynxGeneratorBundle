@@ -3,9 +3,10 @@
 namespace Tests\Domain\Service\Manager\CountryManager;
 
 
-use DemoCountry\Domain\Entity\Country;
-use DemoCountry\Domain\Service\Country\Manager\CountryManager;
-use DemoCountry\Infrastructure\Persistence\Repository\Country\Orm\GetRepository;
+use {{ projectName }}\Domain\Entity\{{ entityName }};
+use {{ projectName }}\Domain\Service\{{ entityName }}\Manager\CountryManager;
+use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\GetRepository;
+use {{ projectName }}\Domain\Service\{{ entityName }}\Processor\PrePersistProcess;
 use Phake;
 use ReflectionClass;
 use Sfynx\DddBundle\Layer\Domain\Service\Generalisation\Factory\RepositoryFactoryInterface;
@@ -14,6 +15,12 @@ use Sfynx\DddBundle\Layer\Infrastructure\Logger\Logger;
 use Sfynx\DddBundle\Layer\Infrastructure\Persistence\Generalisation\CouchDB\SaveRepository;
 use Sfynx\DddBundle\Layer\Infrastructure\Validator\Constraint\IdValidator;
 
+{% set args = "" %}
+{% for field in entityFields %}
+    {% if field.type != "id" %}
+        {% set args = args ~ "0123,"  %}
+    {% endif %}
+{% endfor %}
 
 class CountryManagerTest extends  \PHPUnit_Framework_TestCase
 {
@@ -32,9 +39,15 @@ class CountryManagerTest extends  \PHPUnit_Framework_TestCase
 
 
 
-        $this->countryManager = new CountryManager($this->repo);
-        $this->countryManager->setLogger($logger);
+        $this->manager = new {{ entityName }}Manager($this->repo);
+        $this->manager->setLogger($logger);
 
+        $processor = Phake::mock(PrePersistProcess::class);
+
+        $this->manager->addProcess("prepersist_create", $processor);
+        $this->manager->addProcess("postpersist_create", $processor);
+        $this->manager->addProcess("prepersist_update", $processor);
+        $this->manager->addProcess("postpersist_update", $processor);
 
         Phake::when($this->repo)->buildRepository(Phake::anyParameters())->thenReturn($this->saveReposiroty);
         Phake::when($this->saveReposiroty)->execute(Phake::anyParameters())->thenReturn($this->entity);
@@ -43,14 +56,17 @@ class CountryManagerTest extends  \PHPUnit_Framework_TestCase
 
     public function testCreate()
     {
-        $this->countryManager->create(null,"France","033","fr",true,"0001");
-        Phake::verify($this->repo)->buildRepository(RepositoryFactoryInterface::NEW_REPOSITORY);
+        if(!isset($_SERVER['HTTP_X_TENANT_ID'])) {
+            $_SERVER['HTTP_X_TENANT_ID']="1000";
+            $this->manager->create(null,{{ args|trim(",") }});
+            Phake::verify($this->repo)->buildRepository(RepositoryFactoryInterface::NEW_REPOSITORY);
+        }
     }
 
 
     public function testUpdate()
     {
-        $this->countryManager->update(new IdVO(),"France","033","fr",true,"0001");
+        $this->manager->update(new IdVO(),{{ args|trim(",") }});
         Phake::verify($this->repo)->buildRepository(RepositoryFactoryInterface::UPDATE_REPOSITORY);
     }
 

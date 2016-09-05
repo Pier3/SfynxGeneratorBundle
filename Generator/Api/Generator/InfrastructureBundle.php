@@ -38,7 +38,7 @@ class InfrastructureBundle extends LayerAbstract
         $this->generateBundle();
         $this->output->writeln('### TEST GENERATION ###');
         //TODO: work on the generation of the tests.
-        //$this->generateTests();
+        $this->generateTests();
     }
 
     /**
@@ -54,5 +54,11 @@ class InfrastructureBundle extends LayerAbstract
         $this->generator->addHandler(new InfrastructureBundleHandler($this->parameters));
 
         $this->generator->execute()->clear();
+    }
+
+
+    public function generateTests()
+    {
+        return $this;
     }
 }

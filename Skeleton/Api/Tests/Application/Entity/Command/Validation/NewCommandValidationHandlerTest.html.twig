@@ -1,0 +1,24 @@
+<?php
+
+namespace Tests\Application\Command\Validation;
+
+require_once __DIR__ . '/../../../../TraitPrivateMethod.php.twig';
+
+use Sfynx\DddBundle\Layer\Application\Generalisation\Validation\ValidationHandler\ValidationErrorHandler;
+use Sfynx\DddBundle\Layer\Application\Generalisation\Validation\ValidationHandler\ValidatorInterface;
+use {{ projectName }}\Application\{{ entityName }}\Command\NewCommand;
+use {{ projectName }}\Application\{{ entityName }}\Command\Validation\ValidationHandler\NewCommandValidationHandler;
+use \Phake;
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\ConstraintViolationInterface;
+use Tests\TraitPrivateMethod;
+
+class NewCommandValidationHandlerTest extends \PHPUnit_Framework_TestCase
+{
+    use TraitPrivateMethod;
+
+    public function setUp()
+    {
+
+    }
+}

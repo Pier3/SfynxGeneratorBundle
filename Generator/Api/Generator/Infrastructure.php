@@ -14,6 +14,19 @@ use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Infrastructure\Persistence\{
     TraitEntityNameHandler
 };
 
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Adapter\Entity\Command\DeleteCommandAdapterTestHandler;
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Adapter\Entity\Command\NewCommandAdapterTestHandler;
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Adapter\Entity\Command\PatchCommandAdapterTestHandler;
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Adapter\Entity\Command\UpdateCommandAdapterTestHandler;
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Coordination\Entity\Command\ControllerCommandTestHandler;
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Coordination\Entity\Query\ControllerQueryTestHandler;
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Request\Entity\Command\DeleteRequestTestHandler;
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Request\Entity\Command\NewRequestTestHandler;
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Request\Entity\Command\PatchRequestTestHandler;
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Request\Entity\Command\UpdateRequestTestHandler;
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Request\Entity\Query\GetAllRequestTestHandler;
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Request\Entity\Query\GetRequestTestHandler;
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Request\Entity\Query\SearchByRequestTestHandler;
 /**
  * Class Infrastructure
  *
@@ -40,8 +53,8 @@ class Infrastructure extends LayerAbstract
         $this->output->writeln('### PERSISTENCE GENERATION ###');
         $this->generatePersistence();
         $this->output->writeln('### TEST GENERATION ###');
-        //TODO: work on the generation of the tests.
-        //$this->generateTests();
+
+        $this->generateTests();
     }
 
     /**
@@ -82,6 +95,16 @@ class Infrastructure extends LayerAbstract
             $this->generator->addHandler(new OdmRepositoryHandler($this->parameters), true);
             $this->generator->addHandler(new CouchDbRepositoryHandler($this->parameters), true);
         }
+
+        return $this;
+    }
+
+
+    /**
+     *  Entry point of the generation of unit tests
+     *
+     */
+    public function generateTests() {
 
         return $this;
     }

@@ -1,11 +1,11 @@
 <?php
 
-namespace  Tests\Application\Country\Command\Handler;
+namespace  Tests\Application\{{ entityName }}\Command\Handler;
 
 use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandHandlerInterface;
-use DemoCountry\Application\Country\Command\Handler\UpdateCommandHandler;
-use DemoCountry\Application\Country\Command\UpdateCommand;
-use DemoCountry\Domain\Workflow\Country\Handler\UpdateWFHandler;
+use {{ projectName }}\Application\{{ entityName }}\Command\Handler\UpdateCommandHandler;
+use {{ projectName }}\Application\{{ entityName }}\Command\UpdateCommand;
+use {{ projectName }}\Domain\Workflow\{{ entityName }}\Handler\UpdateWFHandler;
 use \Phake;
 
 class UpdateCommandHandlerTest extends \PHPUnit_Framework_TestCase
@@ -30,7 +30,7 @@ class UpdateCommandHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function testProcess()
     {
-        $entity = [["id"=>"123465","libelle"=>"France","reference"=>"0001","iso"=>"FR"]];
+        $entity = [["id"=>"123465"]];
         $this->workflowHandler->data->entity = $entity;
 
         $result = $this->commandHandler->process($this->command);

@@ -6,15 +6,20 @@ use Sfynx\DddGeneratorBundle\Generator\Generalisation\AbstractHandler;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\HandlerInterface;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
-class PatchCommandAdapterTestHandler extends AbstractHandler implements HandlerInterface
+class CommandAdapterTestHandler extends AbstractHandler implements HandlerInterface
 {
     use ExecuteTrait;
 
     const SKELETON_DIR = 'Api/Tests/Presentation/Adapter/Entity/Command';
-    const SKELETON_TPL = 'PatchCommandAdapterTest.php.twig';
+    const SKELETON_TPL = 'CommandAdapterTest.php.twig';
 
-    protected $targetPattern = '%s/%s/Tests/Presentation/Adapter/%s/Command/PatchCommandAdapterTest.php';
+    protected $targetPattern = '%s/%s/Tests/Presentation/Adapter/%s/Command/%sCommandAdapterTest.php';
     protected $target;
+
+    protected function setTemplateName()
+    {
+        $this->templateName = sprintf(self::SKELETON_TPL,$this->parameters["actionName"]);
+    }
 
     protected function setTarget()
     {

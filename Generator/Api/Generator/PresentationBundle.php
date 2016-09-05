@@ -50,7 +50,7 @@ class PresentationBundle extends LayerAbstract
         $this->generateResourcesConfiguration();
         $this->output->writeln('### TESTS GENERATION ###');
         //TODO: work on the generation of the tests.
-        //$this->generateTests();
+        $this->generateTests();
     }
 
     /**
@@ -111,6 +111,11 @@ class PresentationBundle extends LayerAbstract
         $this->generator->addHandler(new ControllerHandler($this->parameters), true);
         $this->generator->addHandler(new RouteHandler($this->parameters), true);
 
+        return $this;
+    }
+
+    public function generateTests()
+    {
         return $this;
     }
 }

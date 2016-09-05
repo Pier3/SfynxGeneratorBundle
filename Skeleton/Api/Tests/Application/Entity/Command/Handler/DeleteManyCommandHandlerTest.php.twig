@@ -1,13 +1,13 @@
 <?php
 
-namespace  Tests\Application\Country\Command\Handler;
+namespace  Tests\Application\{{ entityName }}\Command\Handler;
 
-use DemoCountry\Application\Country\Command\DeletManyeCommand;
-use DemoCountry\Domain\Service\Country\Manager\CountryManager;
+use {{ projectName }}\Application\{{ entityName }}\Command\DeletManyeCommand;
+use {{ projectName }}\Domain\Service\{{ entityName }}\Manager\CountryManager;
 use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandHandlerInterface;
-use DemoCountry\Application\Country\Command\Handler\DeleteManyCommandHandler;
-use DemoCountry\Application\Country\Command\DeleteCommand;
-use DemoCountry\Domain\Workflow\Country\Handler\DeleteManyWFHandler;
+use {{ projectName }}\Application\{{ entityName }}\Command\Handler\DeleteManyCommandHandler;
+use {{ projectName }}\Application\{{ entityName }}\Command\DeleteCommand;
+use {{ projectName }}\Domain\Workflow\{{ entityName }}\Handler\DeleteManyWFHandler;
 use \Phake;
 
 class DeleteManyCommandHandlerTest extends \PHPUnit_Framework_TestCase

@@ -13,7 +13,7 @@ class DeleteCommandHandlerTestHandler extends AbstractHandler implements Handler
     const SKELETON_DIR = 'Api/Tests/Application/Entity/Command/Handler';
     const SKELETON_TPL = 'DeleteCommandHandlerTest.php.twig';
 
-    protected $targetPattern = '%s/%s/Tests/Application/Entity/Command/Handler/DeleteCommandHandlerTest.php';
+    protected $targetPattern = '%s/%s/Tests/Application/%s/Command/Handler/DeleteCommandHandlerTest.php';
     protected $target;
 
     protected function setTemplateName()

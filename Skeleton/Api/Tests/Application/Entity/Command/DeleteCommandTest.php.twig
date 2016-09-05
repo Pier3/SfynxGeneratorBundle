@@ -2,7 +2,7 @@
 
 namespace  Tests\Application\Country\Command\Command;
 
-use DemoCountry\Application\Country\Command\DeleteCommand;
+use {{ projectName }}\Application\{{ entityName }}\Command\DeleteCommand;
 use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandInterface;
 
 class DeleteCommandTest extends \PHPUnit_Framework_TestCase
@@ -14,14 +14,10 @@ class DeleteCommandTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->libelle="FRANCE";
-        $this->indicatif="033";
-        $this->iso="FR";
-        $this->selectable=true;
-        $this->reference="001";
 
+        $this->reference="001";
         $this->entityId="123456";
-        $this->revision="1";
+
 
         $this->command = new DeleteCommand($this->entityId,$this->reference);
     }

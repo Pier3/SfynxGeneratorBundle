@@ -1,11 +1,11 @@
 <?php
 
-namespace  Tests\Application\Country\Command\Command;
+namespace  Tests\Application\{{ entityName }}\Command\Command;
 
-use DemoCountry\Application\Country\Command\NewCommand;
+use {{ projectName }}\Application\{{ entityName }}\Command\NewCommand;
 use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandInterface;
 
-class NewCommandTest extends \PHPUnit_Framework_TestCase
+class PatchCommandTest extends \PHPUnit_Framework_TestCase
 {
     protected $command;
     protected $message;

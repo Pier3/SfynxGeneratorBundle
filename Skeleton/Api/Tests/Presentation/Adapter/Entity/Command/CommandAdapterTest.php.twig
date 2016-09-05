@@ -1,15 +1,15 @@
 <?php
 
-namespace Tests\Presentation\Adapter\Country\Command;
+namespace Tests\Presentation\Adapter\{{ entityName }}\Command;
 
-use DemoCountry\Presentation\Adapter\Country\Command\PatchCommandAdapter;
-use DemoCountry\Presentation\Request\Country\Command\PatchRequest;
+use {{ projectName }}\Presentation\Adapter\{{ entityName }}\Command\UpdateCommandAdapter;
+use {{ projectName }}\Presentation\Request\{{ entityName }}\Command\UpdateRequest;
 use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandInterface;
 use Sfynx\DddBundle\Layer\Presentation\Adapter\Generalisation\CommandAdapterInterface;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\CommandRequestInterface;
 use \Phake;
 
-class PatchCommandAdapterTest extends \PHPUnit_Framework_TestCase
+class {{ actionName }}CommandAdapterTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var UpdateCommandAdapter
@@ -23,8 +23,8 @@ class PatchCommandAdapterTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->adapter = new PatchCommandAdapter();
-        $this->request  = Phake::mock(PatchRequest::class);
+        $this->adapter = new UpdateCommandAdapter();
+        $this->request  = Phake::mock(UpdateRequest::class);
     }
 
     public function testInterfaces()

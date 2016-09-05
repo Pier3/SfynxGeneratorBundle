@@ -1,0 +1,24 @@
+<?php
+
+namespace  Tests\Application\{{ entityName }}\Query;
+
+use {{ projectName }}\Application\{{ entityName }}\Query\GetAllQuery;
+use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\QueryInterface;
+
+class GetAllQueryHandlerTest extends \PHPUnit_Framework_TestCase
+{
+    protected $query;
+    protected $message;
+    protected $transaction;
+    protected $jsonRequest;
+
+    public function setUp()
+    {
+        $this->query = new GetAllQuery();
+    }
+
+    public function testInterface()
+    {
+        $this->assertInstanceOf(QueryInterface::class, $this->query);
+    }
+}

@@ -13,7 +13,7 @@ class CommandTestHandler extends AbstractHandler implements HandlerInterface
     const SKELETON_DIR = 'Api/Tests/Application/Entity/Command';
     const SKELETON_TPL = '%sCommandTest.php.twig';
 
-    protected $targetPattern = '%s/%s/Tests/Application/Entity/Command/%sCommandTest.php';
+    protected $targetPattern = '%s/%s/Tests/Application/%s/Command/%sCommandTest.php';
     protected $target;
 
     protected function setTemplateName()

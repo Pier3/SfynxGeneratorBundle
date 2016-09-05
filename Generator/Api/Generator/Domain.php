@@ -6,7 +6,6 @@ namespace Sfynx\DddGeneratorBundle\Generator\Api\Generator;
 //Entities and Repositories Interfaces
 use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Domain\Entity\EntityHandler;
 use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Domain\Repository\EntityRepositoryInterfaceHandler;
-
 //Services
 use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Domain\Service\{
     Manager\ManagerHandler,
@@ -32,6 +31,7 @@ use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Domain\Workflow\Listener\{
     WFRetrieveEntityHandler,
     WFSaveEntityHandler
 };
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Domain\Service\Entity\Manager\ManagerTestHandler;
 
 /**
  * Class Domain
@@ -76,7 +76,7 @@ class Domain extends LayerAbstract
         $this->output->writeln('### TESTS GENERATION ###');
         $this->output->writeln(' - BE MY GUEST ... -');
         //TODO: work on the generation of the tests.
-        //$this->generateTests();
+        $this->generateTests();
     }
 
     /**
@@ -177,6 +177,19 @@ class Domain extends LayerAbstract
 
     public function generateTests()
     {
-        // TODO: make some FUN .. or tests
+        foreach (array_keys($this->entitiesToCreate) as $entityName) {
+
+            $this->parameters['entityName'] = $entityName;
+            $this->parameters['entityFields'] = $this->entitiesToCreate[$entityName];
+
+            $this->generator->addHandler(new OrmRepositoryFactoryHandler($this->parameters));
+
+            $this->generator->addHandler(new ManagerTestHandler($this->parameters));
+
+            $this->generator->execute();
+            $this->generator->clear();
+        }
+
+        return $this;
     }
 }

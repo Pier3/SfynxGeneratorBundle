@@ -81,6 +81,13 @@ abstract class LayerAbstract
     abstract public function generate();
 
     /**
+     * Entry point of generation of the tests files
+     */
+
+    abstract protected function generateTests();
+
+
+    /**
      * Parse all routes and define:
      * - entities for each group;
      * - groups for each entities.

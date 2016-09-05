@@ -1,12 +1,12 @@
 <?php
 
-namespace  Tests\Application\Country\Command\Handler;
+namespace  Tests\Application\{{ entityName }}\Command\Handler;
 
-use DemoCountry\Domain\Service\Country\Manager\CountryManager;
+use {{ projectName }}\Domain\Service\{{ entityName }}\Manager\{{ entityName }}Manager;
 use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandHandlerInterface;
-use DemoCountry\Application\Country\Command\Handler\DeleteCommandHandler;
-use DemoCountry\Application\Country\Command\DeleteCommand;
-use DemoCountry\Domain\Workflow\Country\Handler\DeleteWFHandler;
+use {{ projectName }}\Application\{{ entityName }}\Command\Handler\DeleteCommandHandler;
+use {{ projectName }}\Application\{{ entityName }}\Command\DeleteCommand;
+use {{ projectName }}\Domain\Workflow\{{ entityName }}\Handler\DeleteWFHandler;
 use \Phake;
 
 class DeleteCommandHandlerTest extends \PHPUnit_Framework_TestCase

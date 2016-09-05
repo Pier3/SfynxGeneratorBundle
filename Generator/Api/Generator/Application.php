@@ -26,6 +26,7 @@ use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\{
     Application\Entity\Command\Handler\DeleteCommandHandlerTestHandler,
     Application\Entity\Command\Handler\DeleteManyCommandHandlerTestHandler
 };
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Application\Entity\Query\QueryTestHandler;
 
 /**
  * Class Application
@@ -54,7 +55,7 @@ class Application extends LayerAbstract
         $this->generateQueries();
         $this->output->writeln('### TESTS GENERATION ###');
         //TODO: work on the generation of the tests.
-        //$this->generateTests();
+        $this->generateTests();
     }
 
     /**
@@ -141,9 +142,9 @@ class Application extends LayerAbstract
                 //$this->generator->addHandler(new CommandValidationTestHandler($this->parameters));
             } else {
                 // Command
-                $this->generator->addHandler(new DeleteCommandHandlerTestHandler($this->parameters));
+                //$this->generator->addHandler(new DeleteCommandHandlerTestHandler($this->parameters));
                 // Handler
-                $this->generator->addHandler(new DeleteManyCommandHandlerTestHandler($this->parameters));
+                //$this->generator->addHandler(new DeleteManyCommandHandlerTestHandler($this->parameters));
                 $this->generator->addHandler(new DeleteCommandHandlerTestHandler($this->parameters));
             }
 
@@ -152,7 +153,27 @@ class Application extends LayerAbstract
         }
 
         // TODO : do tests for queries, like commands
-        //foreach ($this->commandsQueriesList[self::QUERY] as $data) {
-        //}
+        foreach ($this->commandsQueriesList[self::QUERY] as $data) {
+
+            $this->parameters['actionName'] = ucfirst($data['action']);
+            $this->parameters['entityName'] = ucfirst(strtolower($data['entity']));
+            $this->parameters['entityFields'] = $this->entitiesToCreate[$data['entity']];
+
+            $this->output->writeln(' - ' . $this->parameters['actionName'] . ' - ');
+
+
+            $this->generator->addHandler(new QueryTestHandler($this->parameters));
+
+            $this->generator->execute();
+            $this->generator->clear();
+        }
+
+
+        return $this;
+
+
     }
+
+
+
 }

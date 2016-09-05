@@ -16,6 +16,11 @@ class ControllerCommandTestHandler extends AbstractHandler implements HandlerInt
     protected $targetPattern = '%s/%s/Tests/Presentation/Coordination/%s/Command/ControllerTest.php';
     protected $target;
 
+    protected function setTemplateName()
+    {
+        $this->templateName = self::SKELETON_TPL;
+    }
+
     protected function setTarget()
     {
         $this->target = sprintf(

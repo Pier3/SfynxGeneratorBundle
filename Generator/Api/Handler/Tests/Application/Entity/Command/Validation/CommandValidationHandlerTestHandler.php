@@ -13,7 +13,7 @@ class CommandValidationHandlerTestHandler extends AbstractHandler implements Han
     const SKELETON_DIR = 'Api/Tests/Application/Entity/Command/Handler/Decorator';
     const SKELETON_TPL = '%sCommandValidationHandlerTest.php.twig';
 
-    protected $targetPattern = '%s/%s/Tests/Application/Entity/Command/Handler/Validation/%sCommandValidationHandlerTest.php';
+    protected $targetPattern = '%s/%s/Tests/Application/%s/Handler/Validation/%sCommandValidationHandlerTest.php';
     protected $target;
 
     protected function setTemplateName()

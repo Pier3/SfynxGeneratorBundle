@@ -1,13 +1,13 @@
 <?php
 
-namespace Tests\Application\Country\Command\Handler\Decorator;
+namespace Tests\Application\{{ entityName }}\Command\Handler\Decorator;
 
-use DemoCountry\Application\Country\Command\Validation\SpecHandler\PatchCommandSpecHandler;
+use {{ projectName }}\Application\{{ entityName }}\Command\Validation\SpecHandler\PatchCommandSpecHandler;
 use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandHandlerInterface;
-use DemoCountry\Application\Country\Command\Handler\PatchCommandHandler;
-use DemoCountry\Application\Country\Command\PatchCommand;
-use DemoCountry\Application\Country\Command\Handler\Decorator\PatchCommandHandlerDecorator;
-use DemoCountry\Application\Country\Command\Validation\ValidationHandler\PatchCommandValidationHandler;
+use {{ projectName }}\Application\{{ entityName }}\Command\Handler\PatchCommandHandler;
+use {{ projectName }}\Application\{{ entityName }}\Command\PatchCommand;
+use {{ projectName }}\Application\{{ entityName }}\Command\Handler\Decorator\PatchCommandHandlerDecorator;
+use {{ projectName }}\Application\{{ entityName }}\Command\Validation\ValidationHandler\PatchCommandValidationHandler;
 use \Phake;
 
 

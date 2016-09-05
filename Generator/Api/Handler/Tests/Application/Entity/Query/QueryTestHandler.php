@@ -1,24 +1,24 @@
 <?php
 
-namespace Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Coordination\Entity\Query;
+namespace Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Application\Entity\Query;
 
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\AbstractHandler;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\HandlerInterface;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
-class ControllerQueryTestHandler extends AbstractHandler implements HandlerInterface
+class QueryTestHandler extends AbstractHandler implements HandlerInterface
 {
     use ExecuteTrait;
 
-    const SKELETON_DIR = 'Api/Tests/Presentation/Coordination/Entity/Query';
-    const SKELETON_TPL = 'ControllerTest.php.twig';
+    const SKELETON_DIR = 'Api/Tests/Application/Entity/Query';
+    const SKELETON_TPL = '%sQueryTest.php.twig';
 
-    protected $targetPattern = '%s/%s/Tests/Presentation/Coordination/%s/Query/ControllerTest.php';
+    protected $targetPattern = '%s/%s/Tests/Application/%s/Query/%sQueryTest.php';
     protected $target;
 
     protected function setTemplateName()
     {
-        $this->templateName = self::SKELETON_TPL;
+        $this->templateName = sprintf(self::SKELETON_TPL, $this->parameters['actionName']);
     }
 
     protected function setTarget()
@@ -27,7 +27,8 @@ class ControllerQueryTestHandler extends AbstractHandler implements HandlerInter
             $this->targetPattern,
             $this->parameters['destinationPath'],
             $this->parameters['projectDir'],
-            ucfirst($this->parameters['entityName'])
+            $this->parameters['entityName'],
+            $this->parameters['actionName']
         );
     }
 }

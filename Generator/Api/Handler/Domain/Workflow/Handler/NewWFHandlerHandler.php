@@ -10,10 +10,9 @@ class NewWFHandlerHandler extends AbstractHandler implements HandlerInterface
 {
     use ExecuteTrait;
 
-    const SKELETON_DIR = 'Api/Domain/Workflow/Handler';
-    const SKELETON_TPL = 'NewWFHandler.php.twig';
+    const SKELETON_TPL = 'Workflow/Handler/NewWFHandler.php.twig';
 
-    protected $targetPattern = '%s/%s/Domain/Workflow/%s/Handler/NewWFHandler.php';
+    protected $targetPattern = '%destinationPath$s/%projectDir$s/Domain/Workflow/%entityName$s/Handler/NewWFHandler.php';
     protected $target;
 
     protected function setTemplateName()

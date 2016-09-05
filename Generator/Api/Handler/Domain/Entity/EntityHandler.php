@@ -10,7 +10,7 @@ class EntityHandler extends AbstractHandler implements HandlerInterface
 {
     use ExecuteTrait;
 
-    const SKELETON_DIR = 'Api/Application/Entity';
+    const SKELETON_DIR = 'Api/Domain/Entity';
     const SKELETON_TPL = 'entity.php.twig';
 
     protected $targetPattern = '%s/%s/Domain/Entity/%s.php';

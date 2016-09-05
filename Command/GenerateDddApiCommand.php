@@ -24,17 +24,10 @@ use Symfony\Component\Console\{
 
 use Sfynx\DddGeneratorBundle\Generator\Api\DddApiGenerator;
 use Sfynx\DddGeneratorBundle\Generator\Api\Generator\{
-    Application,
-    Domain,
-    Infrastructure,
-    InfrastructureBundle,
-    Presentation,
-    PresentationBundle
+    Application, Domain, Infrastructure, InfrastructureBundle, LayerAbstract, LayerContext, Presentation, PresentationBundle
 };
 use Sfynx\DddGeneratorBundle\Generator\Api\ValueObjects\{
-    ElementsToCreateVO,
-    GeneratorVO,
-    PathsVO
+    ElementsToCreateVO, GeneratorVO, LayerVO, PathsVO
 };
 
 /**
@@ -165,19 +158,21 @@ class GenerateDddApiCommand extends Command
         $voPaths = new PathsVO($this->rootDir, $projectDir, $destinationPath);
         $voGenerator = new GeneratorVO($this->generator, $voElementsToCreate, $voPaths);
 
+        $voLayer = new LayerVO($voGenerator, $output);
+
         //Generate Layers based on the inverse importance of the Layer.
         //Infrastructure : no dependency.
         //Domain has a dependency to Infrastructure.
         //Application has dependency to Domain.
         //Presentation has dependency to Application.
-        (new Infrastructure($voGenerator, $output))->generate();
-        (new Domain($voGenerator, $output))->generate();
-        (new Application($voGenerator, $output))->generate();
-        (new Presentation($voGenerator, $output))->generate();
+        (new Infrastructure($voLayer))->generate();
+        (new Domain($voLayer))->generate();
+        (new Application($voLayer))->generate();exit;
+        (new Presentation($voLayer))->generate();
 
         //Generate Layers linked to Symfony with the same pattern of generation upside.
-        (new InfrastructureBundle($voGenerator, $output))->generate();
-        (new PresentationBundle($voGenerator, $output))->generate();
+        (new InfrastructureBundle($voLayer))->generate();
+        (new PresentationBundle($voLayer))->generate();
 
         return 0;
     }

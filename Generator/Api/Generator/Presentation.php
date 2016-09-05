@@ -21,6 +21,12 @@ use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Presentation\Request\RequestH
  */
 class Presentation extends LayerAbstract
 {
+    /** @var string */
+    protected static $handlersFileName = 'presentation.yml';
+
+    /** @var string */
+    protected static $skeletonDir = 'Api/Presentation';
+
     /**
      * Entry point of the generation of the "Presentation" layer in DDD.
      * Call the generation of :

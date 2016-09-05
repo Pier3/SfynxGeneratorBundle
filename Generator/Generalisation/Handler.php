@@ -3,22 +3,25 @@ declare(strict_types = 1);
 
 namespace Sfynx\DddGeneratorBundle\Generator\Generalisation;
 
+use Exception;
+use Sfynx\DddGeneratorBundle\Util\StringManipulation;
 use Twig_Environment;
 use Twig_Error_Loader;
 use Twig_Error_Runtime;
 use Twig_Error_Syntax;
 
+use Sfynx\DddGeneratorBundle\Util\PiFileManager;
 use Sfynx\DddGeneratorBundle\Twig\DDDExtension;
 use Twig_Loader_Filesystem;
 use Twig_SimpleFilter;
 
 /**
- * Class AbstractHandler.
+ * Class Handler.
  *
  * @category Generator
  * @package Generalisation
  */
-abstract class AbstractHandler
+class Handler implements HandlerInterface
 {
     /** @var string */
     protected $rootSkeletonDir;
@@ -28,6 +31,16 @@ abstract class AbstractHandler
     protected $parameters;
     /** @var string */
     protected $templateName;
+    /** @var string */
+    protected $skeletonDir;
+    /** @var string */
+    protected $skeletonTpl;
+    /** @var string */
+    protected $targetPattern;
+    /** @var string */
+    protected $target;
+    /** @var string */
+    protected $handlerName;
 
     /**
      * AbstractHandler constructor.
@@ -36,9 +49,32 @@ abstract class AbstractHandler
     public function __construct(array $commonParameters)
     {
         $this->parameters = $commonParameters;
+        //If key "skeletonDir" is set, give its value to $this->skeletonDir, otherwise, set null.
+        $this->skeletonDir = $commonParameters['skeletonDir'] ?? null;
+        $this->skeletonTpl = $commonParameters['skeletonTpl'] ?? null;
+        $this->targetPattern = $commonParameters['targetPattern'] ?? null;
+        $this->handlerName = $commonParameters['handlerName'] ?? null;
+
         $this->rootSkeletonDir = dirname(dirname(__DIR__)) . '/Skeleton';
         $this->setTarget();
         $this->setTemplateName();
+    }
+
+    public function execute()
+    {
+        try {
+            $this->setSkeletonDirs($this->getRootSkeletonDir() . '/' . $this->skeletonDir);
+            $targetDir = PiFileManager::getFileDirname($this->target);
+            if (!file_exists(PiFileManager::getFileDirname($this->target))) {
+                mkdir($targetDir, 0777, true);
+            }
+            $this->renderFile($this->getTemplateName(), $this->target, $this->getParameters());
+            $this->setPermissions($this->target);
+        } catch (Exception $e) {
+            $errorMessage = PHP_EOL . ' # /!\ Exception occurs during the execution of handler "%s":' . PHP_EOL
+                . '    %s' . PHP_EOL . PHP_EOL;
+            fwrite(STDERR, sprintf($errorMessage, $this->handlerName, $e->getMessage()));
+        }
     }
 
     /**
@@ -71,19 +107,25 @@ abstract class AbstractHandler
     /**
      * Set the name of the target file to be created.
      */
-    abstract protected function setTarget();
+    protected function setTarget()
+    {
+        $this->target = StringManipulation::vksprintf($this->targetPattern, $this->parameters);
+    }
 
     /**
      * Set the name of the template file used for creation.
      */
-    abstract protected function setTemplateName();
+    protected function setTemplateName()
+    {
+        $this->templateName = StringManipulation::vksprintf($this->skeletonTpl, $this->parameters);
+    }
 
     /**
      * Set an array of directories to look for templates.
      * The directories must be sorted from the most specific to the most generic directory.
      *
      * @param array|string $skeletonDirs An array of skeleton dirs
-     * @return AbstractHandler
+     * @return Handler
      */
     public function setSkeletonDirs($skeletonDirs): self
     {

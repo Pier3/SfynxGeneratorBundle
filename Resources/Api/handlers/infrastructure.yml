@@ -1,0 +1,16 @@
+#Persistance Handlers
+ormRepositoryHandler:
+    skeletonTpl: "Persistence/Orm/Repository.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Infrastructure/Persistence/Repository/%entityName$s/Orm/%actionName$sRepository.php"
+
+odmRepositoryHandler:
+    skeletonTpl: "Persistence/Odm/Repository.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Infrastructure/Persistence/Repository/%entityName$s/Odm/%actionName$sRepository.php"
+
+couchDbRepositoryHandler:
+    skeletonTpl: "Persistence/CouchDb/Repository.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Infrastructure/Persistence/Repository/%entityName$s/CouchDb/%actionName$sRepository.php"
+
+traitEntityNameHandler:
+    skeletonTpl: "Persistence/TraitEntityName.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Infrastructure/Persistence/Repository/%entityName$s/TraitEntityName.php"

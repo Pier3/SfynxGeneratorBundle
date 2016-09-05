@@ -10,10 +10,10 @@ class WFGenerateVOListenerHandler extends AbstractHandler implements HandlerInte
 {
     use ExecuteTrait;
 
-    const SKELETON_DIR = 'Api/Domain/Workflow/Listener';
-    const SKELETON_TPL = 'WFGenerateVOListener.php.twig';
+    const SKELETON_DIR = 'Api/Domain/';
+    const SKELETON_TPL = 'Workflow/Listener/WFGenerateVOListener.php.twig';
 
-    protected $targetPattern = '%s/%s/Domain/Workflow/%s/Listener/WFGenerateVOListener.php';
+    protected $targetPattern = '%destinationPath$s/%projectDir$s/Domain/Workflow/%entityName$s/Listener/WFGenerateVOListener.php';
     protected $target;
 
     protected function setTemplateName()

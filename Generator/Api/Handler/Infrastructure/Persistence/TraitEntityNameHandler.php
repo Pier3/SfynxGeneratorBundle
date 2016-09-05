@@ -10,9 +10,9 @@ class TraitEntityNameHandler extends AbstractHandler implements HandlerInterface
     use ExecuteTrait;
 
     const SKELETON_DIR = 'Api/Infrastructure/Persistence';
-    const SKELETON_TPL = 'TraitEntityName.php.twig';
+    const SKELETON_TPL = 'Persistence/TraitEntityName.php.twig';
 
-    protected $targetPattern = '%s/%s/Infrastructure/Persistence/Repository/%s/TraitEntityName.php';
+    protected $targetPattern = '%destinationPath$s/%projectDir$s/Infrastructure/Persistence/Repository/%entityName$s/TraitEntityName.php';
     protected $target;
 
     protected function setTemplateName()

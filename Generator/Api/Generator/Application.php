@@ -3,21 +3,6 @@ declare(strict_types = 1);
 
 namespace Sfynx\DddGeneratorBundle\Generator\Api\Generator;
 
-//Commands
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Command\{
-    CommandHandler,
-    Handler\CommandHandlerHandler,
-    Handler\Decorator\CommandHandlerDecoratorHandler,
-    Validation\SpecHandler\CommandSpecHandler,
-    Validation\ValidationHandler\CommandValidationHandler
-};
-
-// Queries
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Application\Query\{
-    QueryHandler,
-    Handler\QueryHandlerHandler
-};
-
 // Tests
 use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\{
     Application\Entity\Command\CommandTestHandler,
@@ -36,6 +21,12 @@ use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\{
  */
 class Application extends LayerAbstract
 {
+    /** @var string */
+    protected static $handlersFileName = 'application.yml';
+
+    /** @var string */
+    protected static $skeletonDir = 'Api/Application';
+
     /**
      * Entry point of the generation of the "Application" layer in DDD.
      * Call the generation of the Commands, the Queries and the Tests of the "Application" layer.
@@ -68,16 +59,13 @@ class Application extends LayerAbstract
             $this->parameters['entityFields'] = $this->entitiesToCreate[$data['entity']];
             $this->parameters['constructorArgs'] = $this->buildConstructorParamsString($data['entity']);
 
-            // Command
-            $this->generator->addHandler(new CommandHandler($this->parameters), true);
-            // Decorator
-            $this->generator->addHandler(new CommandHandlerDecoratorHandler($this->parameters), true);
-            // Handler
-            $this->generator->addHandler(new CommandHandlerHandler($this->parameters), true);
-            // SpecHandler
-            $this->generator->addHandler(new CommandSpecHandler($this->parameters), true);
-            // ValidationHandler
-            $this->generator->addHandler(new CommandValidationHandler($this->parameters), true);
+            $this->addHandlers(
+                'commandHandler',
+                'commandHandlerDecoratorHandler',
+                'commandHandlerHandler',
+                'commandSpecHandler',
+                'commandValidationHandler'
+            );
         }
 
         $this->generator->execute()->clear();
@@ -93,8 +81,7 @@ class Application extends LayerAbstract
             $this->parameters['entityName'] = ucfirst(strtolower($data['entity']));
             $this->parameters['entityFields'] = $this->entitiesToCreate[$data['entity']];
 
-            $this->generator->addHandler(new QueryHandler($this->parameters), true);
-            $this->generator->addHandler(new QueryHandlerHandler($this->parameters), true);
+            $this->addHandlers('queryHandler', 'queryHandlerHandler');
         }
 
         $this->generator->execute()->clear();

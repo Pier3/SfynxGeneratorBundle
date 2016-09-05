@@ -3,36 +3,6 @@ declare(strict_types = 1);
 
 namespace Sfynx\DddGeneratorBundle\Generator\Api\Generator;
 
-//Entities and Repositories Interfaces
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Domain\Entity\EntityHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Domain\Repository\EntityRepositoryInterfaceHandler;
-
-//Services
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Domain\Service\{
-    Manager\ManagerHandler,
-    Processor\PrePersistProcessHandler,
-    Processor\PostPersistProcessHandler,
-    CouchDB\RepositoryFactoryHandler as CouchDbRepositoryFactoryHandler,
-    Odm\RepositoryFactoryHandler as OdmRepositoryFactoryHandler,
-    Orm\RepositoryFactoryHandler as OrmRepositoryFactoryHandler
-};
-
-//Workflow Handlers
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Domain\Workflow\Handler\{
-    NewWFHandlerHandler,
-    PatchWFHandlerHandler,
-    UpdateWFHandlerHandler
-};
-
-//Workflow Listeners
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Domain\Workflow\Listener\{
-    WFGenerateVOListenerHandler,
-    WFGetCurrencyHandler,
-    WFPublishEventHandler,
-    WFRetrieveEntityHandler,
-    WFSaveEntityHandler
-};
-
 /**
  * Class Domain
  *
@@ -42,6 +12,12 @@ use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Domain\Workflow\Listener\{
  */
 class Domain extends LayerAbstract
 {
+    /** @var string */
+    protected static $handlersFileName = 'domain.yml';
+
+    /** @var string */
+    protected static $skeletonDir = 'Api/Domain';
+
     /**
      * Entry point of the generation of the "Domain" layer in DDD.
      * Call the generation of :
@@ -59,14 +35,8 @@ class Domain extends LayerAbstract
         $this->output->writeln('##############################################');
         $this->output->writeln('');
 
-        $this->output->writeln('### ENTITIES & REPOSITORIES INTERFACES GENERATION ###');
-        $this->generateEntitiesAndRepositoriesInterfaces();
-
-        $this->output->writeln('### SERVICES GENERATION ###');
-        $this->generateServices();
-
-        $this->output->writeln('### WORKFLOW GENERATION ###');
-        $this->generateWorkflow();
+        $this->output->writeln('### ENTITIES ELEMENTS GENERATION ###');
+        $this->generateEntitiesElements();
 
         $this->output->writeln('### VALUE OBJECTS GENERATION ###');
         $this->output->writeln(' - GOOD LUCK, PREPARE YOUR BRAIN -');
@@ -80,64 +50,41 @@ class Domain extends LayerAbstract
     }
 
     /**
-     * Generate the Entities and repositories interfaces part in the "Domain" layer.
+     * Generate the entities elements int the "Domain" layer.
+     * Those elements are Entities and Repository Interfaces, Services and Workflow.
      */
-    public function generateEntitiesAndRepositoriesInterfaces()
+    public function generateEntitiesElements()
     {
         foreach ($this->entitiesToCreate as $entityName => $fields) {
             $this->parameters['entityName'] = ucfirst(strtolower($entityName));
             $this->parameters['entityFields'] = $fields;
             $this->parameters['constructorArgs'] = $this->buildConstructorParamsString($entityName);
 
-            $this->generator->addHandler(new EntityHandler($this->parameters), true);
-            $this->generator->addHandler(new EntityRepositoryInterfaceHandler($this->parameters), true);
+            $this->addHandlers(
+                //Entities and Repository Interfaces
+                'entityHandler',
+                'entityRepositoryHandlerInterfaceHandler',
+
+                //Services
+                'couchDbRepositoryFactoryHandler',
+                'odmRepositoryFactoryHandler',
+                'ormRepositoryFactoryHandler',
+                'managerHandler',
+                'prePersistProcessHandler',
+                'postPersistProcessHandler',
+
+                //Workflow
+                'newWFHandlerHandler',
+                'updateWFHandlerHandler',
+                'patchWFHandlerHandler',
+                'wFGenerateVOListenerHandler',
+                'wFGetCurrencyHandler',
+                'wFPublishEventHandler',
+                'wFSaveEntityHandler',
+                'wFRetrieveEntityHandler'
+            );
         }
 
-        $this->generator->execute()->clear();
-    }
-
-    /**
-     * Generate the Services part in the "Domain" layer.
-     */
-    public function generateServices()
-    {
-        foreach ($this->entitiesToCreate as $entityName => $fields) {
-            $this->parameters['entityName'] = ucfirst(strtolower($entityName));
-            $this->parameters['entityFields'] = $fields;
-            $this->parameters['constructorArgs'] = $this->buildConstructorParamsString($entityName);
-
-            $this->generator->addHandler(new CouchDbRepositoryFactoryHandler($this->parameters), true);
-            $this->generator->addHandler(new OdmRepositoryFactoryHandler($this->parameters), true);
-            $this->generator->addHandler(new OrmRepositoryFactoryHandler($this->parameters), true);
-
-            $this->generator->addHandler(new ManagerHandler($this->parameters), true);
-
-            $this->generator->addHandler(new PrePersistProcessHandler($this->parameters), true);
-            $this->generator->addHandler(new PostPersistProcessHandler($this->parameters), true);
-        }
-
-        $this->generator->execute()->clear();
-    }
-
-    /**
-     * Generate the Workflow part in the "Domain" layer.
-     */
-    public function generateWorkflow()
-    {
-        foreach (array_keys($this->entitiesToCreate) as $entityName) {
-            $this->parameters['entityName'] = $entityName;
-            $this->parameters['entityFields'] = $this->entitiesToCreate[$entityName];
-
-            $this->generator->addHandler(new NewWFHandlerHandler($this->parameters), true);
-            $this->generator->addHandler(new UpdateWFHandlerHandler($this->parameters), true);
-            $this->generator->addHandler(new PatchWFHandlerHandler($this->parameters), true);
-
-            $this->generator->addHandler(new WFGenerateVOListenerHandler($this->parameters), true);
-            $this->generator->addHandler(new WFGetCurrencyHandler($this->parameters), true);
-            $this->generator->addHandler(new WFPublishEventHandler($this->parameters), true);
-            $this->generator->addHandler(new WFSaveEntityHandler($this->parameters), true);
-            $this->generator->addHandler(new WFRetrieveEntityHandler($this->parameters), true);
-        }
         $this->generator->execute()->clear();
     }
 

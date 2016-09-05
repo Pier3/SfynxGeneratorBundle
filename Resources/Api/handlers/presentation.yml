@@ -1,0 +1,15 @@
+commandHandler:
+    skeletonTpl: "Command/%sCommand.php.twig"
+    targetPattern: "%s/%s/Application/%s/Command/%sCommand.php"
+
+commandHandlerDecoratorHandler:
+    skeletonTpl: "Command/Handler/Decorator/%sCommandHandlerDecorator.php.twig"
+    targetPattern: "%s/%s/Application/%s/Command/Handler/Decorator/%sCommandHandlerDecorator.php"
+
+commandHandlerHandler:
+    skeletonTpl: "Command/Handler/%sCommandHandler.php.twig"
+    targetPattern: "%s/%s/Application/%s/Command/Handler/%sCommandHandler.php"
+
+commandSpecHandler:
+    skeletonTpl: "Command/Handler/Validation/SpecHandler/%sCommandSpecHandler.php.twig"
+    targetPattern: "%s/%s/Application/%s/Command/Validation/SpecHandler/%sCommandSpecHandler.php"

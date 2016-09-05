@@ -11,7 +11,7 @@ class ManagerHandler extends AbstractHandler implements HandlerInterface
     use ExecuteTrait;
 
     const SKELETON_DIR = 'Api/Domain/Service/Manager';
-    const SKELETON_TPL = 'Manager.php.twig';
+    const SKELETON_TPL = 'Service/Manager/Manager.php.twig';
 
     protected $targetPattern = '%s/%s/Domain/Service/%s/Manager/%sManager.php';
     protected $target;

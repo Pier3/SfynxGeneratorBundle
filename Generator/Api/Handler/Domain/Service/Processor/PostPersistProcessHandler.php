@@ -11,7 +11,7 @@ class PostPersistProcessHandler extends AbstractHandler implements HandlerInterf
     use ExecuteTrait;
 
     const SKELETON_DIR = 'Api/Domain/Service/Processor';
-    const SKELETON_TPL = 'PostPersistsProcess.php.twig';
+    const SKELETON_TPL = 'Service/Processor/PostPersistsProcess.php.twig';
 
     protected $targetPattern = '%s/%s/Domain/Service/%s/Processor/PostPersistProcess.php';
     protected $target;

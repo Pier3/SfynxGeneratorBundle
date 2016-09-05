@@ -10,10 +10,10 @@ class RepositoryHandler extends AbstractHandler implements HandlerInterface
 {
     use ExecuteTrait;
 
-    const SKELETON_DIR = 'Api/Infrastructure/Persistence/Orm';
-    const SKELETON_TPL = 'Repository.php.twig';
+    const SKELETON_DIR = 'Api/Infrastructure/';
+    const SKELETON_TPL = 'Persistence/Orm/Repository.php.twig';
 
-    protected $targetPattern = '%s/%s/Infrastructure/Persistence/Repository/%s/Orm/%sRepository.php';
+    protected $targetPattern = '%destinationPath$s/%projectDir$s/Infrastructure/Persistence/Repository/%entityName$s/Orm/%actionName$sRepository.php';
     protected $target;
 
     protected function setTemplateName()

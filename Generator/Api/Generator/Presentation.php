@@ -12,6 +12,8 @@ use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Presentation\Coordination\Con
 //Request
 use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Request\RequestHandler;
 use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Adapter\Entity\Command\CommandAdapterTestHandler;
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Coordination\Entity\Command\ControllerCommandTestHandler;
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Coordination\Entity\Query\ControllerQueryTestHandler;
 
 /**
  * Class Presentation
@@ -131,20 +133,34 @@ class Presentation extends LayerAbstract
 
         // Generate controllers
         foreach ($this->entitiesGroups as $entityName => $entityGroups) {
-            $this->parameters['entityName'] = $entityName;
-            //Set the parameter $group to its good value (might be a reset)
-            $this->parameters['group'] = $group;
 
+            $this->parameters['entityName'] = $entityName;
             //Reset the controllerData list
             $this->parameters['controllerData'] = [];
 
+            // Query
+            $group = SELF::QUERY;
+            //Set the parameter $group to its good value (might be a reset)
+            $this->parameters['group'] = $group;
             //Fetch all controllerData for the given group (Command or Query)
             foreach ($entityGroups[$group] as $entityCommandData) {
                 $this->parameters['controllerData'][] = $entityCommandData;
             }
-
             //Add the Handlers to the generator's stack.
-            $this->generator->addHandler(new ControllerHandler($this->parameters), true);
+            $this->generator->addHandler(new ControllerQueryTestHandler($this->parameters), true);
+
+
+            // Command
+            $group = SELF::COMMAND;
+            //Set the parameter $group to its good value (might be a reset)
+            $this->parameters['group'] = $group;
+            //Fetch all controllerData for the given group (Command or Query)
+            foreach ($entityGroups[$group] as $entityCommandData) {
+                $this->parameters['controllerData'][] = $entityCommandData;
+            }
+            //Add the Handlers to the generator's stack.
+            $this->generator->addHandler(new ControllerCommandTestHandler($this->parameters), true);
+
         }
 
         return $this;

@@ -16,11 +16,11 @@ class DeleteCommandTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
 
-        $this->revision="001";
-        $this->entityId="123456";
+        $this->revision='001';
+        $this->entityId='123456';
 
 
-        $this->command = new DeleteCommand($this->entityId,$this->revision);
+        $this->command = new DeleteCommand($this->entityId, $this->revision);
     }
 
     public function testInterface()

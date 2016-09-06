@@ -1,0 +1,69 @@
+#Entities and Repositories Handlers
+entityHandler:
+    skeletonTpl: "Entity/entity.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Domain/Entity/%entityName$s.php"
+
+entityRepositoryHandlerInterfaceHandler:
+    skeletonTpl: "Repository/EntityRepositoryInterface.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Domain/Repository/%entityName$sRepositoryInterface.php"
+
+#Services Handlers
+couchDbRepositoryFactoryHandler:
+    skeletonTpl: "Service/CouchDB/RepositoryFactory.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Domain/Service/%entityName$s/Factory/CouchDB/RepositoryFactory.php"
+
+odmRepositoryFactoryHandler:
+    skeletonTpl: "Service/Odm/RepositoryFactory.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Domain/Service/%entityName$s/Factory/Odm/RepositoryFactory.php"
+
+ormRepositoryFactoryHandler:
+    skeletonTpl: "Service/Orm/RepositoryFactory.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Domain/Service/%entityName$s/Factory/Orm/RepositoryFactory.php"
+
+managerHandler:
+    skeletonTpl: "Service/Manager/Manager.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Domain/Service/%entityName$s/Manager/%entityName$sManager.php"
+
+prePersistProcessHandler:
+    skeletonTpl: "Service/Processor/PrePersistsProcess.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Domain/Service/%entityName$s/Processor/PrePersistProcess.php"
+
+postPersistProcessHandler:
+    skeletonTpl: "Service/Processor/PostPersistsProcess.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Domain/Service/%entityName$s/Processor/PostPersistProcess.php"
+
+#Workflow Handlers
+newWFHandlerHandler:
+    skeletonTpl: "Workflow/Handler/NewWFHandler.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Domain/Workflow/%entityName$s/Handler/NewWFHandler.php"
+
+updateWFHandlerHandler:
+    skeletonTpl: "Workflow/Handler/UpdateWFHandler.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Domain/Workflow/%entityName$s/Handler/UpdateWFHandler.php"
+
+patchWFHandlerHandler:
+    skeletonTpl: "Workflow/Handler/PatchWFHandler.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Domain/Workflow/%entityName$s/Handler/PatchWFHandler.php"
+
+wFGenerateVOListenerHandler:
+    skeletonTpl: "Workflow/Listener/WFGenerateVOListener.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Domain/Workflow/%entityName$s/Listener/WFGenerateVOListener.php"
+
+wFGetCurrencyHandler:
+    skeletonTpl: "Workflow/Listener/WFGetCurrency.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Domain/Workflow/%entityName$s/Listener/WFGetCurrency.php"
+
+wFPublishEventHandler:
+    skeletonTpl: "Workflow/Listener/WFPublishEvent.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Domain/Workflow/%entityName$s/Listener/WFPublishEvent.php"
+
+wFSaveEntityHandler:
+    skeletonTpl: "Workflow/Listener/WFSaveEntity.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Domain/Workflow/%entityName$s/Listener/WFSaveEntity.php"
+
+wFRetrieveEntityHandler:
+    skeletonTpl: "Workflow/Listener/WFRetrieveEntity.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Domain/Workflow/%entityName$s/Listener/WFRetrieveEntity.php"
+
+#Value objects Handlers
+#TODO

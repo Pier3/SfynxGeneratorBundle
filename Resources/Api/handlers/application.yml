@@ -1,0 +1,30 @@
+# Command Handler
+commandHandler:
+    skeletonTpl: "Command/%actionName$sCommand.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Application/%entityName$s/Command/%actionName$sCommand.php"
+
+commandHandlerDecoratorHandler:
+    skeletonTpl: "Command/Handler/Decorator/%actionName$sCommandHandlerDecorator.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Application/%entityName$s/Command/Handler/Decorator/%actionName$sCommandHandlerDecorator.php"
+
+commandHandlerHandler:
+    skeletonTpl: "Command/Handler/%actionName$sCommandHandler.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Application/%entityName$s/Command/Handler/%actionName$sCommandHandler.php"
+
+commandSpecHandler:
+    skeletonTpl: "Command/Handler/Validation/SpecHandler/%actionName$sCommandSpecHandler.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Application/%entityName$s/Command/Validation/SpecHandler/%actionName$sCommandSpecHandler.php"
+
+commandValidationHandler:
+    skeletonTpl: "Command/Handler/Validation/ValidationHandler/%actionName$sCommandValidationHandler.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Application/%entityName$s/Command/Validation/ValidationHandler/%actionName$sCommandValidationHandler.php"
+
+# Query Handler
+queryHandler:
+    skeletonTpl: "Query/%actionName$sQuery.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Application/%entityName$s/Query/%actionName$sQuery.php"
+
+queryHandlerHandler:
+    skeletonTpl: "Query/Handler/%actionName$sQueryHandler.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Application/%entityName$s/Query/Handler/%actionName$sQueryHandler.php"
+

@@ -20,6 +20,7 @@ class Generator
     const PROJECT_DIR = __DIR__ . '/../';
 
     const API_CONFIG = self::PROJECT_DIR . 'Resources/Api/config';
+    const API_HANDLERS = self::PROJECT_DIR . 'Resources/Api/handlers';
 
     const API_COMMAND = 'dddapi.generator.command';
 

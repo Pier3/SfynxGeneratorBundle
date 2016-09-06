@@ -11,13 +11,13 @@ parameters:
     #      MANAGER    #
     ###################
 
-    project.{{ projectName|lower }}.{{ entityName|lower }}.manager.{{ group|lower }}.class: {{ projectName|capitalize }}Context\Domain\Service\{{ entityName|capitalize }}\Manager\{{ group }}\Manager
+    project.{{ projectName|lower }}.{{ entityName|lower }}.manager.{{ group }}.class: {{ projectName|capitalize }}Context\Domain\Service\{{ entityName|capitalize }}\Manager\{{ group|capitalize }}\Manager
 
     #################
     # QUERY HANDLER #
     #################
 {% for commandQueryResponsibilitySegregation in controllerData %}
-    project.{{ projectName|lower }}.{{ entityName|lower }}.{{ group|lower }}.{{ commandQueryResponsibilitySegregation.action|lower }}.handler.class: {{ projectName|capitalize }}Context\Application\{{ entityName|capitalize }}\{{ group }}\Handler\{{ commandQueryResponsibilitySegregation.action }}{{ group }}Handle
+    project.{{ projectName|lower }}.{{ entityName|lower }}.{{ group }}.{{ commandQueryResponsibilitySegregation.action|lower }}.handler.class: {{ projectName|capitalize }}Context\Application\{{ entityName|capitalize }}\{{ group|capitalize }}\Handler\{{ commandQueryResponsibilitySegregation.action }}{{ group|capitalize }}Handle
 {% if loop.last %}
 
 {% endif %}
@@ -32,7 +32,7 @@ services:
     # project.{{ projectName|lower }}.{{ entityName|lower }}.repository.factory service is created by CreateRepositoryFactoryPass
     #
     project.{{ projectName|lower }}.{{ entityName|lower }}.query.manager:
-        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.manager.{{ group }}.class%
+        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.manager.{{ group|capitalize }}.class%
         arguments:
             - "@project.{{ projectName|lower }}.{{ entityName|lower }}.repository.factory"
         calls:
@@ -48,11 +48,11 @@ services:
 {% for commandQueryResponsibilitySegregation in controllerData %}
 
     #
-    # {{ commandQueryResponsibilitySegregation.action|lower }} {{ entityName|lower }} {{ group }} handler
+    # {{ commandQueryResponsibilitySegregation.action|lower }} {{ entityName|lower }} {{ group|capitalize }} handler
     #
-    project.{{ projectName|lower }}.{{ entityName|lower }}.{{ group|lower }}.{{ commandQueryResponsibilitySegregation.action|lower }}.handler:
-        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.{{ group|lower }}.{{ commandQueryResponsibilitySegregation.action|lower }}.handler.class%
-        arguments: ["@project.{{ projectName|lower }}.{{ entityName|lower }}.{{ group|lower }}.manager"]
+    project.{{ projectName|lower }}.{{ entityName|lower }}.{{ group }}.{{ commandQueryResponsibilitySegregation.action|lower }}.handler:
+        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.{{ group }}.{{ commandQueryResponsibilitySegregation.action|lower }}.handler.class%
+        arguments: ["@project.{{ projectName|lower }}.{{ entityName|lower }}.{{ group }}.manager"]
 {% if loop.last %}
 
 {% endif %}

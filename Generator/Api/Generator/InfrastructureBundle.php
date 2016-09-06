@@ -20,6 +20,12 @@ use Sfynx\DddGeneratorBundle\Generator\Api\Handler\InfrastructureBundle\Dependen
  */
 class InfrastructureBundle extends LayerAbstract
 {
+    /** @var string */
+    protected static $handlersFileName = 'infrastructureBundle.yml';
+
+    /** @var string */
+    protected static $skeletonDir = 'Api/InfrastructureBundle';
+
     /**
      * Entry point of the generation of the "InfrastructureBundle" layer in DDD.
      * Call the generation of :
@@ -34,11 +40,16 @@ class InfrastructureBundle extends LayerAbstract
         $this->output->writeln('#############################################');
         $this->output->writeln('');
 
-        $this->output->writeln('### BUNDLE GENERATION ###');
-        $this->generateBundle();
-        $this->output->writeln('### TEST GENERATION ###');
-        //TODO: work on the generation of the tests.
-        $this->generateTests();
+        try {
+            $this->output->writeln('### BUNDLE GENERATION ###');
+            $this->generateBundle();
+            $this->output->writeln('### TEST GENERATION ###');
+            //TODO: work on the generation of the tests.
+            //$this->generateTests();
+        } catch (\InvalidArgumentException $e) {
+            fwrite(STDERR, $e->getMessage());
+            exit;
+        }
     }
 
     /**
@@ -48,17 +59,13 @@ class InfrastructureBundle extends LayerAbstract
     {
         $this->parameters['entities'] = $this->entitiesToCreate;
 
-        $this->generator->addHandler(new CreateRepositoryFactoryPassHandler($this->parameters));
-        $this->generator->addHandler(new ConfigurationHandler($this->parameters));
-        $this->generator->addHandler(new InfrastructureBundleExtensionHandler($this->parameters));
-        $this->generator->addHandler(new InfrastructureBundleHandler($this->parameters));
+        $this->addHandlers(
+            'createRepositoryFactoryPassHandler',
+            'configurationHandler',
+            'infrastructureBundleExtensionHandler',
+            'infrastructureBundleHandler'
+        );
 
         $this->generator->execute()->clear();
-    }
-
-
-    public function generateTests()
-    {
-        return $this;
     }
 }

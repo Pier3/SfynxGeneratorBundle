@@ -10,7 +10,7 @@ use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Presentation\Adapter\Query\Ad
 //Controller
 use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Presentation\Coordination\ControllerHandler;
 //Request
-
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Presentation\Request\RequestHandler;
 use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Presentation\Request\RequestHandler;
 use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Adapter\Entity\Command\CommandAdapterTestHandler;
 use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Coordination\Entity\Command\ControllerCommandTestHandler;
@@ -26,6 +26,12 @@ use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Coordinati
  */
 class Presentation extends LayerAbstract
 {
+    /** @var string */
+    protected static $handlersFileName = 'presentation.yml';
+
+    /** @var string */
+    protected static $skeletonDir = 'Api/Presentation';
+
     /**
      * Entry point of the generation of the "Presentation" layer in DDD.
      * Call the generation of :
@@ -43,16 +49,23 @@ class Presentation extends LayerAbstract
         $this->output->writeln('##############################################');
         $this->output->writeln('');
 
-        $this->output->writeln('### COMMAND ADAPTERS GENERATION ###');
-        $this->generateCommandsAdapter();
-        $this->output->writeln('### QUERY ADAPTERS GENERATION ###');
-        $this->generateQueriesAdapter();
-        $this->output->writeln('### COORDINATION CONTROLLERS GENERATION ###');
-        $this->generateCoordinationControllers();
-        $this->output->writeln('### REQUESTS GENERATION ###');
-        $this->generateRequest();
-        $this->output->writeln('### TESTS GENERATION ###');
-        $this->generateTests();
+        try {
+            $this->output->writeln('### COMMAND ADAPTERS GENERATION ###');
+            $this->generateCommandsAdapter();
+            $this->output->writeln('### QUERY ADAPTERS GENERATION ###');
+            $this->generateQueriesAdapter();
+            $this->output->writeln('### COORDINATION CONTROLLERS GENERATION ###');
+            $this->generateCoordinationControllers();
+            $this->output->writeln('### REQUESTS GENERATION ###');
+            $this->generateRequest();
+            $this->output->writeln('### TESTS GENERATION ###');
+            $this->output->writeln(' - BE MY GUEST ... -');
+            //TODO: work on the generation of the tests.
+            $this->generateTests();
+        } catch (\InvalidArgumentException $e) {
+            fwrite(STDERR, $e->getMessage());
+            exit;
+        }
     }
 
     /**
@@ -65,7 +78,7 @@ class Presentation extends LayerAbstract
             $this->parameters['entityName'] = ucfirst($data['entity']);
             $this->parameters['entityFields'] = $this->entitiesToCreate[$data['entity']];
 
-            $this->generator->addHandler(new AdapterCommandHandler($this->parameters), true);
+            $this->addHandler('adapterCommandHandler');
         }
 
         $this->generator->execute()->clear();
@@ -81,7 +94,7 @@ class Presentation extends LayerAbstract
             $this->parameters['entityName'] = ucfirst($data['entity']);
             $this->parameters['entityFields'] = $this->entitiesToCreate[$data['entity']];
 
-            $this->generator->addHandler(new AdapterQueryHandler($this->parameters), true);
+            $this->addHandler('adapterQueryHandler');
         }
         $this->generator->execute()->clear();
     }
@@ -189,7 +202,7 @@ class Presentation extends LayerAbstract
         }
 
         //Add the Handlers to the generator's stack.
-        $this->generator->addHandler(new ControllerHandler($this->parameters), true);
+        $this->addHandler('controllerHandler');
 
         return $this;
     }
@@ -209,7 +222,8 @@ class Presentation extends LayerAbstract
         //Fetch all actionName and add the handler for this actionName
         foreach ($entityGroups[$group] as $data) {
             $this->parameters['actionName'] = ucfirst($data['action']);
-            $this->generator->addHandler(new RequestHandler($this->parameters), true);
+
+            $this->addHandler('requestHandler');
         }
 
         return $this;

@@ -44,6 +44,8 @@ class Infrastructure extends LayerAbstract
 
     /**
      * Generate the Persistence part in the "Infrastructure" layer.
+     *
+     * @throws \InvalidArgumentException
      */
     public function generatePersistence()
     {
@@ -64,9 +66,10 @@ class Infrastructure extends LayerAbstract
     /**
      * Add Repositories handlers to the generator. For use in a loop for each C.Q.R.S. actions.
      *
-     * @param array  $entityGroups
+     * @param array $entityGroups
      * @param string $group
      * @return self
+     * @throws \InvalidArgumentException
      */
     private function addCQRSRepositoriesToGenerator(array $entityGroups, string $group): self
     {

@@ -64,8 +64,8 @@ class Handler implements HandlerInterface
     {
         try {
             $this->setSkeletonDirs($this->getRootSkeletonDir() . '/' . $this->skeletonDir);
-            $targetDir = PiFileManager::getFileDirname($this->target);
-            if (!file_exists(PiFileManager::getFileDirname($this->target))) {
+            $targetDir = PiFileManager::getFileDirectoryName($this->target);
+            if (!file_exists(PiFileManager::getFileDirectoryName($this->target))) {
                 mkdir($targetDir, 0777, true);
             }
             $this->renderFile($this->getTemplateName(), $this->target, $this->getParameters());

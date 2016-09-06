@@ -54,6 +54,7 @@ class Application extends LayerAbstract
 
     /**
      * Generate the Command part in the "Application" layer.
+     * @throws \InvalidArgumentException
      */
     protected function generateCommands()
     {
@@ -77,6 +78,7 @@ class Application extends LayerAbstract
 
     /**
      * Generate the Query part in the "Application" layer.
+     * @throws \InvalidArgumentException
      */
     protected function generateQueries()
     {

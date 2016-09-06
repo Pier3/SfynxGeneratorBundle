@@ -8,6 +8,7 @@ use Sfynx\DddGeneratorBundle\Bin\Generator;
 use Sfynx\DddGeneratorBundle\Generator\Api\DddApiGenerator;
 use Sfynx\DddGeneratorBundle\Generator\Api\ValueObjects\LayerVO;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\Handler;
+use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
 
 /**
@@ -77,8 +78,15 @@ abstract class LayerAbstract
         $this->parameters = $layerVO->parameters;
         $this->parameters['skeletonDir'] = static::$skeletonDir;
 
-        $handlersFileName = Generator::API_HANDLERS . '/' . static::$handlersFileName;
-        $this->handlersConfig = (new Parser())->parse(file_get_contents($handlersFileName));
+        $handlersFileName = realpath(Generator::API_HANDLERS . '/' . static::$handlersFileName);
+        try {
+            $this->handlersConfig = (new Parser())->parse(file_get_contents($handlersFileName));
+        } catch (ParseException $e) {
+            $errorMessage = '# Error in layer "%s": configuration handler file "%s" does not exist.' . PHP_EOL
+                . 'Error reported is: "%s".' . PHP_EOL;
+            fwrite(STDERR, sprintf($errorMessage, static::class, $handlersFileName, $e->getMessage()));
+            exit;
+        }
     }
 
     /**
@@ -118,6 +126,7 @@ abstract class LayerAbstract
      * Add all handlers defined in arguments.
      *
      * @param string[] ...$handlersNames
+     * @throws InvalidArgumentException If the handler name is not defined in the configuration file.
      * @return LayerAbstract
      */
     public function addHandlers(string ...$handlersNames): self

@@ -3,23 +3,6 @@ declare(strict_types = 1);
 
 namespace Sfynx\DddGeneratorBundle\Generator\Api\Generator;
 
-//Bundle part
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\PresentationBundle\PresentationBundleHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\PresentationBundle\DependencyInjection\{
-    PresentationBundleExtensionHandler,
-    ConfigurationHandler,
-    Compiler\ResettingListenersPassHandler
-};
-
-//Resource configuration part
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\PresentationBundle\Resources\{
-    Application\ApplicationHandler,
-    Controller\ControllerHandler,
-    Route\RouteHandler,
-    Controller\ControllerMultiTenantHandler,
-    Controller\ControllerSwaggerHandler
-};
-
 /**
  * Class PresentationBundle
  *
@@ -65,11 +48,11 @@ class PresentationBundle extends LayerAbstract
 
     /**
      * Generate the Bundle part in the "PresentationBundle" layer.
+     * @throws \InvalidArgumentException
      */
     public function generateBundle()
     {
         $this->parameters['entities'] = $this->entitiesToCreate;
-
 
         $this->addHandlers(
             'presentationBundleHandler',
@@ -83,6 +66,7 @@ class PresentationBundle extends LayerAbstract
 
     /**
      * Generate the Resource Configuration part in the "PresentationBundle" layer.
+     * @throws \InvalidArgumentException
      */
     public function generateResourcesConfiguration()
     {
@@ -93,10 +77,7 @@ class PresentationBundle extends LayerAbstract
                 ->addCQRSHandlerServiceToGenerator($entityGroups, self::QUERY);
         }
 
-        $this->addHandlers(
-            'controllerMultiTenantHandler',
-            'controllerSwaggerHandler'
-        );
+        $this->addHandlers('controllerMultiTenantHandler', 'controllerSwaggerHandler');
 
         $this->generator->execute()->clear();
     }
@@ -104,9 +85,10 @@ class PresentationBundle extends LayerAbstract
     /**
      * Add Resource configuration handlers to the generator. For use in a loop for each C.Q.R.S. actions.
      *
-     * @param array  $entityGroups
+     * @param array $entityGroups
      * @param string $group
      * @return self
+     * @throws \InvalidArgumentException
      */
     private function addCQRSHandlerServiceToGenerator(array $entityGroups, string $group): self
     {
@@ -122,11 +104,7 @@ class PresentationBundle extends LayerAbstract
         }
 
         //Add the Handlers to the generator's stack.
-        $this->addHandlers(
-            'applicationHandler',
-            'controllerHandler',
-            'routeHandler'
-        );
+        $this->addHandlers('applicationHandler', 'controllerHandler', 'routeHandler');
 
         return $this;
     }

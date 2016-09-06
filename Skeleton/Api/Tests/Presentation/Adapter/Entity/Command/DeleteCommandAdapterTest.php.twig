@@ -3,14 +3,14 @@ declare(strict_types = 1);
 
 namespace Tests\Presentation\Adapter\{{ entityName }}\Command;
 
-use {{ projectName }}\Presentation\Adapter\{{ entityName }}\Command\UpdateCommandAdapter;
-use {{ projectName }}\Presentation\Request\{{ entityName }}\Command\UpdateRequest;
+use {{ projectName}}\Presentation\Adapter\{{ entityName }}\Command\DeleteCommandAdapter;
+use {{ projectName}}\Presentation\Request\{{ entityName }}\Command\DeleteRequest;
 use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandInterface;
 use Sfynx\DddBundle\Layer\Presentation\Adapter\Generalisation\CommandAdapterInterface;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\CommandRequestInterface;
 use \Phake;
 
-class {{ actionName }}CommandAdapterTest extends \PHPUnit_Framework_TestCase
+class DeleteCommandAdapterTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var UpdateCommandAdapter
@@ -24,8 +24,8 @@ class {{ actionName }}CommandAdapterTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->adapter = new UpdateCommandAdapter();
-        $this->request  = Phake::mock(UpdateRequest::class);
+        $this->adapter = new DeleteCommandAdapter();
+        $this->request  = Phake::mock(DeleteRequest::class);
     }
 
     public function testInterfaces()

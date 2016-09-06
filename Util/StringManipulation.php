@@ -1,8 +1,13 @@
 <?php
+declare(strict_types = 1);
 
 namespace Sfynx\DddGeneratorBundle\Util;
 
-
+/**
+ * Class StringManipulation.
+ *
+ * @category Util
+ */
 class StringManipulation
 {
     /**
@@ -20,8 +25,7 @@ class StringManipulation
         is_array($args) ?: $args = [$args];
 
         $map = array_flip(array_keys($args));
-        $callback = function ($m) use ($map, $input)
-        {
+        $callback = function ($m) use ($map, $input) {
             //If the variable to replace does not exist, remove the variable and replace with empty.
             if (!isset($map[$m[2]])) {
                 return '';
@@ -29,9 +33,8 @@ class StringManipulation
             return $m[1] . '%' . ($map[$m[2]] + 1) . '$' . $m[3];
         };
 
-        $output = preg_replace_callback(
-            '#(^|[^%])%([a-zA-Z0-9_-]+)\$([-+ 0]?(\'.)?[0-9.]*[bcdeEfFgGosuxX])#', $callback, $input
-        );
+        $regExp = '#(^|[^%])%([a-zA-Z0-9_-]+)\$([-+ 0]?(\'.)?[0-9.]*[bcdeEfFgGosuxX])#';
+        $output = preg_replace_callback($regExp, $callback, $input);
 
         return vsprintf($output, $args);
     }

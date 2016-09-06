@@ -29,8 +29,3 @@ queryHandlerHandler:
     targetPattern: "%destinationPath$s/%projectDir$s/Application/%entityName$s/Query/Handler/%actionName$sQueryHandler.php"
 
 
-
-
-
-
-

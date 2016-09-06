@@ -1,17 +1,11 @@
 services:
-    project.{{ projectName|lower }}.controller.{{ group|lower }}.{{ entityName|lower }}:
+    project.{{ projectName|lower }}.controller.{{ group }}.{{ entityName|lower }}:
         scope: prototype
-        class: {{ projectName|title }}Context\Presentation\Coordination\{{ entityName|title }}\{{ group|lower }}\Controller
+        class: {{ projectName|title }}Context\Presentation\Coordination\{{ entityName|title }}\{{ group }}\Controller
         arguments:
             - @project.request.strategy
             - @project.resolver.strategy
             - @project.dddcontext.response.handler
 {% for commandQueryResponsibilitySegregation in controllerData %}
-            - @project.{{ projectName|lower }}.{{ entityName|lower }}.{{ group|lower }}.{{ commandQueryResponsibilitySegregation.action|lower }}.handler
-{% if loop.last %}
-
-{% endif %}
+            - @project.{{ projectName|lower }}.{{ entityName|lower }}.{{ group }}.{{ commandQueryResponsibilitySegregation.action|lower }}.handler
 {% endfor %}
-
-
-

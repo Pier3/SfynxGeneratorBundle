@@ -1,0 +1,26 @@
+<?php
+
+namespace {{ projectName }}\Presentation\Coordination\{{ entityName }}\{{ group }};
+
+use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Resolver\ResolverInterface;
+use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Request\RequestInterface;
+use Sfynx\DddBundle\Layer\Presentation\Response\Generalisation\ResponseHandlerInterface;
+use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\{{ group }}HandlerInterface;
+use Symfony\Component\HttpFoundation\Response;
+
+{% for commandQueryResponsibilitySegregation in controllerData %}
+use {{ projectName }}\Presentation\Adapter\{{ entityName }}\{{ group }}\{{ commandQueryResponsibilitySegregation.action|ucfirst }}{{ group }}Adapter;
+use {{ projectName }}\Presentation\Adapter\{{ entityName }}\{{ group }}\{{ commandQueryResponsibilitySegregation.action|ucfirst }}{{ group }}Handler;
+
+{% endfor %}
+/**
+ * Class Controller
+ *
+ * @category   {{ projectName }}
+ * @package    Presentation
+ * @subpackage Coordination\{{ group }}
+ */
+class Controller
+{
+{% include('Coordination/Controller/controller.block.twig') %}
+}

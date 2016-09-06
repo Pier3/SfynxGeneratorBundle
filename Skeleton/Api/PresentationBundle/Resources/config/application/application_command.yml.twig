@@ -11,7 +11,7 @@ parameters:
     #      MANAGER    #
     ###################
 
-    project.{{ projectName|lower }}.{{ entityName|lower }}.manager.{{ group|lower }}.class: {{ projectName }}\Domain\Service\{{ entityName|capitalize }}\Manager\{{ group }}\Manager
+    project.{{ projectName|lower }}.{{ entityName|lower }}.manager.{{ group }}.class: {{ projectName }}\Domain\Service\{{ entityName|capitalize }}\Manager\{{ group|capitalize }}\Manager
 
     ####################
     # WORKFLOW HANDLER #
@@ -38,7 +38,7 @@ parameters:
     ###################
 
 {% for commandQueryResponsibilitySegregation in controllerData %}
-    project.{{ projectName|lower }}.{{ entityName|lower }}.{{ group|lower }}.{{ commandQueryResponsibilitySegregation.action|lower }}.handler.class: {{ projectName }}\Application\{{ entityName|capitalize }}\{{ group }}\Handler\{{ commandQueryResponsibilitySegregation.action }}{{ group }}Handler
+    project.{{ projectName|lower }}.{{ entityName|lower }}.{{ group }}.{{ commandQueryResponsibilitySegregation.action|lower }}.handler.class: {{ projectName }}\Application\{{ entityName|capitalize }}\{{ group|capitalize }}\Handler\{{ commandQueryResponsibilitySegregation.action }}{{ group|capitalize }}Handler
 {% endfor %}
 
     #############################
@@ -46,7 +46,7 @@ parameters:
     #############################
 
 {% for commandQueryResponsibilitySegregation in controllerData %}
-    project.{{ projectName|lower }}.{{ entityName|lower }}.{{ group|lower }}.{{ commandQueryResponsibilitySegregation.action|lower }}.handler.decorator.class: {{ projectName }}\Application\{{ entityName|capitalize }}\{{ group }}\Handler\Decorator\{{ commandQueryResponsibilitySegregation.action }}{{ group }}HandlerDecorator
+    project.{{ projectName|lower }}.{{ entityName|lower }}.{{ group }}.{{ commandQueryResponsibilitySegregation.action|lower }}.handler.decorator.class: {{ projectName }}\Application\{{ entityName|capitalize }}\{{ group|capitalize }}\Handler\Decorator\{{ commandQueryResponsibilitySegregation.action }}{{ group|capitalize }}HandlerDecorator
 {% endfor %}
 
     ######################
@@ -54,7 +54,7 @@ parameters:
     ######################
 
 {% for commandQueryResponsibilitySegregation in controllerData %}
-    project.{{ projectName|lower }}.{{ entityName|lower }}.validation.{{ commandQueryResponsibilitySegregation.action|lower }}.handler.class: {{ projectName }}\Application\{{ entityName|capitalize }}\{{ group }}\Validation\ValidationHandler\{{ commandQueryResponsibilitySegregation.action }}{{ group }}ValidationHandler
+    project.{{ projectName|lower }}.{{ entityName|lower }}.validation.{{ commandQueryResponsibilitySegregation.action|lower }}.handler.class: {{ projectName }}\Application\{{ entityName|capitalize }}\{{ group|capitalize }}\Validation\ValidationHandler\{{ commandQueryResponsibilitySegregation.action }}{{ group|capitalize }}ValidationHandler
 {% endfor %}
 
     #################
@@ -62,7 +62,7 @@ parameters:
     #################
 
 {% for commandQueryResponsibilitySegregation in controllerData %}
-    project.{{ projectName|lower }}.{{ entityName|lower }}.spec.{{ commandQueryResponsibilitySegregation.action|lower }}.handler.class: {{ projectName }}\Application\{{ entityName|capitalize }}\{{ group }}\Validation\SpecHandler\{{ commandQueryResponsibilitySegregation.action }}{{ group }}SpecHandler
+    project.{{ projectName|lower }}.{{ entityName|lower }}.spec.{{ commandQueryResponsibilitySegregation.action|lower }}.handler.class: {{ projectName }}\Application\{{ entityName|capitalize }}\{{ group|capitalize }}\Validation\SpecHandler\{{ commandQueryResponsibilitySegregation.action }}{{ group|capitalize }}SpecHandler
 {% endfor %}
 
 services:
@@ -168,11 +168,11 @@ services:
 {% for commandQueryResponsibilitySegregation in controllerData %}
 
     #
-    # {{ commandQueryResponsibilitySegregation.action|lower }} {{ entityName|lower }} {{ group }} handler
+    # {{ commandQueryResponsibilitySegregation.action|lower }} {{ entityName|lower }} {{ group|capitalize }} handler
     #
-    project.{{ projectName|lower }}.{{ entityName|lower }}.{{ group|lower }}.{{ commandQueryResponsibilitySegregation.action|lower }}.handler:
-        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.{{ group|lower }}.{{ commandQueryResponsibilitySegregation.action|lower }}.handler.class%
-        arguments: ["@project.{{ projectName|lower }}.{{ entityName|lower }}.{{ group|lower }}.manager"]
+    project.{{ projectName|lower }}.{{ entityName|lower }}.{{ group }}.{{ commandQueryResponsibilitySegregation.action|lower }}.handler:
+        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.{{ group }}.{{ commandQueryResponsibilitySegregation.action|lower }}.handler.class%
+        arguments: ["@project.{{ projectName|lower }}.{{ entityName|lower }}.{{ group }}.manager"]
 
 {% endfor %}
     ############################
@@ -181,10 +181,10 @@ services:
 {% for commandQueryResponsibilitySegregation in controllerData %}
 
     #
-    # {{ commandQueryResponsibilitySegregation.action|lower }} {{ entityName|lower }} {{ group }} handler decorator
+    # {{ commandQueryResponsibilitySegregation.action|lower }} {{ entityName|lower }} {{ group|capitalize }} handler decorator
     #
-    project.{{ projectName|lower }}.{{ entityName|lower }}.{{ group|lower }}.{{ commandQueryResponsibilitySegregation.action|lower }}.handler.decorator:
-        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.{{ group|lower }}.{{ commandQueryResponsibilitySegregation.action|lower }}.handler.decorator.class%
+    project.{{ projectName|lower }}.{{ entityName|lower }}.{{ group }}.{{ commandQueryResponsibilitySegregation.action|lower }}.handler.decorator:
+        class: %project.{{ projectName|lower }}.{{ entityName|lower }}.{{ group }}.{{ commandQueryResponsibilitySegregation.action|lower }}.handler.decorator.class%
         arguments:
             - "@project.{{ projectName|lower }}.{{ entityName|lower }}.command.{{ commandQueryResponsibilitySegregation.action|lower }}.handler"
             - "@project.{{ projectName|lower }}.{{ entityName|lower }}.validation.{{ commandQueryResponsibilitySegregation.action|lower }}.handler"
@@ -197,7 +197,7 @@ services:
 {% for commandQueryResponsibilitySegregation in controllerData %}
 
     #
-    # {{ commandQueryResponsibilitySegregation.action|lower }} {{ entityName|lower }} {{ group }} Validation handler
+    # {{ commandQueryResponsibilitySegregation.action|lower }} {{ entityName|lower }} {{ group|capitalize }} Validation handler
     #
     project.{{ projectName|lower }}.{{ entityName|lower }}.validation.{{ commandQueryResponsibilitySegregation.action|lower }}.handler:
         class: %project.{{ projectName|lower }}.{{ entityName|lower }}.validation.{{ commandQueryResponsibilitySegregation.action|lower }}.handler.class%
@@ -211,7 +211,7 @@ services:
 {% for commandQueryResponsibilitySegregation in controllerData %}
 
     #
-    # {{ commandQueryResponsibilitySegregation.action|lower }} {{ entityName|lower }} {{ group }} spec handler
+    # {{ commandQueryResponsibilitySegregation.action|lower }} {{ entityName|lower }} {{ group|capitalize }} spec handler
     #
     project.{{ projectName|lower }}.{{ entityName|lower }}.spec.{{ commandQueryResponsibilitySegregation.action|lower }}.handler:
         class: %project.{{ projectName|lower }}.{{ entityName|lower }}.spec.{{ commandQueryResponsibilitySegregation.action|lower }}.handler.class%

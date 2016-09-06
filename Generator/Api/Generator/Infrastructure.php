@@ -35,7 +35,6 @@ class Infrastructure extends LayerAbstract
         try {
             $this->output->writeln('### PERSISTENCE GENERATION ###');
             $this->generatePersistence();
-            $this->output->writeln('### TEST GENERATION ###');
         } catch (\InvalidArgumentException $e) {
             fwrite(STDERR, $e->getMessage());
             exit;

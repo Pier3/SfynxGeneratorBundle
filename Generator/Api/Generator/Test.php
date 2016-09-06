@@ -2,7 +2,6 @@
 declare(strict_types = 1);
 
 namespace Sfynx\DddGeneratorBundle\Generator\Api\Generator;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Domain\Service\Entity\Manager\ManagerTestHandler;
 
 /**
  * Class Domain
@@ -20,13 +19,13 @@ class Test extends LayerAbstract
     protected static $skeletonDir = 'Api/Tests';
 
     /**
-     * Entry point of the generation of the "Domain" layer in DDD.
+     * Entry point of the generation of the 'Domain' layer in DDD.
      * Call the generation of :
      * - Entities and Repositories Interfaces ;
      * - Services ;
      * - Workflow ;
      * - Value objects ;
-     * - Tests of the whole "Domain" layer.
+     * - Tests of the whole 'Domain' layer.
      */
     public function generate()
     {
@@ -39,21 +38,18 @@ class Test extends LayerAbstract
         try {
             $this->output->writeln('### GENERATE APPLICATION TESTS ###');
             $this->generateApplicationTests();
-
             $this->output->writeln('### GENERATE DOMAIN TESTS ###');
             $this->generateDomainTests();
-
             $this->output->writeln('### GENERATE PRESENTATION TESTS ###');
             $this->generatePresentationTests();
-
-
         } catch (\InvalidArgumentException $e) {
             fwrite(STDERR, $e->getMessage());
             exit;
         }
     }
 
-    public function generateApplicationTests() {
+    public function generateApplicationTests()
+    {
         foreach ($this->commandsQueriesList[self::COMMAND] as $data) {
             $constructorParams = '';
             $managerArgs = '';
@@ -66,18 +62,14 @@ class Test extends LayerAbstract
 
             foreach ($this->entitiesToCreate[$data['entity']] as $field) {
                 $constructorParams .= '$' . $field['name'] . ', ';
-
                 if (('new' === $data['action'] && 'id' !== $field['type']) || ('new' !== $data['action'])) {
                     $managerArgs .= '$' . $field['name'] . ', ';
                 }
             }
-
             $this->parameters['constructorArgs'] = trim($constructorParams, ', ');
             $this->parameters['managerArgs'] = trim($managerArgs, ', ');
 
-
-            $this->addHandlers('TestCommand','TestCommandHandlerDecorator','TestCommandHandler');
-
+            $this->addHandlers('TestCommand', 'TestCommandHandlerDecorator', 'TestCommandHandler');
 
             $this->generator->execute();
             $this->generator->clear();
@@ -92,7 +84,7 @@ class Test extends LayerAbstract
 
             $this->output->writeln(' - ' . $this->parameters['actionName'] . ' - ');
 
-            $this->addHandlers("TestQuery");
+            $this->addHandlers('TestQuery');
 
             $this->generator->execute();
             $this->generator->clear();
@@ -108,7 +100,7 @@ class Test extends LayerAbstract
             $this->parameters['entityName'] = $entityName;
             $this->parameters['entityFields'] = $this->entitiesToCreate[$entityName];
 
-            $this->addHandlers('TestManager','TestRepositoryFactory');
+            $this->addHandlers('TestManager', 'TestRepositoryFactory');
 
             $this->generator->execute();
             $this->generator->clear();
@@ -129,7 +121,6 @@ class Test extends LayerAbstract
         }
 
         $this->generator->execute()->clear();
-
 
         // Generate controllers
         foreach ($this->entitiesGroups as $entityName => $entityGroups) {
@@ -164,7 +155,6 @@ class Test extends LayerAbstract
 
             $this->generator->execute()->clear();
         }
-
         return $this;
     }
 }

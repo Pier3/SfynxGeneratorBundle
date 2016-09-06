@@ -44,8 +44,6 @@ class Presentation extends LayerAbstract
             $this->generateCoordinationControllers();
             $this->output->writeln('### REQUESTS GENERATION ###');
             $this->generateRequest();
-            $this->output->writeln('### TESTS GENERATION ###');
-            $this->output->writeln(' - BE MY GUEST ... -');
         } catch (\InvalidArgumentException $e) {
             fwrite(STDERR, $e->getMessage());
             exit;

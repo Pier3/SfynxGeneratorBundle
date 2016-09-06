@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 
 namespace Sfynx\DddGeneratorBundle\Generator\Api\Generator;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Domain\Service\Entity\Manager\ManagerTestHandler;
+
 
 /**
  * Class Domain
@@ -44,9 +44,6 @@ class Domain extends LayerAbstract
             $this->output->writeln(' - GOOD LUCK, PREPARE YOUR BRAIN -');
             //TODO: work on the generation of the Value Objects.
             //$this->generateValueObject();
-
-            $this->output->writeln('### TESTS GENERATION ###');
-            $this->output->writeln(' - BE MY GUEST ... -');
         } catch (\InvalidArgumentException $e) {
             fwrite(STDERR, $e->getMessage());
             exit;

@@ -3,15 +3,6 @@ declare(strict_types = 1);
 
 namespace Sfynx\DddGeneratorBundle\Generator\Api\Generator;
 
-// Tests
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\{
-    Application\Entity\Command\CommandTestHandler,
-    Application\Entity\Command\Handler\CommandHandlerTestHandler,
-    Application\Entity\Command\Handler\Decorator\CommandHandlerDecoratorTestHandler,
-    Application\Entity\Command\Handler\DeleteCommandHandlerTestHandler,
-    Application\Entity\Command\Handler\DeleteManyCommandHandlerTestHandler
-};
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Application\Entity\Query\QueryTestHandler;
 
 /**
  * Class Application
@@ -45,7 +36,6 @@ class Application extends LayerAbstract
             $this->generateCommands();
             $this->output->writeln('### QUERIES GENERATION ###');
             $this->generateQueries();
-            $this->output->writeln('### TESTS GENERATION ###');
         } catch (\InvalidArgumentException $e) {
             fwrite(STDERR, $e->getMessage());
             exit;

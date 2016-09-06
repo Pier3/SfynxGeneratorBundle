@@ -38,8 +38,6 @@ class PresentationBundle extends LayerAbstract
             $this->generateBundle();
             $this->output->writeln('### RESOURCES CONFIGURATION GENERATION ###');
             $this->generateResourcesConfiguration();
-            $this->output->writeln('### TESTS GENERATION ###');
-
         } catch (\InvalidArgumentException $e) {
             fwrite(STDERR, $e->getMessage());
             exit;

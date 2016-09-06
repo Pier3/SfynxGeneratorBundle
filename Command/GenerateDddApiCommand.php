@@ -9,7 +9,7 @@ use Symfony\Component\Console\Exception\{
     LogicException as SFConsoleLogicException,
     RuntimeException as SFConsoleRuntimeException
 };
-use Sfynx\DddGeneratorBundle\Generator\Api\Generator\Test;
+
 use Symfony\Component\Yaml\Exception\ParseException as SFYMLParseException;
 
 use Symfony\Component\Yaml\Parser;
@@ -30,7 +30,8 @@ use Sfynx\DddGeneratorBundle\Generator\Api\Generator\{
     Infrastructure,
     InfrastructureBundle,
     Presentation,
-    PresentationBundle
+    PresentationBundle,
+    Test
 };
 use Sfynx\DddGeneratorBundle\Generator\Api\ValueObjects\{
     ElementsToCreateVO,

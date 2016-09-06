@@ -35,7 +35,6 @@ class InfrastructureBundle extends LayerAbstract
         try {
             $this->output->writeln('### BUNDLE GENERATION ###');
             $this->generateBundle();
-            $this->output->writeln('### TEST GENERATION ###');
         } catch (\InvalidArgumentException $e) {
             fwrite(STDERR, $e->getMessage());
             exit;

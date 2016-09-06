@@ -1,0 +1,11 @@
+    public function testGetAllAction()
+    {
+        $adapter = new GetAllQueryAdapter();
+        $query = $adapter->createQueryFromRequest(
+            new GetAllRequest($this->request, $this->resolver)
+        );
+
+        $this->controller->getAllAction();
+        Phake::verify($this->getAllQueryHandler, Phake::times(1))->process($query);
+        Phake::verify($this->responseHandler, Phake::times(1))->create($this->entity, Response::HTTP_OK);
+    }

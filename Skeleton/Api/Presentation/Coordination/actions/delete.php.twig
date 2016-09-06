@@ -6,7 +6,7 @@
         $adapter = new DeleteCommandAdapter();
         $command = $adapter->createCommandFromRequest(new DeleteRequest($this->request, $this->resolver));
         $result = $this->deleteCommandHandler->process($command);
-        $result = ['message' => sprintf('%s row(s) deleted.', $result)];
+        $result = ['message' => sprintf('%s row deleted', count($result))];
 
         return $this->responseHandler->create($result, Response::HTTP_OK)->getResponse();
     }

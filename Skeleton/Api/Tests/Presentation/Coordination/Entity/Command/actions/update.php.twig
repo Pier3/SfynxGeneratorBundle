@@ -1,0 +1,11 @@
+public function testupdateAction()
+{
+    $adapter = new UpdateCommandAdapter();
+    $command = $adapter->createCommandFromRequest(
+        new UpdateRequest($this->request, $this->resolver)
+    );
+
+    $this->controller->updateAction();
+    Phake::verify($this->updateHandler, Phake::times(1))->process($command);
+    Phake::verify($this->responseHandler, Phake::times(1))->create($this->entity, Response::HTTP_OK);
+}

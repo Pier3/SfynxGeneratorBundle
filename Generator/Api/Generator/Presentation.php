@@ -52,8 +52,6 @@ class Presentation extends LayerAbstract
         $this->output->writeln('### REQUESTS GENERATION ###');
         $this->generateRequest();
         $this->output->writeln('### TESTS GENERATION ###');
-        $this->output->writeln(' - BE MY GUEST ... -');
-
         $this->generateTests();
     }
 
@@ -145,17 +143,18 @@ class Presentation extends LayerAbstract
             //Set the parameter $group to its good value (might be a reset)
             $this->parameters['group'] = $group;
             //Fetch all controllerData for the given group (Command or Query)
+
             foreach ($entityGroups[$group] as $entityCommandData) {
                 $this->parameters['controllerData'][] = $entityCommandData;
             }
             //Add the Handlers to the generator's stack.
             $this->generator->addHandler(new ControllerQueryTestHandler($this->parameters), true);
-
+            $this->generator->execute()->clear();
 
             // Command
             $group = SELF::COMMAND;
             //Set the parameter $group to its good value (might be a reset)
-            $this->parameters['group'] = $group;
+            $this->parameters['group'] = SELF::COMMAND;
             //Fetch all controllerData for the given group (Command or Query)
             foreach ($entityGroups[$group] as $entityCommandData) {
                 $this->parameters['controllerData'][] = $entityCommandData;
@@ -163,6 +162,7 @@ class Presentation extends LayerAbstract
             //Add the Handlers to the generator's stack.
             $this->generator->addHandler(new ControllerCommandTestHandler($this->parameters), true);
 
+            $this->generator->execute()->clear();
         }
 
         return $this;

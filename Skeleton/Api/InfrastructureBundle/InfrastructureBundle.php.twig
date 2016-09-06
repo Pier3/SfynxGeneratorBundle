@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace {{ projectName }}\InfrastructureBundle;
 
 use {{ projectName }}\InfrastructureBundle\DependencyInjection\{{ projectName }}InfrastructureBundleExtension;
+
 use {{ projectName }}\InfrastructureBundle\DependencyInjection\Compiler\{
     CreateRepositoryFactoryPass,
     CreateDynamicConnectionPass
@@ -87,6 +88,8 @@ class {{ projectName }}InfrastructureBundle extends Bundle
 {% for name,data in valueObjects %}
         if (!Orm\Type::hasType('{{ name }}')) {
             Orm\Type::addType('{{ name }}', '{{ projectName }}\Infrastructure\EntityType\Orm\{{ name }}Type');
+        if (!ORM\Type::hasType('{{ name }}')) {
+            ORM\Type::addType('{{ name }}', '{{ projectName }}\Infrastructure\EntityType\Orm\{{ name }}Type');
             $em->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('{{ name }}', '{{ name }}');
         }
 {% endfor %}
@@ -127,7 +130,7 @@ class {{ projectName }}InfrastructureBundle extends Bundle
         }
 
 {% for name,data in valueObjects %}
-        if (!CouchDB\Type::hasType('{{  name }}')) {
+        if (!CouchDB\Type::hasType('{{ name }}')) {
             CouchDB\Type::addType('{{ name }}', '{{ projectName }}\Infrastructure\EntityType\CouchDB\{{ name }}Type');
             $em->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('{{ name }}', '{{ name }}');
         }

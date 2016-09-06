@@ -20,10 +20,17 @@ class NewCommandAdapter implements CommandAdapterInterface
      * @param CommandRequestInterface $request
      * @return NewCommand
      */
-    public function createCommandFromRequest(CommandRequestInterface $request)
+    public function createCommandFromRequest(CommandRequestInterface $request): NewCommand
     {
         $parameters = $request->getRequestParameters();
 
-        return new NewCommand({% for field in entityFields %}{% if field.type!="id" %}$parameters['{{ field.name }}']{% if loop.index < entityFields|length %}, {% endif %}{% endif %}{% endfor %});
+        return new NewCommand(
+{% for field in entityFields %}
+{% if field.type != "id" %}
+            $parameters['{{ field.name }}']{% if loop.index < entityFields|length %},{% endif %}
+
+{% endif %}
+{% endfor %}
+        );
     }
 }

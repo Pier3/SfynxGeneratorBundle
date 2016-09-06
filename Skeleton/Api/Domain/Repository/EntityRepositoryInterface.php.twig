@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace {{ projectName }}\Domain\Repository;
 
+use {{ projectName }}\Domain\Entity\{{ entityName }};
+
 /**
  * {{ entityName }} Repository interface.
  *
@@ -15,6 +17,7 @@ interface {{ entityName }}RepositoryInterface
     /**
      * Execute the save into the database for the entity {{ entityName }}.
      * @param \stdClass $object
+     * @return {{ entityName }}
      */
-    public function execute(\stdClass $object);
+    public function execute(\stdClass $object): {{ entityName }};
 }

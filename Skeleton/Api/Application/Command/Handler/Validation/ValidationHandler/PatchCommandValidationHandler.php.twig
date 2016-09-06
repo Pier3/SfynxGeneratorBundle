@@ -3,6 +3,11 @@ declare(strict_types = 1);
 
 namespace {{ projectName }}\Application\{{ entityName }}\Command\Validation\ValidationHandler;
 
+use Symfony\Component\Validator\Exception\{
+    ConstraintDefinitionException,
+    MissingOptionsException,
+    InvalidOptionsException
+};
 use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandInterface;
 use Sfynx\DddBundle\Layer\Application\Generalisation\Validation\ValidationHandler\AbstractCommandValidationHandler;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -40,6 +45,9 @@ class PatchCommandValidationHandler extends AbstractCommandValidationHandler
     /**
      * Init the constraints the patching entity properties must validate
      *
+     * @throws ConstraintDefinitionException
+     * @throws MissingOptionsException
+     * @throws InvalidOptionsException
      * @return $this
      */
     protected function initConstraints()

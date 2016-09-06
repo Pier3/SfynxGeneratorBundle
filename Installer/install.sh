@@ -38,6 +38,9 @@ rm ${projectName}/composer.lock
 composer install -d ${projectName}
 sleep 8
 
+echo '# Remove the useless AppBundle folder.'
+rm -rf ${projectName}/src/AppBundle
+
 echo '# Activate bundles into the Kernel.'
 cat ${0%/install.sh}/templates/appKernel.php.tpl > ${projectName}/app/AppKernel.php
 

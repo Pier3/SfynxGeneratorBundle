@@ -1,3 +1,7 @@
+{% set throwException = false %}
+{% for field in entityFields %}
+{% if field.type == "id" and field.voName is defined and field.voName == 'IdVO' %}{% set throwException = true %}{% endif %}
+{% endfor %}
 <?php
 declare(strict_types = 1);
 
@@ -8,6 +12,8 @@ use Doctrine\ORM\Mapping as Orm;
 use Doctrine\ODM\CouchDB\Mapping\Annotations as CouchDB;
 use Symfony\Component\Validator\Constraints as Assert;
 use Sfynx\DddBundle\Layer\Domain\Generalisation\Traits\TraitTenant;
+{% if throwException %}use Sfynx\DddBundle\Layer\Infrastructure\Exception\DomainException;
+{% endif %}
 {% for vo in valueObjects %}use {{ vo.type|trim("\\") }};
 {% endfor %}
 
@@ -106,7 +112,8 @@ class {{ entityName }}
      * Constructor
      * @param int $tenantId
 {% for field in entityFields %}     * @param {% if field.type == "id" %}int{% elseif field.type == "IdVO" %}string{% else %}{{ field.type }}{% endif %} ${{ field.name }}
-{% endfor %}
+{% endfor %}{% if throwException %}     * @throws DomainException
+{% endif %}
      */
     protected function __construct($tenantId, {{ constructorArgs }})
     {

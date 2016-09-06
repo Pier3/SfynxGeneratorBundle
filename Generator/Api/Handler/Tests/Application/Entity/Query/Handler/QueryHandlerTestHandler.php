@@ -3,10 +3,11 @@
 namespace Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Application\Entity\Query;
 
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\AbstractHandler;
+use Sfynx\DddGeneratorBundle\Generator\Generalisation\Handler;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\HandlerInterface;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
-class QueryTestHandler extends AbstractHandler implements HandlerInterface
+class QueryTestHandler extends Handler implements HandlerInterface
 {
     use ExecuteTrait;
 

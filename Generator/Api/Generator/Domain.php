@@ -2,6 +2,7 @@
 declare(strict_types = 1);
 
 namespace Sfynx\DddGeneratorBundle\Generator\Api\Generator;
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Domain\Service\Entity\Manager\ManagerTestHandler;
 
 /**
  * Class Domain
@@ -46,8 +47,6 @@ class Domain extends LayerAbstract
 
             $this->output->writeln('### TESTS GENERATION ###');
             $this->output->writeln(' - BE MY GUEST ... -');
-            //TODO: work on the generation of the tests.
-            $this->generateTests();
         } catch (\InvalidArgumentException $e) {
             fwrite(STDERR, $e->getMessage());
             exit;
@@ -127,21 +126,5 @@ class Domain extends LayerAbstract
     }
     */
 
-    public function generateTests()
-    {
-        foreach (array_keys($this->entitiesToCreate) as $entityName) {
 
-            $this->parameters['entityName'] = $entityName;
-            $this->parameters['entityFields'] = $this->entitiesToCreate[$entityName];
-
-            $this->generator->addHandler(new OrmRepositoryFactoryHandler($this->parameters));
-
-            $this->generator->addHandler(new ManagerTestHandler($this->parameters));
-
-            $this->generator->execute();
-            $this->generator->clear();
-        }
-
-        return $this;
-    }
 }

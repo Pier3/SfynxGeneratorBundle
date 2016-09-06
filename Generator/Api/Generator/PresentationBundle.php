@@ -56,8 +56,7 @@ class PresentationBundle extends LayerAbstract
             $this->output->writeln('### RESOURCES CONFIGURATION GENERATION ###');
             $this->generateResourcesConfiguration();
             $this->output->writeln('### TESTS GENERATION ###');
-            //TODO: work on the generation of the tests.
-            //$this->generateTests();
+
         } catch (\InvalidArgumentException $e) {
             fwrite(STDERR, $e->getMessage());
             exit;
@@ -129,11 +128,6 @@ class PresentationBundle extends LayerAbstract
             'routeHandler'
         );
 
-        return $this;
-    }
-
-    public function generateTests()
-    {
         return $this;
     }
 }

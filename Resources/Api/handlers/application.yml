@@ -28,3 +28,9 @@ queryHandlerHandler:
     skeletonTpl: "Query/Handler/%actionName$sQueryHandler.php.twig"
     targetPattern: "%destinationPath$s/%projectDir$s/Application/%entityName$s/Query/Handler/%actionName$sQueryHandler.php"
 
+
+
+
+
+
+

@@ -2,19 +2,20 @@
 #Commands
 adapterCommandHandler:
     skeletonTpl: "Adapter/%actionName$sCommandAdapter.php.twig"
-    targetPattern: "%destinationPath$s/%projectDir$s%/Presentation/Adapter/%entityName$s/Command/%actionName$sCommandAdapter.php"
+    targetPattern: "%destinationPath$s/%projectDir$s/Presentation/Adapter/%entityName$s/Command/%actionName$sCommandAdapter.php"
 
 #Queries
 adapterQueryHandler:
     skeletonTpl: "Adapter/%actionName$sQueryAdapter.php.twig"
-    targetPattern: "%destinationPath$s/%projectDir$s%/Presentation/Adapter/%entityName$s/Query/%actionName$sQueryAdapter.php"
+    targetPattern: "%destinationPath$s/%projectDir$s/Presentation/Adapter/%entityName$s/Query/%actionName$sQueryAdapter.php"
 
 #Controller Handler
 controllerHandler:
     skeletonTpl: "Coordination/Controller/Controller.php.twig"
-    targetPattern: "%destinationPath$s/%projectDir$s%/Presentation/Coordination/%entityName$s/%group$s/Controller.php"
+    targetPattern: "%destinationPath$s/%projectDir$s/Presentation/Coordination/%entityName$s/%group$s/Controller.php"
 
 #Request Handler
 requestHandler:
     skeletonTpl: "Request/%actionName$sRequest.php.twig"
-    targetPattern: "%destinationPath$s/%projectDir$s%/Presentation/Request/%entityName$s/%entityName$s/%actionName$sRequest.php"
+    targetPattern: "%destinationPath$s/%projectDir$s/Presentation/Request/%entityName$s/%group$s/%actionName$sRequest.php"
+

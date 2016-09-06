@@ -1,19 +1,19 @@
 <?php
 
-namespace Tests\Domain\Service\Country\Factory\Orm;
+namespace Tests\Domain\Service\{{ entityName }}\Factory\Orm;
 
 
-use DemoCountry\Domain\Service\Country\Factory\Orm\RepositoryFactory;
-use DemoCountry\Domain\Service\Country\Manager\CountryManager;
-use DemoCountry\Infrastructure\Persistence\Repository\Country\CouchDB\DeleteManyRepository;
-use DemoCountry\Infrastructure\Persistence\Repository\Country\Orm\DeleteRepository;
-use DemoCountry\Infrastructure\Persistence\Repository\Country\Orm\GetAllRepository;
-use DemoCountry\Infrastructure\Persistence\Repository\Country\Orm\GetByIdsRepository;
-use DemoCountry\Infrastructure\Persistence\Repository\Country\Orm\GetRepository;
-use DemoCountry\Infrastructure\Persistence\Repository\Country\Orm\SearchByRepository;
+use {{ projectName }}\Domain\Service\{{ entityName }}\Factory\Orm\RepositoryFactory;
+use {{ projectName }}\Domain\Service\{{ entityName }}\Manager\CountryManager;
+use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\DeleteManyRepository;
+use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\DeleteRepository;
+use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\GetAllRepository;
+use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\GetByIdsRepository;
+use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\GetRepository;
+use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\SearchByRepository;
 use Phake;
 use Sfynx\DddBundle\Layer\Domain\Service\Generalisation\Factory\RepositoryFactoryInterface;
-use Sfynx\DddBundle\Layer\Infrastructure\Persistence\Generalisation\Odm\SaveRepository;
+use Sfynx\DddBundle\Layer\Infrastructure\Persistence\Generalisation\Orm\SaveRepository;
 
 
 class RepositoryFactoryTest extends  \PHPUnit_Framework_TestCase
@@ -29,7 +29,7 @@ class RepositoryFactoryTest extends  \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(GetAllRepository::class,$this->repositoryFactory->buildRepository(RepositoryFactoryInterface::ALL_REPOSITORY));
         $this->assertInstanceOf(GetRepository::class,$this->repositoryFactory->buildRepository(RepositoryFactoryInterface::ONE_REPOSITORY));
         $this->assertInstanceOf(SearchByRepository::class,$this->repositoryFactory->buildRepository(RepositoryFactoryInterface::SEARCHBY_REPOSITORY));
-        $this->assertInstanceOf(GetByIdsRepository::class,$this->repositoryFactory->buildRepository(RepositoryFactoryInterface::GETBYIDS_REPOSITORY));
+        //$this->assertInstanceOf(GetByIdsRepository::class,$this->repositoryFactory->buildRepository(RepositoryFactoryInterface::GETBYIDS_REPOSITORY));
         $this->assertInstanceOf(DeleteRepository::class,$this->repositoryFactory->buildRepository(RepositoryFactoryInterface::DELETEONE_REPOSITORY));
         //$this->assertInstanceOf(DeleteManyRepository::class,$this->repositoryFactory->buildRepository(RepositoryFactoryInterface::DELETEMANY_REPOSITORY));
         $this->assertInstanceOf(SaveRepository::class,$this->repositoryFactory->buildRepository(RepositoryFactoryInterface::NEW_REPOSITORY));

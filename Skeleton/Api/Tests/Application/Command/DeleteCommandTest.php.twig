@@ -1,6 +1,6 @@
 <?php
 
-namespace  Tests\Application\Country\Command\Command;
+namespace  Tests\Application\Country\Command;
 
 use {{ projectName }}\Application\{{ entityName }}\Command\DeleteCommand;
 use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandInterface;
@@ -15,11 +15,11 @@ class DeleteCommandTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
 
-        $this->reference="001";
+        $this->revision="001";
         $this->entityId="123456";
 
 
-        $this->command = new DeleteCommand($this->entityId,$this->reference);
+        $this->command = new DeleteCommand($this->entityId,$this->revision);
     }
 
     public function testInterface()

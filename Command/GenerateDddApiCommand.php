@@ -24,10 +24,18 @@ use Symfony\Component\Console\{
 
 use Sfynx\DddGeneratorBundle\Generator\Api\DddApiGenerator;
 use Sfynx\DddGeneratorBundle\Generator\Api\Generator\{
-    Application, Domain, Infrastructure, InfrastructureBundle, LayerAbstract, LayerContext, Presentation, PresentationBundle
+    Application,
+    Domain,
+    Infrastructure,
+    InfrastructureBundle,
+    Presentation,
+    PresentationBundle
 };
 use Sfynx\DddGeneratorBundle\Generator\Api\ValueObjects\{
-    ElementsToCreateVO, GeneratorVO, LayerVO, PathsVO
+    ElementsToCreateVO,
+    GeneratorVO,
+    LayerVO,
+    PathsVO
 };
 
 /**
@@ -291,9 +299,6 @@ class GenerateDddApiCommand extends Command
 
         while (!is_file($pathToSwaggerEntityFile)) {
             $output->writeln('This file does not exist.');
-
-            //Todo: check the existence of the entity-name
-
             $pathToSwaggerEntityFile = $this->getQuestionHelper()->ask($input, $output, $question);
         }
 

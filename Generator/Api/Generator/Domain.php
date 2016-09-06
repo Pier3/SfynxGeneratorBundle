@@ -57,6 +57,7 @@ class Domain extends LayerAbstract
     /**
      * Generate the entities elements int the "Domain" layer.
      * Those elements are Entities and Repository Interfaces, Services and Workflow.
+     * @throws \InvalidArgumentException
      */
     public function generateEntitiesElements()
     {
@@ -69,7 +70,6 @@ class Domain extends LayerAbstract
                 //Entities and Repository Interfaces
                 'entityHandler',
                 'entityRepositoryHandlerInterfaceHandler',
-
                 //Services
                 'couchDbRepositoryFactoryHandler',
                 'odmRepositoryFactoryHandler',
@@ -77,7 +77,6 @@ class Domain extends LayerAbstract
                 'managerHandler',
                 'prePersistProcessHandler',
                 'postPersistProcessHandler',
-
                 //Workflow
                 'newWFHandlerHandler',
                 'updateWFHandlerHandler',

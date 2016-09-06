@@ -3,14 +3,6 @@ declare(strict_types = 1);
 
 namespace Sfynx\DddGeneratorBundle\Generator\Api\Generator;
 
-//Bundle part
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\InfrastructureBundle\InfrastructureBundleHandler;
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\InfrastructureBundle\DependencyInjection\{
-    Compiler\CreateRepositoryFactoryPassHandler,
-    ConfigurationHandler,
-    InfrastructureBundleExtensionHandler
-};
-
 /**
  * Class InfrastructureBundle
  *
@@ -54,6 +46,7 @@ class InfrastructureBundle extends LayerAbstract
 
     /**
      * Generate the Bundle part in the "InfrastructureBundle" layer.
+     * @throws \InvalidArgumentException
      */
     public function generateBundle()
     {

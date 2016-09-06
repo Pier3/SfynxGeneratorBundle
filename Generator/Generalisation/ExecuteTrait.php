@@ -21,8 +21,8 @@ trait ExecuteTrait
     {
         try {
             $this->setSkeletonDirs($this->getRootSkeletonDir() . '/' . self::SKELETON_DIR);
-            $targetDir = PiFileManager::getFileDirname($this->target);
-            if (!file_exists(PiFileManager::getFileDirname($this->target))) {
+            $targetDir = PiFileManager::getFileDirectoryName($this->target);
+            if (!file_exists(PiFileManager::getFileDirectoryName($this->target))) {
                 mkdir($targetDir, 0777, true);
             }
             $this->renderFile($this->getTemplateName(), $this->target, $this->getParameters());

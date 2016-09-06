@@ -7,7 +7,6 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use {{ projectName }}\PresentationBundle\DependencyInjection\Configuration;
 
 /**
  * This is the class that loads and manages your bundle configuration
@@ -20,21 +19,28 @@ use {{ projectName }}\PresentationBundle\DependencyInjection\Configuration;
  */
 class {{ projectName }}PresentationBundleExtension extends Extension
 {
+    const CONFIG_DIR = realpath(__DIR__ . '/../Resources/config/');
+
     /**
-     * {@inheritdoc}
+     * Loads a specific configuration.
+     *
+     * @param array            $configs   An array of configuration values
+     * @param ContainerBuilder $container A ContainerBuilder instance
+     *
+     * @throws \Exception
      */
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();
         $this->processConfiguration($configuration, $configs);
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config/application'));
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(self::CONFIG_DIR . 'application'));
 {% for entity_name,Vo in entities %}
         $loader->load('{{ entity_name|lower }}_command.yml');
         $loader->load('{{ entity_name|lower }}_query.yml');
 {% endfor %}
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config/controller'));
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(self::CONFIG_DIR . 'controller'));
 {% for entity_name,Vo in entities %}
         $loader->load('{{ entity_name|lower }}_command.yml');
         $loader->load('{{ entity_name|lower }}_query.yml');
@@ -42,13 +48,12 @@ class {{ projectName }}PresentationBundleExtension extends Extension
         $loader->load('multiTenant.yml');
         $loader->load('swagger.yml');
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config/file/multiTenant'));
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(self::CONFIG_DIR . 'file/multiTenant'));
 {% for entity_name,Vo in entities %}
         $loader->load('{{ entity_name|lower }}_multiTenant.yml');
 {% endfor %}
-    }
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config/route'));
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(self::CONFIG_DIR . 'route'));
 {% for entity_name,Vo in entities %}
         $loader->load('{{ entity_name|lower }}_command.yml');
         $loader->load('{{ entity_name|lower }}_query.yml');

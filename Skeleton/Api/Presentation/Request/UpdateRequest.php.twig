@@ -31,9 +31,9 @@ class UpdateRequest extends AbstractRequest implements CommandRequestInterface
     ];
 
     /**
-     * setOptions
-     *
      * Set options from the request body and add the entity identifier.
+     *
+     * @throws \LogicException
      */
     protected function setOptions()
     {

@@ -18,8 +18,15 @@ use Symfony\Component\DependencyInjection\{
  */
 class {{ projectName }}InfrastructureBundleExtension extends Extension
 {
+    const CONFIG_DIR = realpath(__DIR__ . '/../Resources/config/');
+
     /**
-     * {@inheritdoc}
+     * Loads a specific configuration.
+     *
+     * @param array            $configs   An array of configuration values
+     * @param ContainerBuilder $container A ContainerBuilder instance
+     *
+     * @throws \Exception
      */
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -29,21 +36,23 @@ class {{ projectName }}InfrastructureBundleExtension extends Extension
         $container->setParameter('database_type', $config['database_type']);
         $container->setParameter('database_multitenant_path_file', $config['database_multitenant_path_file']);
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config/application'));
-        /*
-        $loader->load('monolog.yml');
-        $loader->load('listener.yml');
-        $loader->load('request.yml');
-        $loader->load('validator.yml');
-        */
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config/application'));
-        /* $loader->load('formtype.xml'); */
+        //todo: Create the InfrastructureBundle/Resource/config/application with all elements to load them.
+        //todo: ...then, remove the @noinspection tag.
+        /** @noinspection PhpUnusedLocalVariableInspection */
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(self::CONFIG_DIR . 'application'));
+        //$loader->load('monolog.yml');
+        //$loader->load('listener.yml');
+        //$loader->load('request.yml');
+        //$loader->load('validator.yml');
+
+        //$loader = new Loader\XmlFileLoader($container, new FileLocator(self::CONFIG_DIR . 'application'));
+        //$loader->load('formtype.xml');
     }
 
     /**
     * @return string
     */
-    public function getAlias()
+    public function getAlias(): string
     {
         return '{{ projectName|lower }}_infrastructure';
     }
@@ -51,7 +60,7 @@ class {{ projectName }}InfrastructureBundleExtension extends Extension
     /**
     * @return string
     */
-    public function getName()
+    public function getName(): string
     {
         return '{{ projectName|lower }}_infrastructure';
     }

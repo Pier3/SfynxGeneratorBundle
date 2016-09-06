@@ -8,7 +8,12 @@ use Sfynx\DddBundle\Layer\Domain\Generalisation\Observer\ObserverInterface;
 use {{ projectName }}\Application\{{ entityName }}\Command\UpdateCommand;
 use {{ projectName }}\Application\{{ entityName }}\Command\PatchCommand;
 {% for data in valueObjects %}
-use {{ projectName }}\Domain\ValueObject\{{ data.name }};
+//use {{ projectName }}\Domain\ValueObject\{{ data.name }}; //todo: create the value object through the generator.
+{% endfor %}
+{% for field in entityFields %}
+{% if field.type == "id" and field.voName is defined %}
+use Sfynx\DddBundle\Layer\Domain\ValueObject\{{ field.voName }};
+{% endif %}
 {% endfor %}
 
 /**
@@ -22,11 +27,6 @@ use {{ projectName }}\Domain\ValueObject\{{ data.name }};
  */
 class WFGenerateVOListener implements ObserverInterface
 {
-{% for field in entityFields %}
-    /** @var {% if field.type == "id" %}int{% elseif field.type == "IdVO" %}string{% else %}{{ field.type }}{% endif %} ${{ field.name }} */
-    private ${{ field.name|lower }};
-
-{% endfor %}
     /**
      * @param ObservableInterface $wfHandler
      */
@@ -37,7 +37,8 @@ class WFGenerateVOListener implements ObserverInterface
 {% else %}
         $this{% for field in entityFields %}->set{{ field.name|capitalize }}($wfHandler){% if loop.index < entityFields|length %}
 
-            {% else %};{% endif %}{% endfor %}
+            {% else %};
+{% endif %}{% endfor %}
 {% endif %}
     }
 {% for field in entityFields %}

@@ -51,6 +51,7 @@ class InfrastructureBundle extends LayerAbstract
 
         $this->addHandlers(
             'createRepositoryFactoryPassHandler',
+            'createDynamicConnectionPassHandler',
             'configurationHandler',
             'infrastructureBundleExtensionHandler',
             'infrastructureBundleHandler'

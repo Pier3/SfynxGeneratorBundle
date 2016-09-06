@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace {{ projectName }}\Domain\Workflow\{{ entityName }}\Listener;
 
-use DddContext\Domain\Generalisation\Observer\ObservableInterface;
-use DddContext\Domain\Generalisation\Observer\ObserverInterface;
+use Sfynx\DddBundle\Layer\Domain\Generalisation\Observer\ObservableInterface;
+use Sfynx\DddBundle\Layer\Domain\Generalisation\Observer\ObserverInterface;
 use Sfynx\CircuitBreakerBundle\CircuitBreaker\CircuitBreaker;
 use Sfynx\CurrencyBundle\Currency\Manager\CurrencyManager;
 

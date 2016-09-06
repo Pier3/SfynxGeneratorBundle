@@ -20,10 +20,8 @@ class Generator
     const PROJECT_DIR = __DIR__ . '/../';
 
     const API_CONFIG = self::PROJECT_DIR . 'Resources/Api/config';
-    const STRUCTURE_CONFIG = self::PROJECT_DIR . 'Resources/Structure/config';
 
     const API_COMMAND = 'dddapi.generator.command';
-    const STRUCTURE_COMMAND = 'structure.generator.command';
 
     public function run()
     {
@@ -37,7 +35,6 @@ class Generator
         //Try to register all required commands into the application, thanks to the container.
         try {
             $this->registerApiCommand($app, $container);
-            //$this->registerStructureCommand($app, $container);
         } catch (Exception $e) {
             die('Exception occurs: ' . $e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
@@ -63,27 +60,6 @@ class Generator
 
         //Register the Api Generator Command.
         $app->add($container->get(self::API_COMMAND)->setRootDir(self::PROJECT_DIR));
-
-        return $this;
-    }
-
-    /**
-     * Register the Structure Generator command into the generator application, using the container.
-     *
-     * @param SfynxGeneratorApplication $app
-     * @param ContainerBuilder          $container
-     * @return Generator
-     * @throws Exception
-     */
-    public function registerStructureCommand(SfynxGeneratorApplication $app, ContainerBuilder $container): self
-    {
-        //Load the Structure configuration file
-        $loader = new YamlFileLoader($container, new FileLocator(self::STRUCTURE_CONFIG));
-        $loader->load('config.yml');
-        $loader->load('services.yml');
-
-        //Register the Structure Generator Command.
-        $app->add($container->get(self::STRUCTURE_COMMAND)->setRootDir(self::PROJECT_DIR));
 
         return $this;
     }

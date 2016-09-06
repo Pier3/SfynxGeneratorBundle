@@ -1,20 +1,25 @@
 <?php
 
-namespace Sfynx\DddGeneratorBundle\Generator\Bundle\Handler\Presentation\Coordination;
+namespace Sfynx\DddGeneratorBundle\Generator\Api\Handler\Domain\ValueObject;
 
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\AbstractHandler;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\HandlerInterface;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
-class ControllerHandler extends AbstractHandler implements HandlerInterface
+class ValueObjectHandler extends AbstractHandler implements HandlerInterface
 {
     use ExecuteTrait;
 
-    const SKELETON_DIR = 'Bundle/Presentation/Coordination/';
-    const SKELETON_TPL = 'Controller.php.twig';
+    const SKELETON_DIR = 'Api/Application/ValueObject';
+    const SKELETON_TPL = 'ValueObject.php.twig';
 
-    protected $targetPattern = '%s/%s/Presentation/Coordination/%s/Query/Controller.php';
+    protected $targetPattern = '%s/%s/Domain/ValueObject/%s.php';
     protected $target;
+
+    protected function setTemplateName()
+    {
+        $this->templateName = self::SKELETON_TPL;
+    }
 
     protected function setTarget()
     {
@@ -22,7 +27,7 @@ class ControllerHandler extends AbstractHandler implements HandlerInterface
             $this->targetPattern,
             $this->parameters['destinationPath'],
             $this->parameters['projectDir'],
-            ucfirst($this->parameters['bundleName'])
+            ucfirst($this->parameters['voName'])
         );
     }
 }

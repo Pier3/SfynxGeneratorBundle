@@ -29,18 +29,17 @@ if [ -f ./composer.json ]; then
 fi
 
 composer create-project symfony/framework-standard-edition "$projectName" "$version" --no-install --no-progress -n
-cd "$projectName"
 
 echo '# Replace the composer.json content.'
-cat ../${0%/install.sh}/templates/composer.json.tpl > composer.json
+cat ${0%/install.sh}/templates/composer.json.tpl > ${projectName}/composer.json
 
 echo '# Removing the composer.lock and re-install the new one.'
-rm composer.lock
-composer install --ignore-platform-reqs
+rm ${projectName}/composer.lock
+composer install -d ${projectName}
 sleep 8
 
 echo '# Activate bundles into the Kernel.'
-cat ../${0%/install.sh}/templates/appKernel.php.tpl > app/AppKernel.php
+cat ${0%/install.sh}/templates/appKernel.php.tpl > ${projectName}/app/AppKernel.php
 
 echo '### SUCCESS ### Your project is generated.'
 exit 0

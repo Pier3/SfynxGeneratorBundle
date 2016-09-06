@@ -1,19 +1,19 @@
 <?php
 
-namespace Sfynx\DddGeneratorBundle\Generator\Api\Handler\Adapter\Command;
+namespace Sfynx\DddGeneratorBundle\Generator\Api\Handler\Presentation\Request;
 
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\AbstractHandler;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\HandlerInterface;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\ExecuteTrait;
 
-class AdapterHandler extends AbstractHandler implements HandlerInterface
+class RequestHandler extends AbstractHandler implements HandlerInterface
 {
     use ExecuteTrait;
 
-    const SKELETON_DIR = 'Api/Presentation/Adapter';
-    const SKELETON_TPL = '%sCommandAdapter.php.twig';
+    const SKELETON_DIR = 'Api/Presentation/Request';
+    const SKELETON_TPL = '%sRequest.php.twig';
 
-    protected $targetPattern = '%s/%s/Presentation/Adapter/%s/Command/%sCommandAdapter.php';
+    protected $targetPattern = '%s/%s/Presentation/Request/%s/%s/%sRequest.php';
     protected $target;
 
     protected function setTemplateName()
@@ -27,7 +27,8 @@ class AdapterHandler extends AbstractHandler implements HandlerInterface
             $this->targetPattern,
             $this->parameters['destinationPath'],
             $this->parameters['projectDir'],
-            $this->parameters['entityName'],
+            ucfirst($this->parameters['entityName']),
+            $this->parameters['group'],
             $this->parameters['actionName']
         );
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Sfynx\DddGeneratorBundle\Generator\Api\Handler\Adapter\Query;
+namespace Sfynx\DddGeneratorBundle\Generator\Api\Handler\Presentation\Adapter\Command;
 
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\AbstractHandler;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\HandlerInterface;
@@ -11,9 +11,9 @@ class AdapterHandler extends AbstractHandler implements HandlerInterface
     use ExecuteTrait;
 
     const SKELETON_DIR = 'Api/Presentation/Adapter';
-    const SKELETON_TPL = '%sQueryAdapter.php.twig';
+    const SKELETON_TPL = '%sCommandAdapter.php.twig';
 
-    protected $targetPattern = '%s/%s/Presentation/Adapter/%s/Query/%sQueryAdapter.php';
+    protected $targetPattern = '%s/%s/Presentation/Adapter/%s/Command/%sCommandAdapter.php';
     protected $target;
 
     protected function setTemplateName()

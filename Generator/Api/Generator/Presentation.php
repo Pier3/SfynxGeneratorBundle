@@ -4,16 +4,18 @@ declare(strict_types = 1);
 namespace Sfynx\DddGeneratorBundle\Generator\Api\Generator;
 
 //Command adapter
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Adapter\Command\AdapterHandler as AdapterCommandHandler;
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Presentation\Adapter\Command\AdapterHandler as AdapterCommandHandler;
 //Query adapter
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Adapter\Query\AdapterHandler as AdapterQueryHandler;
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Presentation\Adapter\Query\AdapterHandler as AdapterQueryHandler;
 //Controller
 use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Presentation\Coordination\ControllerHandler;
 //Request
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Request\RequestHandler;
+
+use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Presentation\Request\RequestHandler;
 use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Adapter\Entity\Command\CommandAdapterTestHandler;
 use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Coordination\Entity\Command\ControllerCommandTestHandler;
 use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Tests\Presentation\Coordination\Entity\Query\ControllerQueryTestHandler;
+
 
 /**
  * Class Presentation

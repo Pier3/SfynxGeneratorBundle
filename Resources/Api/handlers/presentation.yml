@@ -1,15 +1,20 @@
-commandHandler:
-    skeletonTpl: "Command/%sCommand.php.twig"
-    targetPattern: "%s/%s/Application/%s/Command/%sCommand.php"
+#CQRS Segregation Handlers
+#Commands
+adapterCommandHandler:
+    skeletonTpl: "Adapter/%actionName$sCommandAdapter.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s%/Presentation/Adapter/%entityName$s/Command/%actionName$sCommandAdapter.php"
 
-commandHandlerDecoratorHandler:
-    skeletonTpl: "Command/Handler/Decorator/%sCommandHandlerDecorator.php.twig"
-    targetPattern: "%s/%s/Application/%s/Command/Handler/Decorator/%sCommandHandlerDecorator.php"
+#Queries
+adapterQueryHandler:
+    skeletonTpl: "Adapter/%actionName$sQueryAdapter.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s%/Presentation/Adapter/%entityName$s/Query/%actionName$sQueryAdapter.php"
 
-commandHandlerHandler:
-    skeletonTpl: "Command/Handler/%sCommandHandler.php.twig"
-    targetPattern: "%s/%s/Application/%s/Command/Handler/%sCommandHandler.php"
+#Controller Handler
+controllerHandler:
+    skeletonTpl: "Coordination/Controller/Controller.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s%/Presentation/Coordination/%entityName$s/%group$s/Controller.php"
 
-commandSpecHandler:
-    skeletonTpl: "Command/Handler/Validation/SpecHandler/%sCommandSpecHandler.php.twig"
-    targetPattern: "%s/%s/Application/%s/Command/Validation/SpecHandler/%sCommandSpecHandler.php"
+#Request Handler
+requestHandler:
+    skeletonTpl: "Request/%actionName$sRequest.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s%/Presentation/Request/%entityName$s/%entityName$s/%actionName$sRequest.php"

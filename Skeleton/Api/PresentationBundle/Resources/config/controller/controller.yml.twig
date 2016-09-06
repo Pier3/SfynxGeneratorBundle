@@ -10,7 +10,6 @@ services:
             - @project.{{ projectName|lower }}.{{ entityName|lower }}.{{ group|lower }}.{{ commandQueryResponsibilitySegregation.action|lower }}.handler
 {% if loop.last %}
 
-
 {% endif %}
 {% endfor %}
 

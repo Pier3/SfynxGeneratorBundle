@@ -1,12 +1,12 @@
 <?php
 declare(strict_types = 1);
 
-namespace  Tests\Application\Country\Command;
+namespace  Tests\Application\{{ entityName }}\Command;
 
-use DemoCountry\Application\Country\Command\NewCommand;
+use {{ projectName }}\Application\{{ entityName }}\Command\UpdateCommand;
 use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandInterface;
 
-class NewCommandTest extends \PHPUnit_Framework_TestCase
+class UpdateCommandTest extends \PHPUnit_Framework_TestCase
 {
     protected $command;
     protected $message;
@@ -15,13 +15,14 @@ class NewCommandTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $this->entityId="132456";
         $this->libelle="FRANCe";
         $this->indicatif="033";
         $this->iso="FR";
         $this->selectable=true;
         $this->reference="001";
 
-        $this->command = new NewCommand($this->libelle,$this->indicatif,$this->iso,$this->selectable,$this->reference);
+        $this->command = new UpdateCommand($this->entityId, $this->libelle,$this->indicatif,$this->iso,$this->selectable,$this->reference);
     }
 
     public function testInterface()
@@ -31,6 +32,7 @@ class NewCommandTest extends \PHPUnit_Framework_TestCase
 
     public function testGetters()
     {
+        $this->assertEquals($this->entityId, $this->command->getEntityId());
         $this->assertEquals($this->libelle, $this->command->getLibelle());
         $this->assertEquals($this->indicatif, $this->command->getIndicatif());
         $this->assertEquals($this->iso, $this->command->getIso());

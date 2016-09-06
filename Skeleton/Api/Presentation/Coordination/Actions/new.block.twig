@@ -9,7 +9,7 @@
     {
         $adapter = new NewCommandAdapter();
         $command = $adapter->createCommandFromRequest(new NewRequest($this->request, $this->resolver));
-        if ($entity = $this->newCommandHandlerDecorator->process($command)) {
+        if ($entity = $this->newCommandHandler->process($command)) {
             return $this->responseHandler->create($entity, Response::HTTP_CREATED)->getResponse();
         }
         //if error

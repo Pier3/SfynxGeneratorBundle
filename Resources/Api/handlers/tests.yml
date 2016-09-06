@@ -1,0 +1,46 @@
+# Application
+TestCommand:
+    skeletonTpl: "Application/Command/%actionName$sCommandTest.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Test/Application/%entityName$s/Command/%actionName$sCommandTest.php"
+
+TestCommandHandlerDecorator:
+    skeletonTpl: "Application/Command/Handler/Decorator/%actionName$sCommandHandlerDecoratorTest.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Test/Application/%entityName$s/Query/Handler/Decorator/%actionName$sCommandHandlerDecorator.php"
+
+TestCommandHandler:
+    skeletonTpl: "Application/Command/Handler/%actionName$sCommandHandlerTest.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Test/Application/%entityName$s/Command/Handler/%actionName$sCommandHandlerTest.php"
+
+TestQuery:
+    skeletonTpl: "Application/Query/%actionName$sQueryTest.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Test/Application/%entityName$s/Query/%actionName$sQueryTest.php"
+
+
+# Domain
+TestManager:
+      skeletonTpl: "Domain/Service/Manager/ManagerTest.php.twig"
+      targetPattern: "%destinationPath$s/%projectDir$s/Test/Domain/%entityName$s/Manager/%entityName$sManagerTest.php"
+
+TestRepositoryFactory:
+      skeletonTpl: "Domain/Service/Factory/Orm/RepositoryFactoryTest.php.twig"
+      targetPattern: "%destinationPath$s/%projectDir$s/Test/Domain/Service/%entityName$s/Factory/Orm/RepositoryFactoryTest.php"
+
+
+# Presentation
+
+TestCommandAdapter:
+    skeletonTpl: "Presentation/Adapter/Command/CommandAdapterTest.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Test/Presentation/Adapter/%entityName$s/Command/%actionName$sAdapterTest.php"
+
+TestQueryAdapter:
+    skeletonTpl: "Presentation/Adapter/Query/CommandAdapterTest.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Test/Presentation/Adapter/%entityName$s/Query/%actionName$sAdapterTest.php"
+
+TestControllerQuery:
+    skeletonTpl: "Presentation/Coordination/Entity/Query/ControllerTest.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Test/Presentation/Coordination/%entityName$s/Query/Controller.php"
+
+TestControllerCommand:
+    skeletonTpl: "Presentation/Coordination/Entity/Command/ControllerTest.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Test/Presentation/Coordination/%entityName$s/Command/Controller.php"
+

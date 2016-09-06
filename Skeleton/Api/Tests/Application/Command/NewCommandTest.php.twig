@@ -1,0 +1,38 @@
+<?php
+
+namespace  Tests\Application\{{ entityName }}\Command;
+
+use {{ projectName }}\Application\Country\Command\NewCommand;
+use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandInterface;
+
+class NewCommandTest extends \PHPUnit_Framework_TestCase
+{
+    protected $command;
+    protected $message;
+    protected $transaction;
+    protected $jsonRequest;
+
+    public function setUp()
+    {
+{% set constructorArgs = "" %}
+{% for field in entityFields %}
+        $this->{{ field.name }}="123456";
+{% set constructorArgs = constructorArgs ~ "$this->" ~ field.name ~ "," %}
+{% endfor %}
+        $this->command = new NewCommand({{ constructorArgs|trim(",")}});
+    }
+
+    public function testInterface()
+    {
+        $this->assertInstanceOf(CommandInterface::class, $this->command);
+    }
+
+    public function testGetters()
+    {
+{% for field in entityFields %}
+{% if field.type != "id" %}
+    $this->assertEquals($this->{{ field.name }}, $this->command->get{{ field.name|ucfirst }}());
+{% endif %}
+{% endfor %}
+    }
+}

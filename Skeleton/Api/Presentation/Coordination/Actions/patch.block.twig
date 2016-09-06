@@ -9,7 +9,7 @@
     {
         $adapter = new PatchCommandAdapter();
         $command = $adapter->createCommandFromRequest(new PatchRequest($this->request, $this->resolver));
-        if ($entity = $this->patchCommandHandlerDecorator->process($command)) {
+        if ($entity = $this->patchCommandHandler->process($command)) {
             return $this->responseHandler->create($entity, Response::HTTP_OK)->getResponse();
         }
         //if error

@@ -1,20 +1,19 @@
 <?php
-declare(strict_types = 1);
 
-namespace Tests\Presentation\Coordination\Country\Query;
+namespace Tests\Presentation\Coordination\{{ entityName }}\Query;
 
 
-use DemoCountry\Application\Country\Query\Handler\GetAllQueryHandler;
-use DemoCountry\Application\Country\Query\Handler\GetQueryHandler;
-use DemoCountry\Application\Country\Query\Handler\SearchByQueryHandler;
-use DemoCountry\Application\Country\Query\Handler\GetByIdsQueryHandler;
-use DemoCountry\Presentation\Adapter\Country\Query\GetAllQueryAdapter;
-use DemoCountry\Presentation\Adapter\Country\Query\GetQueryAdapter;
-use DemoCountry\Presentation\Adapter\Country\Query\SearchByQueryAdapter;
-use DemoCountry\Presentation\Coordination\Country\Query\Controller;
-use DemoCountry\Presentation\Request\Country\Query\GetAllRequest;
-use DemoCountry\Presentation\Request\Country\Query\GetRequest;
-use DemoCountry\Presentation\Request\Country\Query\SearchByRequest;
+use {{ projectName}}\Application\{{ entityName }}\Query\Handler\GetAllQueryHandler;
+use {{ projectName}}\Application\{{ entityName }}\Query\Handler\GetQueryHandler;
+use {{ projectName}}\Application\{{ entityName }}\Query\Handler\SearchByQueryHandler;
+use {{ projectName}}\Application\{{ entityName }}\Query\Handler\GetByIdsQueryHandler;
+use {{ projectName}}\Presentation\Adapter\{{ entityName }}\Query\GetAllQueryAdapter;
+use {{ projectName}}\Presentation\Adapter\{{ entityName }}\Query\GetQueryAdapter;
+use {{ projectName}}\Presentation\Adapter\{{ entityName }}\Query\SearchByQueryAdapter;
+use {{ projectName}}\Presentation\Coordination\{{ entityName }}\Query\Controller;
+use {{ projectName}}\Presentation\Request\{{ entityName }}\Query\GetAllRequest;
+use {{ projectName}}\Presentation\Request\{{ entityName }}\Query\GetRequest;
+use {{ projectName}}\Presentation\Request\{{ entityName }}\Query\SearchByRequest;
 use \Phake;
 
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Request\SymfonyStrategy;
@@ -35,58 +34,29 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 
         Phake::when($this->responseHandler)->create(Phake::anyParameters())->thenReturn($this->responseHandler);
         Phake::when($this->responseHandler)->getResponse(Phake::anyParameters())->thenReturn(Phake::mock(Response::class));
+        Phake::when($this->request)->getContent(Phake::anyParameters())->thenReturn(json_encode(["id"=>123456]));
 
         $this->entity = ["id" => "00c1ab20-6e1e-4c54-83b4-62e677aba7ec"];
 
-        $this->getAllQueryHandler = Phake::mock(GetAllQueryHandler::class);
-        $this->getQueryHandler = Phake::mock(GetQueryHandler::class);
-        $this->getByIdsQueryHandler = Phake::mock(GetByIdsQueryHandler::class);
-        $this->searchByQueryHandler = Phake::mock(SearchByQueryHandler::class);
+{% set controllerArgs ="" %}
+{% for commandQueryResponsibilitySegregation in controllerData %}
+{% if  commandQueryResponsibilitySegregation.group == group %}
+        $this->{{ commandQueryResponsibilitySegregation.action }}{{ group }}Handler = Phake::mock({{ commandQueryResponsibilitySegregation.action }}{{ group }}Handler::class);;
+        Phake::when($this->{{ commandQueryResponsibilitySegregation.action }}{{ group }}Handler)->process(Phake::anyParameters())->thenReturn($this->entity);
+{% endif %}
+{% set controllerArgs = controllerArgs  ~ "$this->" ~ commandQueryResponsibilitySegregation.action ~ group ~ "Handler, "%}
+{% endfor %}
 
+        $this->controller = new Controller($this->request, $this->resolver, $this->responseHandler, {{ controllerArgs|trim(", ") }});
 
-
-        Phake::when($this->getAllQueryHandler)->process(Phake::anyParameters())->thenReturn([$this->entity, $this->entity]);
-        Phake::when($this->getQueryHandler)->process(Phake::anyParameters())->thenReturn($this->entity);
-        Phake::when($this->getByIdsQueryHandler)->process(Phake::anyParameters())->thenReturn([$this->entity, $this->entity]);
-        Phake::when($this->searchByQueryHandler)->process(Phake::anyParameters())->thenReturn([$this->entity, $this->entity]);
-
-        $this->controller = new Controller($this->request, $this->resolver, $this->responseHandler, $this->getAllQueryHandler, $this->getByIdsQueryHandler, $this->getQueryHandler, $this->searchByQueryHandler);
     }
 
-    public function testGetAllAction()
-    {
-        $adapter = new GetAllQueryAdapter();
-        $query = $adapter->createQueryFromRequest(
-            new GetAllRequest($this->request, $this->resolver)
-        );
+{% for commandQueryResponsibilitySegregation in controllerData %}
+{% if  commandQueryResponsibilitySegregation.group == group %}
 
-        $this->controller->getAllAction();
-        Phake::verify($this->getAllQueryHandler, Phake::times(1))->process($query);
-        Phake::verify($this->responseHandler, Phake::times(1))->create([$this->entity, $this->entity], Response::HTTP_OK);
-    }
+{% include('actions/' ~ commandQueryResponsibilitySegregation.action ~ '.php.twig') with {'action': commandQueryResponsibilitySegregation.action} %}
 
-    public function testGetAction()
-    {
-        $adapter = new GetQueryAdapter();
-        $query = $adapter->createQueryFromRequest(
-            new GetRequest($this->request, $this->resolver)
-        );
+{% endif %}
+{% endfor %}
 
-        $this->controller->getAction();
-        Phake::verify($this->getQueryHandler, Phake::times(1))->process($query);
-        Phake::verify($this->responseHandler, Phake::times(1))->create($this->entity, Response::HTTP_OK);
-    }
-
-
-    public function testSearchByAction()
-    {
-        $adapter = new SearchByQueryAdapter();
-        $query = $adapter->createQueryFromRequest(
-            new SearchByRequest($this->request, $this->resolver)
-        );
-
-        $this->controller->searchByAction();
-        Phake::verify($this->searchByQueryHandler, Phake::times(1))->process($query);
-        Phake::verify($this->responseHandler, Phake::times(1))->create([$this->entity,$this->entity], Response::HTTP_OK);
-    }
 }

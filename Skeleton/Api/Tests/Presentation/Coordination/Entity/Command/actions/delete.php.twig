@@ -1,0 +1,11 @@
+public function testDeleteAction()
+{
+    $adapter = new DeleteCommandAdapter();
+    $command = $adapter->createCommandFromRequest(
+        new DeleteRequest($this->request, $this->resolver)
+    );
+
+    $this->controller->deleteAction();
+    Phake::verify($this->deleteHandler, Phake::times(1))->process($command);
+    Phake::verify($this->responseHandler, Phake::times(1))->create(["message" => '1 row deleted'], Response::HTTP_OK);
+}

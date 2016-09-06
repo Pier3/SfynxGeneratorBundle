@@ -9,6 +9,7 @@ use Symfony\Component\Console\Exception\{
     LogicException as SFConsoleLogicException,
     RuntimeException as SFConsoleRuntimeException
 };
+
 use Symfony\Component\Yaml\Exception\ParseException as SFYMLParseException;
 
 use Symfony\Component\Yaml\Parser;
@@ -29,7 +30,8 @@ use Sfynx\DddGeneratorBundle\Generator\Api\Generator\{
     Infrastructure,
     InfrastructureBundle,
     Presentation,
-    PresentationBundle
+    PresentationBundle,
+    Test
 };
 use Sfynx\DddGeneratorBundle\Generator\Api\ValueObjects\{
     ElementsToCreateVO,
@@ -177,6 +179,7 @@ class GenerateDddApiCommand extends Command
         (new Domain($voLayer))->generate();
         (new Application($voLayer))->generate();
         (new Presentation($voLayer))->generate();
+        (new Test($voLayer))->generate();
 
         //Generate Layers linked to Symfony with the same pattern of generation upside.
         (new InfrastructureBundle($voLayer))->generate();

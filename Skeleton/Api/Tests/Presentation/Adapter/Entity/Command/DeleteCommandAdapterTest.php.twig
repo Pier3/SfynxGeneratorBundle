@@ -1,10 +1,10 @@
 <?php
 declare(strict_types = 1);
 
-namespace Tests\Presentation\Adapter\Country\Command;
+namespace Tests\Presentation\Adapter\{{ entityName }}\Command;
 
-use DemoCountry\Presentation\Adapter\Country\Command\DeleteCommandAdapter;
-use DemoCountry\Presentation\Request\Country\Command\DeleteRequest;
+use {{ projectName}}\Presentation\Adapter\{{ entityName }}\Command\DeleteCommandAdapter;
+use {{ projectName}}\Presentation\Request\{{ entityName }}\Command\DeleteRequest;
 use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandInterface;
 use Sfynx\DddBundle\Layer\Presentation\Adapter\Generalisation\CommandAdapterInterface;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\CommandRequestInterface;

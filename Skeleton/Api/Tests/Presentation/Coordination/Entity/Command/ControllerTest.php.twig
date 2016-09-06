@@ -3,21 +3,21 @@ declare(strict_types = 1);
 
 namespace Tests\Presentation\Coordination\Country\Command;
 
-use DemoCountry\Application\Country\Command\Handler\Decorator\NewCommandHandlerDecorator;
-use DemoCountry\Application\Country\Command\Handler\Decorator\PatchCommandHandlerDecorator;
-use DemoCountry\Application\Country\Command\Handler\Decorator\UpdateCommandHandlerDecorator;
-use DemoCountry\Application\Country\Command\Handler\DeleteCommandHandler;
-use DemoCountry\Application\Country\Command\Handler\DeleteManyCommandHandler;
-use DemoCountry\Domain\Entity\Country;
-use DemoCountry\Presentation\Adapter\Country\Command\DeleteCommandAdapter;
-use DemoCountry\Presentation\Adapter\Country\Command\NewCommandAdapter;
-use DemoCountry\Presentation\Adapter\Country\Command\PatchCommandAdapter;
-use DemoCountry\Presentation\Adapter\Country\Command\UpdateCommandAdapter;
-use DemoCountry\Presentation\Coordination\Country\Command\Controller;
-use DemoCountry\Presentation\Request\  Country\Command\PatchRequest;
-use DemoCountry\Presentation\Request\  Country\Command\UpdateRequest;
-use DemoCountry\Presentation\Request\Country\Command\DeleteRequest;
-use DemoCountry\Presentation\Request\Country\Command\NewRequest;
+use {{ projectName}}\Application\{{ entityName }}\Command\Handler\NewCommandHandler;
+use {{ projectName}}\Application\{{ entityName }}\Command\Handler\PatchCommandHandler;
+use {{ projectName}}\Application\{{ entityName }}\Command\Handler\UpdateCommandHandler;
+use {{ projectName}}\Application\{{ entityName }}\Command\Handler\DeleteCommandHandler;
+use {{ projectName}}\Application\{{ entityName }}\Command\Handler\DeleteManyCommandHandler;
+use {{ projectName}}\Domain\Entity\{{ entityName }};
+use {{ projectName}}\Presentation\Adapter\{{ entityName }}\Command\DeleteCommandAdapter;
+use {{ projectName}}\Presentation\Adapter\{{ entityName }}\Command\NewCommandAdapter;
+use {{ projectName}}\Presentation\Adapter\{{ entityName }}\Command\PatchCommandAdapter;
+use {{ projectName}}\Presentation\Adapter\{{ entityName }}\Command\UpdateCommandAdapter;
+use {{ projectName}}\Presentation\Coordination\{{ entityName }}\Command\Controller;
+use {{ projectName}}\Presentation\Request\{{ entityName }}\Command\PatchRequest;
+use {{ projectName}}\Presentation\Request\{{ entityName }}\Command\UpdateRequest;
+use {{ projectName}}\Presentation\Request\{{ entityName }}\Command\DeleteRequest;
+use {{ projectName}}\Presentation\Request\{{ entityName }}\Command\NewRequest;
 use \Phake;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Request\SymfonyStrategy;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Resolver\ResolverStrategy;
@@ -34,68 +34,30 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $this->resolver = Phake::mock(ResolverStrategy::class);
         $this->responseHandler = Phake::mock(ResponseHandler::class);
 
+        $this->entity = ["id" => "00c1ab20-6e1e-4c54-83b4-62e677aba7ec"];
+
         Phake::when($this->responseHandler)->create(Phake::anyParameters())->thenReturn($this->responseHandler);
         Phake::when($this->responseHandler)->getResponse(Phake::anyParameters())->thenReturn(Phake::mock(Response::class));
+        Phake::when($this->request)->getContent(Phake::anyParameters())->thenReturn(json_encode(["id"=>123456]));
 
-        $this->deleteHandler = Phake::mock(DeleteCommandHandler::class);
-        $this->deleteManyHandler = Phake::mock(DeleteManyCommandHandler::class);
-        $this->updateHandler = Phake::mock(UpdateCommandHandlerDecorator::class);
-        $this->newHandler = Phake::mock(NewCommandHandlerDecorator::class);
-        $this->patchHandler = Phake::mock(PatchCommandHandlerDecorator::class);
-        $this->entity = ["id" => "00c1ab20-6e1e-4c54-83b4-62e677aba7ec"];
-        Phake::when($this->newHandler)->process(Phake::anyParameters())->thenReturn($this->entity);
-        Phake::when($this->patchHandler)->process(Phake::anyParameters())->thenReturn($this->entity);
-        Phake::when($this->deleteHandler)->process(Phake::anyParameters())->thenReturn(1);
-        Phake::when($this->updateHandler)->process(Phake::anyParameters())->thenReturn($this->entity);
+{% set controllerArgs ="" %}
+{% for commandQueryResponsibilitySegregation in controllerData %}
+{% if  commandQueryResponsibilitySegregation.group == group %}
 
-        $this->controller = new Controller($this->request, $this->resolver, $this->responseHandler, $this->deleteHandler, $this->deleteManyHandler, $this->updateHandler, $this->newHandler, $this->patchHandler);
+        $this->{{ commandQueryResponsibilitySegregation.action }}Handler = Phake::mock({{ commandQueryResponsibilitySegregation.action }}{{ group }}Handler::class);;
+        Phake::when($this->{{ commandQueryResponsibilitySegregation.action }}Handler)->process(Phake::anyParameters())->thenReturn($this->entity);
+{% set controllerArgs = controllerArgs  ~ "$this->" ~ commandQueryResponsibilitySegregation.action ~ "Handler, "%}
+{% endif %}
+{% endfor %}
+
+        $this->controller = new Controller($this->request, $this->resolver, $this->responseHandler, {{ controllerArgs|trim(", ") }});
     }
 
-    public function testNewAction()
-    {
-        $adapter = new NewCommandAdapter();
-        $command = $adapter->createCommandFromRequest(
-            new NewRequest($this->request, $this->resolver)
-        );
+{% for commandQueryResponsibilitySegregation in controllerData %}
+{% if  commandQueryResponsibilitySegregation.group == group %}
+    {% include('actions/' ~ commandQueryResponsibilitySegregation.action ~ '.php.twig') with {'action': commandQueryResponsibilitySegregation.action} %}
+{% endif %}
+{% endfor %}
 
-        $this->controller->newAction();
-        Phake::verify($this->newHandler, Phake::times(1))->process($command);
-        Phake::verify($this->responseHandler, Phake::times(1))->create($this->entity, Response::HTTP_OK);
-    }
-
-    public function testPatchAction()
-    {
-        $adapter = new PatchCommandAdapter();
-        $command = $adapter->createCommandFromRequest(
-            new PatchRequest($this->request, $this->resolver)
-        );
-
-        $this->controller->patchAction();
-        Phake::verify($this->patchHandler, Phake::times(1))->process($command);
-        Phake::verify($this->responseHandler, Phake::times(1))->create($this->entity, Response::HTTP_OK);
-    }
-
-    public function testDeleteAction()
-    {
-        $adapter = new DeleteCommandAdapter();
-        $command = $adapter->createCommandFromRequest(
-            new DeleteRequest($this->request, $this->resolver)
-        );
-
-        $this->controller->deleteAction();
-        Phake::verify($this->deleteHandler, Phake::times(1))->process($command);
-        Phake::verify($this->responseHandler, Phake::times(1))->create(["message" => '1 row deleted'], Response::HTTP_OK);
-    }
-
-    public function testupdateAction()
-    {
-        $adapter = new UpdateCommandAdapter();
-        $command = $adapter->createCommandFromRequest(
-            new UpdateRequest($this->request, $this->resolver)
-        );
-
-        $this->controller->updateAction();
-        Phake::verify($this->updateHandler, Phake::times(1))->process($command);
-        Phake::verify($this->responseHandler, Phake::times(1))->create($this->entity, Response::HTTP_OK);
     }
 }

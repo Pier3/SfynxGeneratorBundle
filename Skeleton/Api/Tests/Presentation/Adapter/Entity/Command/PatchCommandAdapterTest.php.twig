@@ -1,10 +1,10 @@
 <?php
 declare(strict_types = 1);
 
-namespace Tests\Presentation\Adapter\Country\Command;
+namespace Tests\Presentation\Adapter\{{ entityName }}\Command;
 
-use DemoCountry\Presentation\Adapter\Country\Command\PatchCommandAdapter;
-use DemoCountry\Presentation\Request\Country\Command\PatchRequest;
+use {{ projectName}}\Presentation\Adapter\{{ entityName }}\Command\PatchCommandAdapter;
+use {{ projectName}}\Presentation\Request\{{ entityName }}\Command\PatchRequest;
 use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandInterface;
 use Sfynx\DddBundle\Layer\Presentation\Adapter\Generalisation\CommandAdapterInterface;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\CommandRequestInterface;

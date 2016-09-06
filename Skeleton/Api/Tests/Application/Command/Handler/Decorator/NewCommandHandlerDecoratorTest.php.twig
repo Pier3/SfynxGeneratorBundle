@@ -1,0 +1,50 @@
+<?php
+declare(strict_types = 1);
+
+namespace Tests\Application\{{ entityName }}\Command\Handler\Decorator;
+
+use {{ projectName }}\Application\{{ entityName }}\Command\Validation\SpecHandler\NewCommandSpecHandler;
+use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandHandlerInterface;
+use {{ projectName }}\Application\{{ entityName }}\Command\Handler\NewCommandHandler;
+use {{ projectName }}\Application\{{ entityName }}\Command\NewCommand;
+use {{ projectName }}\Application\{{ entityName }}\Command\Handler\Decorator\NewCommandHandlerDecorator;
+use {{ projectName }}\Application\{{ entityName }}\Command\Validation\ValidationHandler\NewCommandValidationHandler;
+use \Phake;
+
+
+class NewCommandHandlerDecoratorTest extends \PHPUnit_Framework_TestCase
+{
+    protected $commandHandlerDecorator;
+    protected $validationHandler;
+    protected $commandHandler;
+    protected $command;
+
+    public function setUp()
+    {
+        $this->command = Phake::mock(NewCommand::class);
+        $this->commandHandler = Phake::mock(NewCommandHandler::class);
+
+        Phake::when($this->commandHandler)->process(Phake::anyParameters())->thenReturn("some result");
+
+        $this->validationHandler = Phake::mock(NewCommandValidationHandler::class);
+
+        $this->specHandler = Phake::mock(NewCommandSpecHandler::class);
+        Phake::when($this->specHandler )->process(Phake::anyParameters())->thenReturn(null);
+
+        $this->commandHandlerDecorator = new NewCommandHandlerDecorator($this->commandHandler, $this->validationHandler,$this->specHandler);
+    }
+
+    public function testInterfaces()
+    {
+        $this->assertInstanceOf(CommandHandlerInterface::class, $this->commandHandlerDecorator);
+    }
+
+    public function testProcess()
+    {
+        $result = $this->commandHandlerDecorator->process($this->command);
+        $this->assertEquals("some result", $result);
+        Phake::verify($this->validationHandler, Phake::times(1))->process(Phake::anyParameters());
+        Phake::verify($this->commandHandler, Phake::times(1))->process(Phake::anyParameters());
+
+    }
+}

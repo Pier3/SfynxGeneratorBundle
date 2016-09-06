@@ -1,0 +1,53 @@
+<?php
+declare(strict_types = 1);
+
+namespace  Tests\Application\{{ entityName }}\Command\Handler;
+
+use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandHandlerInterface;
+use {{ projectName }}\Application\{{ entityName }}\Command\Handler\PatchCommandHandler;
+use {{ projectName }}\Application\{{ entityName }}\Command\PatchCommand;
+use {{ projectName }}\Domain\Workflow\{{ entityName }}\Handler\PatchWFHandler;
+use \Phake;
+
+class PatchCommandHandlerTest extends \PHPUnit_Framework_TestCase
+{
+    protected $workflowHandler;
+    protected $commandHandler;
+    protected $command;
+
+    public function setUp()
+    {
+        $this->command = Phake::mock(PatchCommand::class);
+        $this->workflowHandler = Phake::mock(PatchWFHandler::class);
+        $this->workflowHandler->data = new \stdClass();
+
+        $this->commandHandler = new PatchCommandHandler($this->workflowHandler);
+    }
+
+    public function testInterfaces()
+    {
+        $this->assertInstanceOf(CommandHandlerInterface::class, $this->commandHandler);
+    }
+
+    public function testProcess()
+    {
+        $entity = [["id"=>"123465"]];
+        $this->workflowHandler->data->entity = $entity;
+
+        $result = $this->commandHandler->process($this->command);
+
+        $this->assertEquals(end($entity), $result);
+        Phake::verify($this->workflowHandler, Phake::times(1))->process(Phake::anyParameters());
+
+    }
+
+    /**
+     * @expectedException \Sfynx\DddBundle\Layer\Infrastructure\Exception\WorkflowException
+     */
+    public function testException()
+    {
+        $this->workflowHandler->data->entity = [];//force exception with that
+
+        $result = $this->commandHandler->process($this->command);
+    }
+}

@@ -44,10 +44,6 @@ class Presentation extends LayerAbstract
             $this->generateCoordinationControllers();
             $this->output->writeln('### REQUESTS GENERATION ###');
             $this->generateRequest();
-            $this->output->writeln('### TESTS GENERATION ###');
-            $this->output->writeln(' - BE MY GUEST ... -');
-            //TODO: work on the generation of the tests.
-            //$this->generateTests();
         } catch (\InvalidArgumentException $e) {
             fwrite(STDERR, $e->getMessage());
             exit;
@@ -120,101 +116,7 @@ class Presentation extends LayerAbstract
         $this->generator->execute()->clear();
     }
 
-    public function generateTests()
-    {
-        //TODO: Big todo => to review for refactoring.
-        /*
-        foreach ($this->pathsToCreate as $route => $verbData) {
-            foreach ($verbData as $verb => $data) {
-                $controllers[$data['controller']][] = [
-                    'action' => $data['action'], 'path' => $route, 'method' => $verb, 'entityName' => $data['entity']
-                ];
 
-                $this->parameters = [
-                    'rootDir' => $this->rootDir . '/src',
-                    'projectDir' => $this->projectDir,
-                    'projectName' => str_replace('src/', '', $this->projectDir),
-                    'actionName' => $data['action'],
-                    'entityName' => $data['entity'],
-                    'entityFields' => $this->entities[$data['entity']],
-                    'destinationPath' => $this->destinationPath,
-                ];
-
-                $this->generator->addHandler(new UpdateCommandAdapterTestHandler($this->parameters));
-                $this->generator->addHandler(new PatchCommandAdapterTestHandler($this->parameters));
-                $this->generator->addHandler(new NewCommandAdapterTestHandler($this->parameters));
-                $this->generator->addHandler(new DeleteCommandAdapterTestHandler($this->parameters));
-
-                $this->generator->execute();
-                $this->generator->clear();
-
-                foreach ($controllers as $controller => $data) {
-
-
-                    $this->parametersQuery = [
-                        'rootDir' => $this->rootDir . '/src',
-                        'projectDir' => $this->projectDir,
-                        'projectName' => str_replace('src/', '', $this->projectDir),
-                        'controllerName' => $controller,
-                        'group' => self::QUERY,
-                        'destinationPath' => $this->destinationPath,
-                    ];
-
-                    $this->parametersCommand = [
-                        'rootDir' => $this->rootDir . '/src',
-                        'projectDir' => $this->projectDir,
-                        'projectName' => str_replace('src/', '', $this->projectDir),
-                        'controllerName' => $controller,
-                        'group' => self::COMMAND,
-                        'destinationPath' => $this->destinationPath,
-                    ];
-
-
-                    foreach ($data as $action) {
-
-                        if (in_array($action['action'], ['put', 'delete', 'update', 'new', 'patch'])) {
-                            $this->parametersCommand['controllerData'][] = $action;
-                            $this->parametersCommand['entityName'] = $action['entityName'];
-                            $this->parametersCommand['destinationPath'] = $this->destinationPath;
-
-                            $this->generator->addHandler(new ControllerCommandTestHandler($this->parametersCommand));
-                            $this->generator->execute();
-                            $this->generator->clear();
-
-                        } else {
-                            $this->parametersQuery['controllerData'][] = $action;
-                            $this->parametersQuery['entityName'] = $action['entityName'];
-                            $this->parametersQuery['destinationPath'] = $this->destinationPath;
-
-                            $this->generator->addHandler(new ControllerQueryTestHandler($this->parametersQuery));
-                            $this->generator->execute();
-                            $this->generator->clear();
-
-                        }
-                        $controllerToCreate[$controller][$action['entityName']] = true;
-                    }
-                    $controllersToCreate[] = $controllerToCreate;
-                }
-
-                $this->generator->addHandler(new UpdateRequestTestHandler($this->parameters));
-                $this->generator->addHandler(new NewRequestTestHandler($this->parameters));
-                $this->generator->addHandler(new DeleteRequestTestHandler($this->parameters));
-                //$this->generator->addHandler(new GetAllRequestTestHandler($this->parameters));
-                $this->generator->addHandler(new SearchByRequestTestHandler($this->parameters));
-                $this->generator->addHandler(new GetRequestTestHandler($this->parameters));
-                $this->generator->addHandler(new PatchRequestTestHandler($this->parameters));
-
-                $this->generator->execute();
-                $this->generator->clear();
-            }
-        }
-
-        $this->generator->addHandler(New TraitEntityNameHandler($this->parameters));
-        $this->generator->addHandler(New TraitVerifyResolverHandler($this->parameters));
-        $this->generator->execute();
-        $this->generator->clear();
-        */
-    }
 
     /**
      * Add Controller (Coordination) Handler to the generator. For use in a loop for each C.Q.R.S. actions.

@@ -1,0 +1,11 @@
+    public function testGetAction()
+    {
+        $adapter = new GetQueryAdapter();
+        $query = $adapter->createQueryFromRequest(
+            new GetRequest($this->request, $this->resolver)
+        );
+
+        $this->controller->getAction();
+        Phake::verify($this->getQueryHandler, Phake::times(1))->process($query);
+        Phake::verify($this->responseHandler, Phake::times(1))->create($this->entity, Response::HTTP_OK);
+    }

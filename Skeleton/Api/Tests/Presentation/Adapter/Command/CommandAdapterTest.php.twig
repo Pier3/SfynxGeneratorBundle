@@ -3,17 +3,17 @@ declare(strict_types = 1);
 
 namespace Tests\Presentation\Adapter\{{ entityName }}\Command;
 
-use {{ projectName}}\Presentation\Adapter\{{ entityName }}\Command\NewCommandAdapter;
-use {{ projectName}}\Presentation\Request\{{ entityName }}\Command\NewRequest;
+use {{ projectName }}\Presentation\Adapter\{{ entityName }}\Command\UpdateCommandAdapter;
+use {{ projectName }}\Presentation\Request\{{ entityName }}\Command\UpdateRequest;
 use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandInterface;
 use Sfynx\DddBundle\Layer\Presentation\Adapter\Generalisation\CommandAdapterInterface;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\CommandRequestInterface;
 use \Phake;
 
-class NewCommandAdapterTest extends \PHPUnit_Framework_TestCase
+class {{ actionName }}CommandAdapterTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var NewCommandAdapter
+     * @var UpdateCommandAdapter
      */
     protected $adapter;
 
@@ -24,8 +24,8 @@ class NewCommandAdapterTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->adapter = new NewCommandAdapter();
-        $this->request  = Phake::mock(NewRequest::class);
+        $this->adapter = new UpdateCommandAdapter();
+        $this->request  = Phake::mock(UpdateRequest::class);
     }
 
     public function testInterfaces()

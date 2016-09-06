@@ -383,33 +383,6 @@ paths:
           500:
             description: An error occurs
 
-  /v{_version}/country/findbyname/{name}:
-      get:
-        operationId: findbyName
-        x-controller: Country
-        x-entity: Country
-        description: |
-        parameters:
-          - name: name
-            in: path
-            required: true
-            description: criteria object
-            schema:
-              title: country
-              type: object
-              properties:
-                id:
-                  type: integer
-                id_parent:
-                   type: integer
-                code:
-                  type: string
-                type:
-                  type: string
-                libelle:
-                  type: string
-                reference:
-                  type: string
 
 x-valueObjects:
  IdVO:

@@ -1,0 +1,12 @@
+
+    public function testSearchByAction()
+        {
+        $adapter = new SearchByQueryAdapter();
+        $query = $adapter->createQueryFromRequest(
+            new SearchByRequest($this->request, $this->resolver)
+        );
+
+        $this->controller->searchByAction();
+        Phake::verify($this->searchByQueryHandler, Phake::times(1))->process($query);
+        Phake::verify($this->responseHandler, Phake::times(1))->create($this->entity, Response::HTTP_OK);
+    }

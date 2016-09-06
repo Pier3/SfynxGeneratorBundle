@@ -1,0 +1,36 @@
+<?php
+declare(strict_types = 1);
+
+namespace  Tests\Application\Country\Command;
+
+use {{ projectName }}\Application\{{ entityName }}\Command\DeleteCommand;
+use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandInterface;
+
+class DeleteCommandTest extends \PHPUnit_Framework_TestCase
+{
+    protected $command;
+    protected $message;
+    protected $transaction;
+    protected $jsonRequest;
+
+    public function setUp()
+    {
+
+        $this->revision='001';
+        $this->entityId='123456';
+
+
+        $this->command = new DeleteCommand($this->entityId, $this->revision);
+    }
+
+    public function testInterface()
+    {
+        $this->assertInstanceOf(CommandInterface::class, $this->command);
+    }
+
+    public function testGetters()
+    {
+        $this->assertEquals($this->entityId, $this->command->getEntityId());
+        $this->assertEquals($this->revision, $this->command->getRevision());
+    }
+}

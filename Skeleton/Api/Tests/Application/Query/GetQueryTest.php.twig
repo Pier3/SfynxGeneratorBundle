@@ -1,0 +1,24 @@
+<?php
+
+namespace  Tests\Application\{{ entityName }}\Query;
+
+use {{ projectName }}\Application\{{ entityName }}\Query\GetQuery;
+use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\QueryInterface;
+
+class GetQueryTest extends \PHPUnit_Framework_TestCase
+{
+    protected $query;
+    protected $message;
+    protected $transaction;
+    protected $jsonRequest;
+
+    public function setUp()
+    {
+        $this->query = new GetQuery("00c1ab20-6e1e-4c54-83b4-62e677aba7ec");
+    }
+
+    public function testInterface()
+    {
+        $this->assertInstanceOf(QueryInterface::class, $this->query);
+    }
+}

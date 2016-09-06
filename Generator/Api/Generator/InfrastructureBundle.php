@@ -35,9 +35,6 @@ class InfrastructureBundle extends LayerAbstract
         try {
             $this->output->writeln('### BUNDLE GENERATION ###');
             $this->generateBundle();
-            $this->output->writeln('### TEST GENERATION ###');
-            //TODO: work on the generation of the tests.
-            //$this->generateTests();
         } catch (\InvalidArgumentException $e) {
             fwrite(STDERR, $e->getMessage());
             exit;

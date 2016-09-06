@@ -29,7 +29,9 @@
     },
     "require-dev": {
         "sensio/generator-bundle": "~3.0",
-        "symfony/phpunit-bridge": "~2.7"
+        "symfony/phpunit-bridge": "~2.7",
+        "phake/phake":"^2.3",
+        "phpunit/php-code-coverage":"^4"
     },
     "scripts": {
         "post-install-cmd": [

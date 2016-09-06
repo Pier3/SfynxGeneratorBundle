@@ -5,7 +5,7 @@ namespace {{ projectName }}\InfrastructureBundle;
 
 use {{ projectName }}\InfrastructureBundle\DependencyInjection\{{ projectName }}InfrastructureBundleExtension;
 
-use {{ projectName }}\InfrastructureBundle\DependencyInjection\Compiler {
+use {{ projectName }}\InfrastructureBundle\DependencyInjection\Compiler\{
     CreateRepositoryFactoryPass,
     CreateDynamicConnectionPass
 };
@@ -53,13 +53,13 @@ class {{ projectName }}InfrastructureBundle extends Bundle
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
 
-        if (!ORM\Type::hasType("IdVO")) {
+        if (!ORM\Type::hasType('IdVO')) {
             ORM\Type::addType('IdVO', 'Sfynx\DddBundle\Layer\Infrastructure\EntityType\Orm\IdType');
             $em->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('IdVO', 'IdVO');
         }
 
 {% for name,data in valueObjects %}
-        if (!ORM\Type::hasType("{{ name }}")) {
+        if (!ORM\Type::hasType('{{ name }}')) {
             ORM\Type::addType('{{ name }}', '{{ projectName }}\Infrastructure\EntityType\Orm\{{ name }}Type');
             $em->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('{{ name }}', '{{ name }}');
         }
@@ -70,13 +70,13 @@ class {{ projectName }}InfrastructureBundle extends Bundle
     {
         $em = $this->container->get('doctrine_mongodb.odm.default_document_manager');
 
-        if (!ODM\Type::hasType("IdVO")) {
+        if (!ODM\Type::hasType('IdVO')) {
             ODM\Type::addType('IdVO', 'Sfynx\DddBundle\Layer\Infrastructure\EntityType\Odm\IdType');
             $em->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('IdVO', 'IdVO');
         }
 
 {% for name,data in valueObjects %}
-        if (!ODM\Type::hasType("{{ name }}")) {
+        if (!ODM\Type::hasType('{{  name }}' }})) {
             ODM\Type::addType('{{ name }}', '{{ projectName }}\Infrastructure\EntityType\Odm\{{ name }}Type');
             $em->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('{{ name }}', '{{ name }}');
         }
@@ -87,13 +87,13 @@ class {{ projectName }}InfrastructureBundle extends Bundle
     {
         $em = $this->container->get('doctrine_couchdb.odm.default_document_manager');
 
-        if (!CouchDB\Type::hasType("IdVO")) {
+        if (!CouchDB\Type::hasType('IdVO')) {
             CouchDB\Type::addType('IdVO', 'Sfynx\DddBundle\Layer\Infrastructure\EntityType\CouchDB\IdType');
             $em->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('IdVO', 'IdVO');
         }
 
 {% for name,data in valueObjects %}
-        if (!CouchDB\Type::hasType("{{ name }}")) {
+        if (!CouchDB\Type::hasType('{{  name }}' }})) {
             CouchDB\Type::addType('{{ name }}', '{{ projectName }}\Infrastructure\EntityType\CouchDB\{{ name }}Type');
             $em->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('{{ name }}', '{{ name }}');
         }

@@ -26,6 +26,13 @@ class NewCommandHandlerDecorator extends AbstractCommandHandlerDecorator
     /** @var AbstractCommandSpecHandler */
     protected $specHandler;
 
+    /**
+     * NewCommandHandlerDecorator constructor.
+     *
+     * @param CommandHandlerInterface $commandHandler
+     * @param CommandValidationHandlerInterface $validationHandler
+     * @param AbstractCommandSpecHandler $specHandler
+     */
     public function __construct(
         CommandHandlerInterface $commandHandler,
         CommandValidationHandlerInterface $validationHandler,

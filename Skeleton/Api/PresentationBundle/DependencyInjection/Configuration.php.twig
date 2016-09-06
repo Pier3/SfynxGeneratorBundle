@@ -15,9 +15,12 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 class Configuration implements ConfigurationInterface
 {
     /**
-     * {@inheritdoc}
+     * Generates the configuration tree builder.
+     *
+     * @return TreeBuilder The tree builder.
+     * @throws \RuntimeException When the node type is not supported.
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder();
         $treeBuilder->root('{{ projectName|lower }}_presentation');

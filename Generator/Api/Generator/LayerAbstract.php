@@ -3,12 +3,15 @@ declare(strict_types = 1);
 
 namespace Sfynx\DddGeneratorBundle\Generator\Api\Generator;
 
+use InvalidArgumentException;
+use Sfynx\DddGeneratorBundle\Bin\Generator;
 use Sfynx\DddGeneratorBundle\Generator\Api\DddApiGenerator;
-use Sfynx\DddGeneratorBundle\Generator\Api\ValueObjects\GeneratorVO;
-use Symfony\Component\Console\Output\OutputInterface;
+use Sfynx\DddGeneratorBundle\Generator\Api\ValueObjects\LayerVO;
+use Sfynx\DddGeneratorBundle\Generator\Generalisation\Handler;
+use Symfony\Component\Yaml\Parser;
 
 /**
- * Abstract class GeneratorAbstract
+ * Abstract class LayerAbstract
  *
  * @category Generator
  * @package Api
@@ -16,6 +19,12 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 abstract class LayerAbstract
 {
+    /** @var string */
+    protected static $handlersFileName;
+
+    /** @var string */
+    protected static $skeletonDir;
+
     const COMMANDS_LIST = ['update', 'new', 'delete', 'patch'];
     const QUERIES_LIST = ['get', 'getAll', 'searchBy', 'getByIds', 'findByName'];
 
@@ -36,42 +45,40 @@ abstract class LayerAbstract
     protected $projectDir;
     /** @var string */
     protected $destinationPath;
-    /** @var OutputInterface */
-    protected $output;
     /** @var array[] */
     protected $parameters;
     /** @var array[] */
     protected $commandsQueriesList;
     /** @var array[] */
     protected $entitiesGroups;
+    /** @var array */
+    protected $handlersConfig;
 
     /**
      * Abstract constructor, used by all layers.
      *
-     * @param GeneratorVO     $voGenerator
-     * @param OutputInterface $output
+     * @param LayerVO $layerVO
      */
-    public function __construct(GeneratorVO $voGenerator, OutputInterface $output)
+    public function __construct(LayerVO $layerVO)
     {
-        $this->generator = $voGenerator->getGenerator();
-        $this->entitiesToCreate = $voGenerator->getEntitiesToCreate();
-        $this->valueObjectsToCreate = $voGenerator->getValueObjectsToCreate();
-        $this->pathsToCreate = $voGenerator->getPathsToCreate();
+        $this->generator = $layerVO->generator;
+        $this->entitiesToCreate = $layerVO->entitiesToCreate;
+        $this->valueObjectsToCreate = $layerVO->valueObjectsToCreate;
+        $this->pathsToCreate = $layerVO->pathsToCreate;
+        $this->entitiesGroups = $layerVO->entitiesGroups;
 
-        $this->rootDir = $voGenerator->getRootDir();
-        $this->projectDir = $voGenerator->getProjectDir();
-        $this->destinationPath = $voGenerator->getDestinationPath();
+        $this->rootDir = $layerVO->rootDir;
+        $this->projectDir = $layerVO->projectDir;
+        $this->destinationPath = $layerVO->destinationPath;
 
-        $this->output = $output;
+        $this->output = $layerVO->output;
 
-        $this->commandsQueriesList = $this->parseRoutes();
-        $this->parameters = [
-            'rootDir' => $this->rootDir . '/src',
-            'projectDir' => $this->projectDir,
-            'projectName' => str_replace('src/', '', $this->projectDir),
-            'valueObjects' => $this->valueObjectsToCreate,
-            'destinationPath' => $this->destinationPath,
-        ];
+        $this->commandsQueriesList = $layerVO->commandsQueriesList;
+        $this->parameters = $layerVO->parameters;
+        $this->parameters['skeletonDir'] = static::$skeletonDir;
+
+        $handlersFileName = Generator::API_HANDLERS . '/' . static::$handlersFileName;
+        $this->handlersConfig = (new Parser())->parse(file_get_contents($handlersFileName));
     }
 
     /**
@@ -81,37 +88,43 @@ abstract class LayerAbstract
     abstract public function generate();
 
     /**
-     * Parse all routes and define:
-     * - entities for each group;
-     * - groups for each entities.
+     * Add the given handler using configuration file to set the right parameters.
      *
-     * This create helpful properties to be used in the layer generations.
-     *
-     * @return array
+     * @param string $handlerName
+     * @throws InvalidArgumentException If the handler name is not defined in the configuration file.
+     * @return LayerAbstract
      */
-    public function parseRoutes(): array
+    public function addHandler(string $handlerName): self
     {
-        $routes = [self::COMMAND => [], self::QUERY => []];
-
-        foreach ($this->pathsToCreate as $route => $verbData) {
-            foreach ($verbData as $verb => $data) {
-                //Define the group
-                $group = in_array($data['action'], self::COMMANDS_LIST) ? self::COMMAND : self::QUERY;
-
-                //Init the elements
-                $elements = $data;
-                $elements['route'] = $route;
-                $elements['verb'] = $verb;
-                $elements['group'] = $group;
-
-                //Sort by entities and by group (command/query)
-                $this->entitiesGroups[$data['entity']][$group][] = $elements;
-                //Sort by group
-                $routes[$group][] = $elements;
-            }
+        if (!isset($this->handlersConfig[$handlerName])) {
+            $msgException = 'The handler "%s" is not defined in the handler file "%s".';
+            $handlersFileName = realpath(Generator::API_HANDLERS . '/' . static::$handlersFileName);
+            throw new InvalidArgumentException(sprintf($msgException, $handlerName, $handlersFileName));
         }
 
-        return $routes;
+        //Merge the parameters with the ones defined in the configuration file for the given handler name.
+        $this->parameters = array_merge($this->parameters, $this->handlersConfig[$handlerName]);
+
+        //Add the name of the handler for debugging in case of emergency.
+        $this->parameters['handlerName'] = $handlerName;
+
+        //Add the handler with the configured parameters.
+        $this->generator->addHandler(new Handler($this->parameters));
+
+        return $this;
+    }
+
+    /**
+     * Add all handlers defined in arguments.
+     *
+     * @param string[] ...$handlersNames
+     * @return LayerAbstract
+     */
+    public function addHandlers(string ...$handlersNames): self
+    {
+        //Execute $this->addHandler for all elements in $handlersNames.
+        array_walk($handlersNames, [$this, 'addHandler']);
+        return $this;
     }
 
     /**

@@ -1,0 +1,16 @@
+#Generate InfrastructureBundle Handlers
+createRepositoryFactoryPassHandler:
+    skeletonTpl: "DependencyInjection/Compiler/CreateRepositoryFactoryPass.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/InfrastructureBundle/DependencyInjection/Compiler/CreateRepositoryFactoryPass.php"
+
+configurationHandler:
+    skeletonTpl: "DependencyInjection/Configuration.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/InfrastructureBundle/DependencyInjection/Configuration.php"
+
+infrastructureBundleExtensionHandler:
+    skeletonTpl: "DependencyInjection/InfrastructureBundleExtension.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/InfrastructureBundle/DependencyInjection/%projectName$sInfrastructureBundleExtension.php"
+
+infrastructureBundleHandler:
+    skeletonTpl: "InfrastructureBundle.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/InfrastructureBundle/%projectName$sInfrastructureBundle.php"

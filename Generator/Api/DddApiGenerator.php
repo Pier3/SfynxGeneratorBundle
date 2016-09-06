@@ -22,7 +22,7 @@ class DddApiGenerator
      * @param HandlerInterface $handler
      * @param bool $force
      */
-    public function addHandler(HandlerInterface $handler, bool $force = false)
+    public function addHandler(HandlerInterface $handler, bool $force = true)
     {
         if (!$this->hasHandler($handler) || true === $force) {
             $this->handlers[] = $handler;

@@ -3,17 +3,6 @@ declare(strict_types = 1);
 
 namespace Sfynx\DddGeneratorBundle\Generator\Api\Generator;
 
-//From root namespace
-use Error, Exception;
-
-//Persistence part.
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Infrastructure\Persistence\{
-    Orm\RepositoryHandler as OrmRepositoryHandler,
-    Odm\RepositoryHandler as OdmRepositoryHandler,
-    CouchDb\RepositoryHandler as CouchDbRepositoryHandler,
-    TraitEntityNameHandler
-};
-
 /**
  * Class Infrastructure
  *
@@ -23,6 +12,12 @@ use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Infrastructure\Persistence\{
  */
 class Infrastructure extends LayerAbstract
 {
+    /** @var string */
+    protected static $handlersFileName = 'infrastructure.yml';
+
+    /** @var string */
+    protected static $skeletonDir = 'Api/Infrastructure';
+
     /**
      * Entry point of the generation of the "Infrastructure" layer in DDD.
      * Call the generation of :
@@ -37,11 +32,16 @@ class Infrastructure extends LayerAbstract
         $this->output->writeln('##############################################');
         $this->output->writeln('');
 
-        $this->output->writeln('### PERSISTENCE GENERATION ###');
-        $this->generatePersistence();
-        $this->output->writeln('### TEST GENERATION ###');
-        //TODO: work on the generation of the tests.
-        //$this->generateTests();
+        try {
+            $this->output->writeln('### PERSISTENCE GENERATION ###');
+            $this->generatePersistence();
+            $this->output->writeln('### TEST GENERATION ###');
+            //TODO: work on the generation of the tests.
+            //$this->generateTests();
+        } catch (\InvalidArgumentException $e) {
+            fwrite(STDERR, $e->getMessage());
+            exit;
+        }
     }
 
     /**
@@ -57,7 +57,7 @@ class Infrastructure extends LayerAbstract
             $this->addCQRSRepositoriesToGenerator($entityGroups, self::COMMAND)
                 ->addCQRSRepositoriesToGenerator($entityGroups, self::QUERY);
 
-            $this->generator->addHandler(new TraitEntityNameHandler($this->parameters), true);
+            $this->addHandler('traitEntityNameHandler');
         }
 
         $this->generator->execute()->clear();
@@ -78,9 +78,7 @@ class Infrastructure extends LayerAbstract
         //Fetch all actionName and add the handler for this actionName
         foreach ($entityGroups[$group] as $data) {
             $this->parameters['actionName'] = ucfirst($data['action']);
-            $this->generator->addHandler(new OrmRepositoryHandler($this->parameters), true);
-            $this->generator->addHandler(new OdmRepositoryHandler($this->parameters), true);
-            $this->generator->addHandler(new CouchDbRepositoryHandler($this->parameters), true);
+            $this->addHandlers('ormRepositoryHandler', 'odmRepositoryHandler', 'couchDbRepositoryHandler');
         }
 
         return $this;

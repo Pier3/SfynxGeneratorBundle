@@ -1,0 +1,39 @@
+#Generate PresentationBundle Handlers
+presentationBundleHandler:
+    skeletonTpl: "PresentationBundle.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/PresentationBundle/%projectName$sPresentationBundle.php"
+
+presentationBundleExtensionHandler:
+    skeletonTpl: "DependencyInjection/PresentationBundleExtension.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/PresentationBundle/DependencyInjection/%projectName$sPresentationBundleExtension.php"
+
+configurationHandler:
+    skeletonTpl: "DependencyInjection/Configuration.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/PresentationBundle/DependencyInjection/Configuration.php"
+
+resettingListenersPassHandler:
+    skeletonTpl: "DependencyInjection/Compiler/ResettingListenersPass.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/PresentationBundle/DependencyInjection/Compiler/ResettingListenersPass.php"
+
+#Multitenant Handler
+controllerMultiTenantHandler:
+    skeletonTpl: "Resources/config/controller/multiTenant.yml.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/PresentationBundle/Resources/config/controller/multiTenant.yml"
+
+#Swagger Handler
+controllerSwaggerHandler:
+    skeletonTpl: "Resources/config/controller/swagger.yml.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/PresentationBundle/Resources/config/controller/swagger.yml"
+
+#PresentationBundle Application Handler
+applicationHandler:
+    skeletonTpl: "Resources/config/application/application_%group$s.yml.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/PresentationBundle/Resources/config/application/%entityName$s_%group$s.yml"
+
+controllerHandler:
+    skeletonTpl: "Resources/config/controller/controller.yml.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/PresentationBundle/Resources/config/controller/%entityNames$s_%group$s.yml"
+
+routeHandler:
+    skeletonTpl: "Resources/config/route/route.yml.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/PresentationBundle/Resources/config/route/%entityNames$s_%group$s.yml"

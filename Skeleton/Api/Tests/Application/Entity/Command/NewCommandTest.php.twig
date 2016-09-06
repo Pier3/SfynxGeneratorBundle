@@ -1,0 +1,40 @@
+<?php
+declare(strict_types = 1);
+
+namespace  Tests\Application\Country\Command;
+
+use DemoCountry\Application\Country\Command\NewCommand;
+use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandInterface;
+
+class NewCommandTest extends \PHPUnit_Framework_TestCase
+{
+    protected $command;
+    protected $message;
+    protected $transaction;
+    protected $jsonRequest;
+
+    public function setUp()
+    {
+        $this->libelle="FRANCe";
+        $this->indicatif="033";
+        $this->iso="FR";
+        $this->selectable=true;
+        $this->reference="001";
+
+        $this->command = new NewCommand($this->libelle,$this->indicatif,$this->iso,$this->selectable,$this->reference);
+    }
+
+    public function testInterface()
+    {
+        $this->assertInstanceOf(CommandInterface::class, $this->command);
+    }
+
+    public function testGetters()
+    {
+        $this->assertEquals($this->libelle, $this->command->getLibelle());
+        $this->assertEquals($this->indicatif, $this->command->getIndicatif());
+        $this->assertEquals($this->iso, $this->command->getIso());
+        $this->assertEquals($this->selectable, $this->command->getSelectable());
+        $this->assertEquals($this->reference, $this->command->getReference());
+    }
+}

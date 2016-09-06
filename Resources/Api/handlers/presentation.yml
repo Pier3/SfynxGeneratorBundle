@@ -17,5 +17,4 @@ controllerHandler:
 #Request Handler
 requestHandler:
     skeletonTpl: "Request/%actionName$sRequest.php.twig"
-    targetPattern: "%destinationPath$s/%projectDir$s/Presentation/Request/%entityName$s/%group$s/%actionName$sRequest.php"
-
+    targetPattern: "%destinationPath$s/%projectDir$s/Presentation/Request/%entityName$s/%entityName$s/%actionName$sRequest.php"

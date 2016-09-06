@@ -98,7 +98,7 @@ abstract class LayerAbstract
     {
         if (!isset($this->handlersConfig[$handlerName])) {
             $msgException = 'The handler "%s" is not defined in the handler file "%s".';
-            $handlersFileName = Generator::API_HANDLERS . '/' . static::$handlersFileName;
+            $handlersFileName = realpath(Generator::API_HANDLERS . '/' . static::$handlersFileName);
             throw new InvalidArgumentException(sprintf($msgException, $handlerName, $handlersFileName));
         }
 

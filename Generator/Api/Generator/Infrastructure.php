@@ -32,11 +32,16 @@ class Infrastructure extends LayerAbstract
         $this->output->writeln('##############################################');
         $this->output->writeln('');
 
-        $this->output->writeln('### PERSISTENCE GENERATION ###');
-        $this->generatePersistence();
-        $this->output->writeln('### TEST GENERATION ###');
-        //TODO: work on the generation of the tests.
-        //$this->generateTests();
+        try {
+            $this->output->writeln('### PERSISTENCE GENERATION ###');
+            $this->generatePersistence();
+            $this->output->writeln('### TEST GENERATION ###');
+            //TODO: work on the generation of the tests.
+            //$this->generateTests();
+        } catch (\InvalidArgumentException $e) {
+            fwrite(STDERR, $e->getMessage());
+            exit;
+        }
     }
 
     /**

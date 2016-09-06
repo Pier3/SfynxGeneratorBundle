@@ -35,18 +35,23 @@ class Domain extends LayerAbstract
         $this->output->writeln('##############################################');
         $this->output->writeln('');
 
-        $this->output->writeln('### ENTITIES ELEMENTS GENERATION ###');
-        $this->generateEntitiesElements();
+        try {
+            $this->output->writeln('### ENTITIES ELEMENTS GENERATION ###');
+            $this->generateEntitiesElements();
 
-        $this->output->writeln('### VALUE OBJECTS GENERATION ###');
-        $this->output->writeln(' - GOOD LUCK, PREPARE YOUR BRAIN -');
-        //TODO: work on the generation of the Value Objects.
-        //$this->generateValueObject();
+            $this->output->writeln('### VALUE OBJECTS GENERATION ###');
+            $this->output->writeln(' - GOOD LUCK, PREPARE YOUR BRAIN -');
+            //TODO: work on the generation of the Value Objects.
+            //$this->generateValueObject();
 
-        $this->output->writeln('### TESTS GENERATION ###');
-        $this->output->writeln(' - BE MY GUEST ... -');
-        //TODO: work on the generation of the tests.
-        //$this->generateTests();
+            $this->output->writeln('### TESTS GENERATION ###');
+            $this->output->writeln(' - BE MY GUEST ... -');
+            //TODO: work on the generation of the tests.
+            //$this->generateTests();
+        } catch (\InvalidArgumentException $e) {
+            fwrite(STDERR, $e->getMessage());
+            exit;
+        }
     }
 
     /**

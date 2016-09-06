@@ -167,7 +167,7 @@ class GenerateDddApiCommand extends Command
         //Presentation has dependency to Application.
         (new Infrastructure($voLayer))->generate();
         (new Domain($voLayer))->generate();
-        (new Application($voLayer))->generate();exit;
+        (new Application($voLayer))->generate();
         (new Presentation($voLayer))->generate();
 
         //Generate Layers linked to Symfony with the same pattern of generation upside.

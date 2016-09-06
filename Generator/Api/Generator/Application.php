@@ -39,13 +39,18 @@ class Application extends LayerAbstract
         $this->output->writeln('##############################################');
         $this->output->writeln('');
 
-        $this->output->writeln('### COMMANDS GENERATION ###');
-        $this->generateCommands();
-        $this->output->writeln('### QUERIES GENERATION ###');
-        $this->generateQueries();
-        $this->output->writeln('### TESTS GENERATION ###');
-        //TODO: work on the generation of the tests.
-        //$this->generateTests();
+        try {
+            $this->output->writeln('### COMMANDS GENERATION ###');
+            $this->generateCommands();
+            $this->output->writeln('### QUERIES GENERATION ###');
+            $this->generateQueries();
+            $this->output->writeln('### TESTS GENERATION ###');
+            //TODO: work on the generation of the tests.
+            //$this->generateTests();
+        } catch (\InvalidArgumentException $e) {
+            fwrite(STDERR, $e->getMessage());
+            exit;
+        }
     }
 
     /**

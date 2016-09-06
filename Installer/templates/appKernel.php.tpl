@@ -19,7 +19,6 @@ class AppKernel extends Kernel
 
             //From this part, those are added bundles from the default Symfony project creation
             //If you want to add new bundles, please add them below this comment
-            new Sfynx\DddGeneratorBundle\SfynxDddGeneratorBundle(),
             new Sfynx\DddBundle\SfynxDddBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle()

@@ -1,13 +1,19 @@
 <?php
+declare(strict_types = 1);
 
 namespace Sfynx\DddGeneratorBundle\Console;
 
 use Sfynx\DddGeneratorBundle\Command\GenerateDddApiCommand;
-use Sfynx\DddGeneratorBundle\Command\GenerateDddStructureCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\LogicException;
 use Symfony\Component\Console\Input\InputInterface;
 
+/**
+ * Class SfynxGeneratorApplication.
+ *
+ * @category Console
+ */
 class SfynxGeneratorApplication extends Application
 {
     /**
@@ -19,11 +25,9 @@ class SfynxGeneratorApplication extends Application
      */
     protected function getCommandName(InputInterface $input)
     {
-        //sfynx:generate:ddd:api
-
         $available = ['sfynx:api'];
         $arg = $input->getFirstArgument();
-        if (!in_array($arg, $available) ||'sfynx:api' === $arg) {
+        if (!in_array($arg, $available) || 'sfynx:api' === $arg) {
             // default argument : we don't want to provide the name of the command by default
             $inputDefinition = $this->getDefinition();
             $inputDefinition->setArguments();
@@ -37,6 +41,7 @@ class SfynxGeneratorApplication extends Application
      * Gets the default commands that should always be available.
      *
      * @return Command[] An array of default Command instances
+     * @throws LogicException
      */
     protected function getDefaultCommands()
     {

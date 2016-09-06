@@ -3,15 +3,6 @@ declare(strict_types = 1);
 
 namespace Sfynx\DddGeneratorBundle\Generator\Api\Generator;
 
-//Command adapter
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Presentation\Adapter\Command\AdapterHandler as AdapterCommandHandler;
-//Query adapter
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Presentation\Adapter\Query\AdapterHandler as AdapterQueryHandler;
-//Controller
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Presentation\Coordination\ControllerHandler;
-//Request
-use Sfynx\DddGeneratorBundle\Generator\Api\Handler\Presentation\Request\RequestHandler;
-
 /**
  * Class Presentation
  *
@@ -65,6 +56,7 @@ class Presentation extends LayerAbstract
 
     /**
      * Generate the Command adapters part in the "Presentation" layer.
+     * @throws \InvalidArgumentException
      */
     public function generateCommandsAdapter()
     {
@@ -81,6 +73,7 @@ class Presentation extends LayerAbstract
 
     /**
      * Generate the Query adapters part in the "Presentation" layer.
+     * @throws \InvalidArgumentException
      */
     public function generateQueriesAdapter()
     {
@@ -96,6 +89,7 @@ class Presentation extends LayerAbstract
 
     /**
      * Generate the Controllers (Coordination) part in the "Presentation" layer.
+     * @throws \InvalidArgumentException
      */
     public function generateCoordinationControllers()
     {
@@ -111,6 +105,7 @@ class Presentation extends LayerAbstract
 
     /**
      * Generate the Requests part in the "Presentation" layer.
+     * @throws \InvalidArgumentException
      */
     public function generateRequest()
     {
@@ -224,9 +219,10 @@ class Presentation extends LayerAbstract
     /**
      * Add Controller (Coordination) Handler to the generator. For use in a loop for each C.Q.R.S. actions.
      *
-     * @param array  $entityGroups
+     * @param array $entityGroups
      * @param string $group
      * @return self
+     * @throws \InvalidArgumentException
      */
     private function addCQRSCoordinationToGenerator(array $entityGroups, string $group): self
     {
@@ -250,9 +246,10 @@ class Presentation extends LayerAbstract
     /**
      * Add Request Handler to the generator. For use in a loop for each group of C.Q.R.S. actions (Command or Query).
      *
-     * @param array  $entityGroups
+     * @param array $entityGroups
      * @param string $group
      * @return self
+     * @throws \InvalidArgumentException
      */
     private function addCQRSRequestToGenerator($entityGroups, $group): self
     {

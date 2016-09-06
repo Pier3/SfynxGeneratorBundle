@@ -2,6 +2,7 @@
 declare(strict_types = 1);
 
 namespace Sfynx\DddGeneratorBundle\Generator\Api\ValueObjects;
+
 use Sfynx\DddGeneratorBundle\Generator\Api\DddApiGenerator;
 use Sfynx\DddGeneratorBundle\Generator\Api\Generator\LayerAbstract;
 use Symfony\Component\Console\Output\OutputInterface;

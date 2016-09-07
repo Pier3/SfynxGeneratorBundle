@@ -8,7 +8,6 @@ use {{ projectName}}\Application\{{ entityName }}\Command\Handler\PatchCommandHa
 use {{ projectName}}\Application\{{ entityName }}\Command\Handler\UpdateCommandHandler;
 use {{ projectName}}\Application\{{ entityName }}\Command\Handler\DeleteCommandHandler;
 use {{ projectName}}\Application\{{ entityName }}\Command\Handler\DeleteManyCommandHandler;
-use {{ projectName}}\Domain\Entity\{{ entityName }};
 use {{ projectName}}\Presentation\Adapter\{{ entityName }}\Command\DeleteCommandAdapter;
 use {{ projectName}}\Presentation\Adapter\{{ entityName }}\Command\NewCommandAdapter;
 use {{ projectName}}\Presentation\Adapter\{{ entityName }}\Command\PatchCommandAdapter;
@@ -55,7 +54,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 
 {% for commandQueryResponsibilitySegregation in controllerData %}
 {% if  commandQueryResponsibilitySegregation.group == group %}
-    {% include('actions/' ~ commandQueryResponsibilitySegregation.action ~ '.php.twig') with {'action': commandQueryResponsibilitySegregation.action} %}
+    {% include('Presentation/Coordination/Entity/Command/actions/' ~ commandQueryResponsibilitySegregation.action ~ '.php.twig') with {'action': commandQueryResponsibilitySegregation.action} %}
 {% endif %}
 {% endfor %}
 

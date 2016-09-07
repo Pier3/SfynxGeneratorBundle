@@ -54,7 +54,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 {% for commandQueryResponsibilitySegregation in controllerData %}
 {% if  commandQueryResponsibilitySegregation.group == group %}
 
-{% include('actions/' ~ commandQueryResponsibilitySegregation.action ~ '.php.twig') with {'action': commandQueryResponsibilitySegregation.action} %}
+{% include('Presentation/Coordination/Entity/Query/actions/' ~ commandQueryResponsibilitySegregation.action ~ '.php.twig') with {'action': commandQueryResponsibilitySegregation.action} %}
 
 {% endif %}
 {% endfor %}

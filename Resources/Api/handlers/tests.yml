@@ -44,3 +44,8 @@ TestControllerCommand:
     skeletonTpl: "Presentation/Coordination/Entity/Command/ControllerTest.php.twig"
     targetPattern: "%destinationPath$s/%projectDir$s/Test/Presentation/Coordination/%entityName$s/Command/Controller.php"
 
+#Phpunit
+
+TestPHpunitXML:
+    skeletonTpl: "phpunit.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Test/phpunit.xml"

@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace Sfynx\DddGeneratorBundle\Generator\Api\Generator;
 
-
 /**
  * Class Domain
  *
@@ -121,6 +120,4 @@ class Domain extends LayerAbstract
         }
     }
     */
-
-
 }

@@ -19,8 +19,6 @@ use Sfynx\DddBundle\Layer\Domain\Generalisation\Processor\{
 };
 use Sfynx\DddBundle\Layer\Infrastructure\Logger\Generalisation\TraitLogger;
 use {{ projectName }}\Domain\Entity\{{ entityName }};
-{% for vo in valueObjects %}use {{ vo.type|trim("\\") }};
-{% endfor %}
 
 /**
  * Class {{ entityName }}Manager.
@@ -49,7 +47,10 @@ class {{ entityName }}Manager extends AbstractManager implements ProcessorInterf
     public function create({{ constructorArgs }}): {{ entityName }}
     {
         //hydrate with VO
-        $entity = {{ entityName }}::makeInstance($_SERVER['HTTP_X_TENANT_ID'], {{ constructorArgs }});
+        $entity = {{ entityName }}::makeInstance(
+            $_SERVER['HTTP_X_TENANT_ID'],
+            {{ paramsString|replace({'!#MARKER#!': "\n" ~ '            '}) }}
+        );
 
         //execute prepersist processor
         $this->executeProcess('prepersist_create', $entity);

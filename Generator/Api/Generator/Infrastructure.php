@@ -35,6 +35,8 @@ class Infrastructure extends LayerAbstract
         try {
             $this->output->writeln('### PERSISTENCE GENERATION ###');
             $this->generatePersistence();
+            $this->output->writeln('### VALUE OBJECTS GENERATION ###');
+            $this->generateValueObject();
         } catch (\InvalidArgumentException $e) {
             fwrite(STDERR, $e->getMessage());
             exit;
@@ -59,6 +61,28 @@ class Infrastructure extends LayerAbstract
             $this->addHandler('traitEntityNameHandler');
         }
 
+        $this->generator->execute()->clear();
+    }
+
+    /**
+     * Generate the Value Object through Entity Types part in the "Infrastructure" layer.
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function generateValueObject()
+    {
+        // Create valueObjects
+        foreach ($this->valueObjectsToCreate as $name => $voToCreate) {
+            $this->parameters['voName'] = ucfirst(str_replace('vo', 'VO', $name));
+            $this->parameters['fields'] = $voToCreate['fields'];
+            $this->parameters['constructorParams'] = $this->buildValueObjectParamsString($voToCreate['fields']);
+
+            $this->addHandlers(
+                'valueObjectTypeCouchDBHandler',
+                'valueObjectTypeOdmHandler',
+                'valueObjectTypeOrmHandler'
+            );
+        }
         $this->generator->execute()->clear();
     }
 

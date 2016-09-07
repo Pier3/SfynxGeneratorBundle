@@ -18,9 +18,9 @@ use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 class CreateRepositoryFactoryPass implements CompilerPassInterface
 {
     const TYPE_DBMS = [
-        'ORM' => 'doctrine.orm.entity_manager',
-        'ODM' => 'doctrine_mongodb.odm.default_document_manager',
-        'COUCHDB' => 'doctrine_couchdb.odm.default_document_manager'
+        'orm' => 'doctrine.orm.entity_manager',
+        'odm' => 'doctrine_mongodb.odm.default_document_manager',
+        'couchdb' => 'doctrine_couchdb.odm.default_document_manager'
     ];
 
     /**

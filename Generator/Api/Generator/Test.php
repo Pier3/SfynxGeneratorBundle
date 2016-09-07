@@ -78,7 +78,6 @@ class Test extends LayerAbstract
 
         // TODO : do tests for queries, like commands
         foreach ($this->commandsQueriesList[self::QUERY] as $data) {
-
             $this->parameters['actionName'] = ucfirst($data['action']);
             $this->parameters['entityName'] = ucfirst(strtolower($data['entity']));
             $this->parameters['entityFields'] = $this->entitiesToCreate[$data['entity']];
@@ -97,7 +96,6 @@ class Test extends LayerAbstract
     public function generateDomainTests()
     {
         foreach (array_keys($this->entitiesToCreate) as $entityName) {
-
             $this->parameters['entityName'] = $entityName;
             $this->parameters['entityFields'] = $this->entitiesToCreate[$entityName];
 
@@ -125,13 +123,12 @@ class Test extends LayerAbstract
 
         // Generate controllers
         foreach ($this->entitiesGroups as $entityName => $entityGroups) {
-
             $this->parameters['entityName'] = $entityName;
             //Reset the controllerData list
             $this->parameters['controllerData'] = [];
 
             // Query
-            $group = SELF::QUERY;
+            $group = self::QUERY;
             //Set the parameter $group to its good value (might be a reset)
             $this->parameters['group'] = $group;
             //Fetch all controllerData for the given group (Command or Query)
@@ -144,9 +141,9 @@ class Test extends LayerAbstract
             $this->generator->execute()->clear();
 
             // Command
-            $group = SELF::COMMAND;
+            $group = self::COMMAND;
             //Set the parameter $group to its good value (might be a reset)
-            $this->parameters['group'] = SELF::COMMAND;
+            $this->parameters['group'] = self::COMMAND;
             //Fetch all controllerData for the given group (Command or Query)
             foreach ($entityGroups[$group] as $entityCommandData) {
                 $this->parameters['controllerData'][] = $entityCommandData;

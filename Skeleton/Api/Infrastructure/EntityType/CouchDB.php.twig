@@ -3,21 +3,38 @@ declare(strict_types = 1);
 
 namespace {{ projectName }}\Infrastructure\EntityType\CouchDB;
 
-use DateTime;
 use Doctrine\ODM\CouchDB\Types\Type;
 
+/**
+ * Class IdVOType
+ * @package OKKo\Infrastructure\EntityType\CouchDB
+ */
 class {{ voName }}Type extends Type
 {
+    /**
+     * @param mixed $value
+     * @return mixed
+     */
     public function convertToCouchDBValue($value)
     {
         return $value;
     }
 
+    /**
+     * Converts a value from its database representation to its PHP representation
+     * of this type.
+     *
+     * @param mixed $value The value to convert.
+     * @return mixed The PHP representation of the value.
+     */
     public function convertToPHPValue($value)
     {
         return $value;
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return '{{ voName }}';

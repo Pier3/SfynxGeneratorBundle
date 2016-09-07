@@ -5,13 +5,31 @@ namespace {{ projectName }}\Infrastructure\EntityType\Odm;
 
 use Doctrine\ODM\MongoDB\Types\Type;
 
+/**
+ * Class IdVOType
+ * @package OKKo\Infrastructure\EntityType\Odm
+ */
 class {{ voName }}Type extends Type
 {
+    /**
+     * Converts a value from its PHP representation to its database representation
+     * of this type.
+     *
+     * @param mixed $value The value to convert.
+     * @return mixed The database representation of the value.
+     */
     public function convertToDatabaseValue($value)
     {
         return (string)$value;
     }
 
+    /**
+     * Converts a value from its database representation to its PHP representation
+     * of this type.
+     *
+     * @param mixed $value The value to convert.
+     * @return mixed The PHP representation of the value.
+     */
     public function convertToPHPValue($value)
     {
         $className = $this->getNamespace() . '\\' . $this->getName();
@@ -19,11 +37,17 @@ class {{ voName }}Type extends Type
         return new $className($value);
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return '{{ voName }}';
     }
 
+    /**
+     * @return string
+     */
     protected function getNamespace()
     {
         return '{{ projectName }}\Domain\ValueObject';

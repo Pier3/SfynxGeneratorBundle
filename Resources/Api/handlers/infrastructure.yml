@@ -14,3 +14,14 @@ couchDbRepositoryHandler:
 traitEntityNameHandler:
     skeletonTpl: "Persistence/TraitEntityName.php.twig"
     targetPattern: "%destinationPath$s/%projectDir$s/Infrastructure/Persistence/Repository/%entityName$s/TraitEntityName.php"
+
+#Value objects
+valueObjectTypeCouchDBHandler:
+    skeletonTpl: "EntityType/CouchDB.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Infrastructure/EntityType/CouchDB/%voName$sType.php"
+valueObjectTypeOdmHandler:
+    skeletonTpl: "EntityType/Odm.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Infrastructure/EntityType/Odm/%voName$sType.php"
+valueObjectTypeOrmHandler:
+    skeletonTpl: "EntityType/Orm.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Infrastructure/EntityType/Orm/%voName$sType.php"

@@ -66,4 +66,9 @@ wFRetrieveEntityHandler:
     targetPattern: "%destinationPath$s/%projectDir$s/Domain/Workflow/%entityName$s/Listener/WFRetrieveEntity.php"
 
 #Value objects Handlers
-#TODO
+valueObjectCompositeHandler:
+    skeletonTpl: "ValueObject/ValueObjectComposite.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Domain/ValueObject/%voName$s.php"
+valueObjectHandler:
+    skeletonTpl: "ValueObject/ValueObject.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Domain/ValueObject/%voName$s.php"

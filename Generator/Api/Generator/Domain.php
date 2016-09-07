@@ -38,11 +38,8 @@ class Domain extends LayerAbstract
         try {
             $this->output->writeln('### ENTITIES ELEMENTS GENERATION ###');
             $this->generateEntitiesElements();
-
             $this->output->writeln('### VALUE OBJECTS GENERATION ###');
-            $this->output->writeln(' - GOOD LUCK, PREPARE YOUR BRAIN -');
-            //TODO: work on the generation of the Value Objects.
-            //$this->generateValueObject();
+            $this->generateValueObject();
         } catch (\InvalidArgumentException $e) {
             fwrite(STDERR, $e->getMessage());
             exit;
@@ -52,6 +49,7 @@ class Domain extends LayerAbstract
     /**
      * Generate the entities elements int the "Domain" layer.
      * Those elements are Entities and Repository Interfaces, Services and Workflow.
+     *
      * @throws \InvalidArgumentException
      */
     public function generateEntitiesElements()
@@ -87,37 +85,22 @@ class Domain extends LayerAbstract
         $this->generator->execute()->clear();
     }
 
-    /*
+    /**
+     * Generate the Value Object part in the "Domain" layer.
+     *
+     * @throws \InvalidArgumentException
+     */
     public function generateValueObject()
     {
         // Create valueObjects
-        foreach ($this->valueObjects as $name => $voToCreate) {
-            $constructorParams = '';
-
-            $this->parameters['voName'] = str_replace('vo', 'VO', $name);
+        foreach ($this->valueObjectsToCreate as $name => $voToCreate) {
+            $this->parameters['voName'] = ucfirst(str_replace('vo', 'VO', $name));
             $this->parameters['fields'] = $voToCreate['fields'];
+            $this->parameters['constructorParams'] = $this->buildValueObjectParamsString($voToCreate['fields']);
 
-            $composite = (count($voToCreate['fields']) > 1);
-
-            foreach ($voToCreate['fields'] as $field) {
-                $constructorParams .= '$' . $field['name'] . ', ';
-            }
-
-            $this->parameters['constructorParams'] = trim($constructorParams, ', ');
-
-            if ($composite) {
-                $this->generator->addHandler(new ValueObjectCompositeHandler($this->parameters));
-            } else {
-                $this->generator->addHandler(new ValueObjectHandler($this->parameters));
-            }
-
-            $this->generator->addHandler(new ValueObjectTypeCouchDBHandler($this->parameters));
-            $this->generator->addHandler(new ValueObjectTypeOdmHandler($this->parameters));
-            $this->generator->addHandler(new ValueObjectTypeOrmHandler($this->parameters));
-
-            $this->generator->execute();
-            $this->generator->clear();
+            $handlerName = (count($voToCreate['fields']) > 1) ? 'valueObjectCompositeHandler' : 'valueObjectHandler';
+            $this->addHandler($handlerName);
         }
+        $this->generator->execute()->clear();
     }
-    */
 }

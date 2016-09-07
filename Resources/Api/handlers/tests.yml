@@ -38,14 +38,13 @@ TestQueryAdapter:
 
 TestControllerQuery:
     skeletonTpl: "Presentation/Coordination/Entity/Query/ControllerTest.php.twig"
-    targetPattern: "%destinationPath$s/%projectDir$s/Test/Presentation/Coordination/%entityName$s/Query/Controller.php"
+    targetPattern: "%destinationPath$s/%projectDir$s/Test/Presentation/Coordination/%entityName$s/Query/ControllerTest.php"
 
 TestControllerCommand:
     skeletonTpl: "Presentation/Coordination/Entity/Command/ControllerTest.php.twig"
-    targetPattern: "%destinationPath$s/%projectDir$s/Test/Presentation/Coordination/%entityName$s/Command/Controller.php"
+    targetPattern: "%destinationPath$s/%projectDir$s/Test/Presentation/Coordination/%entityName$s/Command/ControllerTest.php"
 
 #Phpunit
-
 TestPHpunitXML:
     skeletonTpl: "phpunit.php.twig"
     targetPattern: "%destinationPath$s/%projectDir$s/Test/phpunit.xml"

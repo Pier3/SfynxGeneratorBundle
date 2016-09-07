@@ -3,15 +3,22 @@ declare(strict_types = 1);
 
 namespace {{ projectName }}\Domain\Service\{{ entityName }}\Factory\CouchDB;
 
-use DddContext\Domain\Service\Generalisation\Factory\RepositoryFactoryInterface;
-use DddContext\Domain\Service\Generalisation\Factory\TraitRepositoryFactory;
-use DddContext\Infrastructure\Persistence\Generalisation\CouchDB\SaveRepository;
-use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\CouchDB\AllRepository;
-use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\CouchDB\DeleteManyRepository;
-use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\CouchDB\DeleteRepository;
-use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\CouchDB\GetByIdsRepository;
-use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\CouchDB\OneRepository;
-use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\CouchDB\SearchByRepository;
+use Sfynx\DddBundle\Layer\Infrastructure\Persistence\Generalisation\CouchDB\SaveRepository;
+
+use Sfynx\DddBundle\Layer\Domain\Service\Generalisation\Factory\{
+    RepositoryFactoryInterface,
+    TraitRepositoryFactory
+};
+
+use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\CouchDB\{
+    GetAllRepository,
+    DeleteManyRepository,
+    DeleteRepository,
+    GetByIdsRepository,
+    OneRepository,
+    SearchByRepository
+};
+use {{ projectName }}\Domain\Repository\{{ entityName }}RepositoryInterface;
 
 /**
  * Class RepositoryFactory for entity {{ entityName }} using CouchDB DBMS.
@@ -26,18 +33,20 @@ class RepositoryFactory //implements RepositoryFactoryInterface
 
     /**
      * Build the repository depending on required action.
+     *
      * @param string $action
      * @throws \Exception
+     * @return {{ entityName }}RepositoryInterface
      */
-    public function buildRepository($action)
+    public function buildRepository(string $action): {{ entityName }}RepositoryInterface
     {
-        switch($action) {
+        switch ($action) {
             case RepositoryFactoryInterface::ONE_REPOSITORY:
                 return new OneRepository($this->manager);
             case RepositoryFactoryInterface::SEARCHBY_REPOSITORY:
                 return new SearchByRepository($this->manager);
             case RepositoryFactoryInterface::ALL_REPOSITORY:
-                return new AllRepository($this->manager);
+                return new GetAllRepository($this->manager);
             case RepositoryFactoryInterface::GETBYIDS_REPOSITORY:
                 return new GetByIdsRepository($this->manager);
             case RepositoryFactoryInterface::DELETEONE_REPOSITORY:

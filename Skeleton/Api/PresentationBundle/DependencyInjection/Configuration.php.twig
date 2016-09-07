@@ -9,15 +9,18 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 /**
  * This is the class that validates and merges configuration from your app/config files
  *
- * To learn more see
- * {@link http://symfony.com/doc/current/cookbook/bundles/extension.html#cookbook-bundles-extension-config-class}
+ * To learn more see {@link http://tiny.cc/x1oney}
  */
 class Configuration implements ConfigurationInterface
 {
     /**
-     * {@inheritdoc}
+     * Generates the configuration tree builder.
+     *
+     * @return TreeBuilder The tree builder.
+     * @throws \InvalidArgumentException When the node type is not valid.
+     * @throws \RuntimeException When the node type is not supported.
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder();
         $treeBuilder->root('{{ projectName|lower }}_presentation');

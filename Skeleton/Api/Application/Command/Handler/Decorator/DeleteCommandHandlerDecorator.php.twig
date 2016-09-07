@@ -26,12 +26,18 @@ class DeleteCommandHandlerDecorator extends AbstractCommandHandlerDecorator
     /** @var AbstractCommandSpecHandler */
     protected $specHandler;
 
+    /**
+     * DeleteCommandHandlerDecorator constructor.
+     *
+     * @param CommandHandlerInterface $commandHandler
+     * @param CommandValidationHandlerInterface $validationHandler
+     * @param AbstractCommandSpecHandler $specHandler
+     */
     public function __construct(
         CommandHandlerInterface $commandHandler,
         CommandValidationHandlerInterface $validationHandler,
         AbstractCommandSpecHandler $specHandler
-    )
-    {
+    ) {
         parent::__construct($commandHandler);
         $this->validationHandler = $validationHandler;
         $this->specHandler = $specHandler;
@@ -41,6 +47,7 @@ class DeleteCommandHandlerDecorator extends AbstractCommandHandlerDecorator
      * Method to decorate (override)
      *
      * @param CommandInterface $command
+     * @throws \Exception
      * @return mixed
      */
     public function process(CommandInterface $command)

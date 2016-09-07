@@ -3,10 +3,10 @@ declare(strict_types = 1);
 
 namespace {{ projectName }}\Domain\Workflow\{{ entityName }}\Listener;
 
-use DddContext\Domain\Generalisation\Observer\ObservableInterface;
-use DddContext\Domain\Generalisation\Observer\ObserverInterface;
-use DddContext\Domain\Service\Generalisation\Manager\ManagerInterface;
-use DddContext\Infrastructure\Logger\Generalisation\TraitLogger;
+use Sfynx\DddBundle\Layer\Domain\Generalisation\Observer\ObservableInterface;
+use Sfynx\DddBundle\Layer\Domain\Generalisation\Observer\ObserverInterface;
+use Sfynx\DddBundle\Layer\Domain\Service\Generalisation\Manager\ManagerInterface;
+use Sfynx\DddBundle\Layer\Infrastructure\Logger\Generalisation\TraitLogger;
 
 /**
  * Class WFPublishEvent

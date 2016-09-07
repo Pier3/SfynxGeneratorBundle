@@ -20,10 +20,15 @@ class PatchCommandAdapter implements CommandAdapterInterface
      * @param CommandRequestInterface $request
      * @return PatchCommand
      */
-    public function createCommandFromRequest(CommandRequestInterface $request)
+    public function createCommandFromRequest(CommandRequestInterface $request): PatchCommand
     {
         $parameters = $request->getRequestParameters();
 
-        return new PatchCommand({% for field in entityFields %}$parameters['{{ field.name }}']{% if loop.index < entityFields|length %}, {% endif %}{% endfor %});
+        return new PatchCommand(
+{% for field in entityFields %}
+            $parameters['{{ field.name }}']{% if loop.index < entityFields|length %},{% endif %}
+
+{% endfor %}
+        );
     }
 }

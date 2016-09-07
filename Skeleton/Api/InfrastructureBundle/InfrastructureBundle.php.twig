@@ -4,8 +4,7 @@ declare(strict_types = 1);
 namespace {{ projectName }}\InfrastructureBundle;
 
 use {{ projectName }}\InfrastructureBundle\DependencyInjection\{{ projectName }}InfrastructureBundleExtension;
-
-use {{ projectName }}\InfrastructureBundle\DependencyInjection\Compiler {
+use {{ projectName }}\InfrastructureBundle\DependencyInjection\Compiler\{
     CreateRepositoryFactoryPass,
     CreateDynamicConnectionPass
 };
@@ -18,13 +17,29 @@ use Doctrine\DBAL\Types as Orm;
 use Doctrine\ODM\MongoDB\Types as Odm;
 use Doctrine\ODM\CouchDB\Types as CouchDB;
 
+/**
+ * Class {{ projectName }}InfrastructureBundle.
+ *
+ * @category {{ projectName }}
+ * @package InfrastructureBundle
+ */
 class {{ projectName }}InfrastructureBundle extends Bundle
 {
-    public function getContainerExtension()
+    /**
+     * Return a new instance of {{ projectName }}InfrastructureBundleExtension.
+     *
+     * @return {{ projectName }}InfrastructureBundleExtension
+     */
+    public function getContainerExtension(): {{ projectName }}InfrastructureBundleExtension
     {
         return new {{ projectName }}InfrastructureBundleExtension();
     }
 
+    /**
+     * Dynamically load the database types depending on the driver set in the configuration.
+     *
+     * @throws \Exception
+     */
     public function boot()
     {
         switch ($this->container->getParameter('database.driver')) {
@@ -36,11 +51,18 @@ class {{ projectName }}InfrastructureBundle extends Bundle
                 $this->loadOdmTypes();
                 break;
             case MultipleDatabase::COUCHDB_DATABASE_TYPE:
-                $this->loadCouchDBTypes();
+                $this->loadCouchDbTypes();
                 break;
         }
     }
 
+    /**
+     * Builds the bundle.
+     * It is only ever called once when the cache is empty.
+     * This method can be overridden to register compilation passes or other extensions which is the case here.
+     *
+     * @param ContainerBuilder $container A ContainerBuilder instance
+     */
     public function build(ContainerBuilder $container)
     {
         parent::build($container);
@@ -49,51 +71,63 @@ class {{ projectName }}InfrastructureBundle extends Bundle
         $container->addCompilerPass(new CreateDynamicConnectionPass());
     }
 
+    /**
+     * Load the Orm database types.
+     * @throws \Exception
+     */
     protected function loadOrmTypes()
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
 
-        if (!ORM\Type::hasType("IdVO")) {
-            ORM\Type::addType('IdVO', 'Sfynx\DddBundle\Layer\Infrastructure\EntityType\Orm\IdType');
+        if (!Orm\Type::hasType('IdVO')) {
+            Orm\Type::addType('IdVO', 'Sfynx\DddBundle\Layer\Infrastructure\EntityType\Orm\IdType');
             $em->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('IdVO', 'IdVO');
         }
 
 {% for name,data in valueObjects %}
-        if (!ORM\Type::hasType("{{ name }}")) {
-            ORM\Type::addType('{{ name }}', '{{ projectName }}\Infrastructure\EntityType\Orm\{{ name }}Type');
+        if (!Orm\Type::hasType('{{ name }}')) {
+            Orm\Type::addType('{{ name }}', '{{ projectName }}\Infrastructure\EntityType\Orm\{{ name }}Type');
             $em->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('{{ name }}', '{{ name }}');
         }
 {% endfor %}
     }
 
+    /**
+     * Load the Odm database types.
+     * @throws \Exception
+     */
     protected function loadOdmTypes()
     {
         $em = $this->container->get('doctrine_mongodb.odm.default_document_manager');
 
-        if (!ODM\Type::hasType("IdVO")) {
-            ODM\Type::addType('IdVO', 'Sfynx\DddBundle\Layer\Infrastructure\EntityType\Odm\IdType');
+        if (!Odm\Type::hasType('IdVO')) {
+            Odm\Type::addType('IdVO', 'Sfynx\DddBundle\Layer\Infrastructure\EntityType\Odm\IdType');
             $em->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('IdVO', 'IdVO');
         }
 
 {% for name,data in valueObjects %}
-        if (!ODM\Type::hasType("{{ name }}")) {
-            ODM\Type::addType('{{ name }}', '{{ projectName }}\Infrastructure\EntityType\Odm\{{ name }}Type');
+        if (!Odm\Type::hasType('{{ name }}')) {
+            Odm\Type::addType('{{ name }}', '{{ projectName }}\Infrastructure\EntityType\Odm\{{ name }}Type');
             $em->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('{{ name }}', '{{ name }}');
         }
 {% endfor %}
     }
 
-    protected function loadCouchDBTypes()
+    /**
+     * Load the CouchDb database types.
+     * @throws \Exception
+     */
+    protected function loadCouchDbTypes()
     {
         $em = $this->container->get('doctrine_couchdb.odm.default_document_manager');
 
-        if (!CouchDB\Type::hasType("IdVO")) {
+        if (!CouchDB\Type::hasType('IdVO')) {
             CouchDB\Type::addType('IdVO', 'Sfynx\DddBundle\Layer\Infrastructure\EntityType\CouchDB\IdType');
             $em->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('IdVO', 'IdVO');
         }
 
 {% for name,data in valueObjects %}
-        if (!CouchDB\Type::hasType("{{ name }}")) {
+        if (!CouchDB\Type::hasType('{{  name }}')) {
             CouchDB\Type::addType('{{ name }}', '{{ projectName }}\Infrastructure\EntityType\CouchDB\{{ name }}Type');
             $em->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('{{ name }}', '{{ name }}');
         }

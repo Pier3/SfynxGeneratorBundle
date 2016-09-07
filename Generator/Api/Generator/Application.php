@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace Sfynx\DddGeneratorBundle\Generator\Api\Generator;
 
-
 /**
  * Class Application
  *
@@ -82,5 +81,4 @@ class Application extends LayerAbstract
 
         $this->generator->execute()->clear();
     }
-
 }

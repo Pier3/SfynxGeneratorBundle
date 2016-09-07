@@ -8,8 +8,8 @@ odmRepositoryHandler:
     targetPattern: "%destinationPath$s/%projectDir$s/Infrastructure/Persistence/Repository/%entityName$s/Odm/%actionName$sRepository.php"
 
 couchDbRepositoryHandler:
-    skeletonTpl: "Persistence/CouchDb/Repository.php.twig"
-    targetPattern: "%destinationPath$s/%projectDir$s/Infrastructure/Persistence/Repository/%entityName$s/CouchDb/%actionName$sRepository.php"
+    skeletonTpl: "Persistence/CouchDB/Repository.php.twig"
+    targetPattern: "%destinationPath$s/%projectDir$s/Infrastructure/Persistence/Repository/%entityName$s/CouchDB/%actionName$sRepository.php"
 
 traitEntityNameHandler:
     skeletonTpl: "Persistence/TraitEntityName.php.twig"
@@ -25,3 +25,4 @@ valueObjectTypeOdmHandler:
 valueObjectTypeOrmHandler:
     skeletonTpl: "EntityType/Orm.php.twig"
     targetPattern: "%destinationPath$s/%projectDir$s/Infrastructure/EntityType/Orm/%voName$sType.php"
+

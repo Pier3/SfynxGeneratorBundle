@@ -52,7 +52,7 @@ class {{ projectName }}InfrastructureBundle extends Bundle
                 $this->loadOdmTypes();
                 break;
             case MultipleDatabase::COUCHDB_DATABASE_TYPE:
-                $this->loadCouchDbTypes();
+                $this->loadCouchDBTypes();
                 break;
         }
     }
@@ -84,12 +84,10 @@ class {{ projectName }}InfrastructureBundle extends Bundle
             Orm\Type::addType('IdVO', 'Sfynx\DddBundle\Layer\Infrastructure\EntityType\Orm\IdType');
             $em->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('IdVO', 'IdVO');
         }
-
 {% for name,data in valueObjects %}
+
         if (!Orm\Type::hasType('{{ name }}')) {
             Orm\Type::addType('{{ name }}', '{{ projectName }}\Infrastructure\EntityType\Orm\{{ name }}Type');
-        if (!ORM\Type::hasType('{{ name }}')) {
-            ORM\Type::addType('{{ name }}', '{{ projectName }}\Infrastructure\EntityType\Orm\{{ name }}Type');
             $em->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('{{ name }}', '{{ name }}');
         }
 {% endfor %}
@@ -107,8 +105,8 @@ class {{ projectName }}InfrastructureBundle extends Bundle
             Odm\Type::addType('IdVO', 'Sfynx\DddBundle\Layer\Infrastructure\EntityType\Odm\IdType');
             $em->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('IdVO', 'IdVO');
         }
-
 {% for name,data in valueObjects %}
+
         if (!Odm\Type::hasType('{{ name }}')) {
             Odm\Type::addType('{{ name }}', '{{ projectName }}\Infrastructure\EntityType\Odm\{{ name }}Type');
             $em->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('{{ name }}', '{{ name }}');
@@ -117,10 +115,10 @@ class {{ projectName }}InfrastructureBundle extends Bundle
     }
 
     /**
-     * Load the CouchDb database types.
+     * Load the CouchDB database types.
      * @throws \Exception
      */
-    protected function loadCouchDbTypes()
+    protected function loadCouchDBTypes()
     {
         $em = $this->container->get('doctrine_couchdb.odm.default_document_manager');
 
@@ -128,8 +126,8 @@ class {{ projectName }}InfrastructureBundle extends Bundle
             CouchDB\Type::addType('IdVO', 'Sfynx\DddBundle\Layer\Infrastructure\EntityType\CouchDB\IdType');
             $em->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('IdVO', 'IdVO');
         }
-
 {% for name,data in valueObjects %}
+
         if (!CouchDB\Type::hasType('{{ name }}')) {
             CouchDB\Type::addType('{{ name }}', '{{ projectName }}\Infrastructure\EntityType\CouchDB\{{ name }}Type');
             $em->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('{{ name }}', '{{ name }}');

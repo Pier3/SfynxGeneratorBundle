@@ -3,8 +3,6 @@ declare(strict_types = 1);
 
 namespace Sfynx\DddGeneratorBundle\Generator\Api\Generator;
 
-use Symfony\Component\Console\Output\Output;
-
 /**
  * Class InfrastructureBundle
  *
@@ -37,7 +35,7 @@ class InfrastructureBundle extends LayerAbstract
         try {
             $this->writeln('### BUNDLE GENERATION ###')->generateBundle();
         } catch (\InvalidArgumentException $e) {
-            $this->writeln($e->getMessage(), Output::VERBOSITY_NORMAL);
+            $this->errWriteln($e->getMessage());
             exit;
         }
     }

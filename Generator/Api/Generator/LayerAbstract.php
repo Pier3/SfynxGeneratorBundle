@@ -8,6 +8,7 @@ use Sfynx\DddGeneratorBundle\Bin\Generator;
 use Sfynx\DddGeneratorBundle\Generator\Api\DddApiGenerator;
 use Sfynx\DddGeneratorBundle\Generator\Api\ValueObjects\LayerVO;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\Handler;
+use Sfynx\DddGeneratorBundle\Generator\Generalisation\OutputManagerTrait;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
@@ -21,6 +22,8 @@ use Symfony\Component\Yaml\Parser;
  */
 abstract class LayerAbstract
 {
+    use OutputManagerTrait;
+
     /** @var bool */
     public static $verbose = false;
 
@@ -60,8 +63,6 @@ abstract class LayerAbstract
     protected $entitiesGroups;
     /** @var array */
     protected $handlersConfig;
-    /** @var OutputInterface */
-    protected $output;
 
     /**
      * Abstract constructor, used by all layers.
@@ -80,7 +81,7 @@ abstract class LayerAbstract
         $this->projectDir = $layerVO->projectDir;
         $this->destinationPath = $layerVO->destinationPath;
 
-        $this->output = $layerVO->output;
+        $this->setOutput($layerVO->output);
 
         $this->commandsQueriesList = $layerVO->commandsQueriesList;
         $this->parameters = $layerVO->parameters;
@@ -93,7 +94,7 @@ abstract class LayerAbstract
             $errorMessage = '# Error in layer "%s": configuration handler file "%s" does not exist.' . PHP_EOL
                 . 'Error reported is: "%s".' . PHP_EOL;
             $errorMessage = sprintf($errorMessage, static::class, $handlersFileName, $e->getMessage());
-            $this->writeln($errorMessage, OutputInterface::VERBOSITY_NORMAL);
+            $this->errWriteln($errorMessage);
             exit;
         }
     }
@@ -142,20 +143,6 @@ abstract class LayerAbstract
     {
         //Execute $this->addHandler for all elements in $handlersNames.
         array_walk($handlersNames, [$this, 'addHandler']);
-        return $this;
-    }
-
-
-    /**
-     * Write in the console depending on the verbosity level. Only write if mode verbose is activated.
-     *
-     * @param string $message
-     * @param int $options
-     * @return $this
-     */
-    public function writeln(string $message, int $options = OutputInterface::VERBOSITY_VERBOSE)
-    {
-        $this->output->writeln($message, $options);
         return $this;
     }
 

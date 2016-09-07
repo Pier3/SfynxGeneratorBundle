@@ -3,8 +3,6 @@ declare(strict_types = 1);
 
 namespace Sfynx\DddGeneratorBundle\Generator\Api\Generator;
 
-use Symfony\Component\Console\Output\Output;
-
 /**
  * Class Application
  *
@@ -36,7 +34,7 @@ class Application extends LayerAbstract
             $this->writeln('### COMMANDS GENERATION ###')->generateCommands();
             $this->writeln('### QUERIES GENERATION ###')->generateQueries();
         } catch (\InvalidArgumentException $e) {
-            $this->writeln($e->getMessage(), Output::VERBOSITY_NORMAL);
+            $this->errWriteln($e->getMessage());
             exit;
         }
     }

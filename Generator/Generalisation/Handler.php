@@ -22,6 +22,8 @@ use Twig_SimpleFilter;
  */
 class Handler implements HandlerInterface
 {
+    use OutputManagerTrait;
+
     /** @var string */
     protected $rootSkeletonDir;
     /** @var string[] */
@@ -40,8 +42,6 @@ class Handler implements HandlerInterface
     protected $target;
     /** @var string */
     protected $handlerName;
-    /** @var OutputInterface */
-    protected $output;
 
     /**
      * AbstractHandler constructor.
@@ -56,13 +56,16 @@ class Handler implements HandlerInterface
         $this->skeletonTpl = $commonParameters['skeletonTpl'] ?? null;
         $this->targetPattern = $commonParameters['targetPattern'] ?? null;
         $this->handlerName = $commonParameters['handlerName'] ?? null;
-        $this->output = $output;
-
         $this->rootSkeletonDir = dirname(dirname(__DIR__)) . '/Skeleton';
+
+        $this->setOutput($output);
         $this->setTarget();
         $this->setTemplateName();
     }
 
+    /**
+     * Execute the handler to render a template with parameters into a target file.
+     */
     public function execute()
     {
         try {
@@ -73,7 +76,7 @@ class Handler implements HandlerInterface
             $errorMessage = PHP_EOL . ' # /!\ Exception occurs during the execution of handler "%s":' . PHP_EOL
                 . '    %s' . PHP_EOL;
             $errorMessage = sprintf($errorMessage, $this->handlerName, $e->getMessage());
-            $this->output->writeln($errorMessage, OutputInterface::VERBOSITY_NORMAL);
+            $this->errWriteln($errorMessage);
         }
     }
 
@@ -137,7 +140,7 @@ class Handler implements HandlerInterface
         }
 
         file_put_contents($target, $this->render($template, $parameters));
-        $this->output->writeln('    # ' . $target, OutputInterface::VERBOSITY_VERY_VERBOSE);
+        $this->writeln('    # ' . $target, OutputInterface::VERBOSITY_VERY_VERBOSE);
     }
 
     /**

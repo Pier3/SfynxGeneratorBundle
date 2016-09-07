@@ -3,8 +3,6 @@ declare(strict_types = 1);
 
 namespace Sfynx\DddGeneratorBundle\Generator\Api\Generator;
 
-use Symfony\Component\Console\Output\Output;
-
 /**
  * Class Presentation
  *
@@ -43,7 +41,7 @@ class Presentation extends LayerAbstract
             $this->writeln('### COORDINATION CONTROLLERS GENERATION ###')->generateCoordinationControllers();
             $this->writeln('### REQUESTS GENERATION ###')->generateRequest();
         } catch (\InvalidArgumentException $e) {
-            $this->writeln($e->getMessage(), Output::VERBOSITY_NORMAL);
+            $this->errWriteln($e->getMessage());
             exit;
         }
     }

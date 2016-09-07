@@ -3,8 +3,6 @@ declare(strict_types = 1);
 
 namespace Sfynx\DddGeneratorBundle\Generator\Api\Generator;
 
-use Symfony\Component\Console\Output\Output;
-
 /**
  * Class Infrastructure
  *
@@ -38,7 +36,7 @@ class Infrastructure extends LayerAbstract
             $this->writeln('### PERSISTENCE GENERATION ###')->generatePersistence();
             $this->writeln('### VALUE OBJECTS GENERATION ###')->generateValueObject();
         } catch (\InvalidArgumentException $e) {
-            $this->writeln($e->getMessage(), Output::VERBOSITY_NORMAL);
+            $this->errWriteln($e->getMessage());
             exit;
         }
     }

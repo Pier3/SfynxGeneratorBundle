@@ -187,4 +187,21 @@ abstract class LayerAbstract
 
         return trim($paramsString, ',' . self::PATTERN_MARKER);
     }
+
+    /**
+     * Build a array which all actions in the const COMMANDS_LIST and  QUERIES_LIST for the use Repository.
+     *
+     * @return string
+     */
+    protected function buildActionName(): string
+    {
+        $paramsString = implode(
+            'Repository,' . self::PATTERN_MARKER,
+            array_map('ucfirst', array_merge(self::COMMANDS_LIST, self::QUERIES_LIST))
+        );
+
+        $paramsString .= 'Repository';
+
+        return $paramsString;
+    }
 }

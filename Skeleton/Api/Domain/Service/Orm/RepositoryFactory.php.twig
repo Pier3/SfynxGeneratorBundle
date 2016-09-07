@@ -11,12 +11,7 @@ use Sfynx\DddBundle\Layer\Domain\Service\Generalisation\Factory\{
 };
 
 use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\{
-    GetAllRepository,
-    DeleteManyRepository,
-    DeleteRepository,
-    GetByIdsRepository,
-    OneRepository,
-    SearchByRepository
+    {{ useRepository|replace({'!#MARKER#!': "\n" ~ '    '}) }}
 };
 use {{ projectName }}\Domain\Repository\{{ entityName }}RepositoryInterface;
 

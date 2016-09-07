@@ -6,6 +6,7 @@ namespace Sfynx\DddGeneratorBundle\Generator\Api\Generator;
 use InvalidArgumentException;
 use Sfynx\DddGeneratorBundle\Bin\Generator;
 use Sfynx\DddGeneratorBundle\Generator\Api\DddApiGenerator;
+use Sfynx\DddGeneratorBundle\Generator\Api\ValueObjects\LayerVO;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\Handler;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;

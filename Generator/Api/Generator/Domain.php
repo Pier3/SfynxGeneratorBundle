@@ -2,7 +2,6 @@
 declare(strict_types = 1);
 
 namespace Sfynx\DddGeneratorBundle\Generator\Api\Generator;
-use Sfynx\DddGeneratorBundle\Generator\Api\ValueObjects\LayerVO;
 
 /**
  * Class Domain

@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace Sfynx\DddGeneratorBundle\Generator\Api\Generator;
 
+use Symfony\Component\Console\Output\Output;
+
 /**
  * Class Domain
  *
@@ -29,19 +31,17 @@ class Domain extends LayerAbstract
      */
     public function generate()
     {
-        $this->output->writeln('');
-        $this->output->writeln('##############################################');
-        $this->output->writeln('#          GENERATE DOMAIN STRUCTURE         #');
-        $this->output->writeln('##############################################');
-        $this->output->writeln('');
+        $this->writeln('')
+            ->writeln('##############################################')
+            ->writeln('#          GENERATE DOMAIN STRUCTURE         #')
+            ->writeln('##############################################')
+            ->writeln('');
 
         try {
-            $this->output->writeln('### ENTITIES ELEMENTS GENERATION ###');
-            $this->generateEntitiesElements();
-            $this->output->writeln('### VALUE OBJECTS GENERATION ###');
-            $this->generateValueObject();
+            $this->writeln('### ENTITIES ELEMENTS GENERATION ###')->generateEntitiesElements();
+            $this->writeln('### VALUE OBJECTS GENERATION ###')->generateValueObject();
         } catch (\InvalidArgumentException $e) {
-            fwrite(STDERR, $e->getMessage());
+            $this->writeln($e->getMessage(), Output::VERBOSITY_NORMAL);
             exit;
         }
     }

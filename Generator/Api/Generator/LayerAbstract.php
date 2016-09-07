@@ -8,6 +8,7 @@ use Sfynx\DddGeneratorBundle\Bin\Generator;
 use Sfynx\DddGeneratorBundle\Generator\Api\DddApiGenerator;
 use Sfynx\DddGeneratorBundle\Generator\Api\ValueObjects\LayerVO;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\Handler;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
 
@@ -20,6 +21,9 @@ use Symfony\Component\Yaml\Parser;
  */
 abstract class LayerAbstract
 {
+    /** @var bool */
+    public static $verbose = false;
+
     /** @var string */
     protected static $handlersFileName;
 
@@ -56,6 +60,8 @@ abstract class LayerAbstract
     protected $entitiesGroups;
     /** @var array */
     protected $handlersConfig;
+    /** @var OutputInterface */
+    protected $output;
 
     /**
      * Abstract constructor, used by all layers.
@@ -86,7 +92,8 @@ abstract class LayerAbstract
         } catch (ParseException $e) {
             $errorMessage = '# Error in layer "%s": configuration handler file "%s" does not exist.' . PHP_EOL
                 . 'Error reported is: "%s".' . PHP_EOL;
-            fwrite(STDERR, sprintf($errorMessage, static::class, $handlersFileName, $e->getMessage()));
+            $errorMessage = sprintf($errorMessage, static::class, $handlersFileName, $e->getMessage());
+            $this->writeln($errorMessage, OutputInterface::VERBOSITY_NORMAL);
             exit;
         }
     }
@@ -119,7 +126,7 @@ abstract class LayerAbstract
         $this->parameters['handlerName'] = $handlerName;
 
         //Add the handler with the configured parameters.
-        $this->generator->addHandler(new Handler($this->parameters));
+        $this->generator->addHandler(new Handler($this->parameters, $this->output));
 
         return $this;
     }
@@ -135,6 +142,20 @@ abstract class LayerAbstract
     {
         //Execute $this->addHandler for all elements in $handlersNames.
         array_walk($handlersNames, [$this, 'addHandler']);
+        return $this;
+    }
+
+
+    /**
+     * Write in the console depending on the verbosity level. Only write if mode verbose is activated.
+     *
+     * @param string $message
+     * @param int $options
+     * @return $this
+     */
+    public function writeln(string $message, int $options = OutputInterface::VERBOSITY_VERBOSE)
+    {
+        $this->output->writeln($message, $options);
         return $this;
     }
 

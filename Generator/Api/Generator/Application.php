@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace Sfynx\DddGeneratorBundle\Generator\Api\Generator;
 
+use Symfony\Component\Console\Output\Output;
+
 /**
  * Class Application
  *
@@ -24,19 +26,17 @@ class Application extends LayerAbstract
      */
     public function generate()
     {
-        $this->output->writeln('');
-        $this->output->writeln('##############################################');
-        $this->output->writeln('#       GENERATE APPLICATION STRUCTURE       #');
-        $this->output->writeln('##############################################');
-        $this->output->writeln('');
+        $this->writeln('')
+            ->writeln('##############################################')
+            ->writeln('#       GENERATE APPLICATION STRUCTURE       #')
+            ->writeln('##############################################')
+            ->writeln('');
 
         try {
-            $this->output->writeln('### COMMANDS GENERATION ###');
-            $this->generateCommands();
-            $this->output->writeln('### QUERIES GENERATION ###');
-            $this->generateQueries();
+            $this->writeln('### COMMANDS GENERATION ###')->generateCommands();
+            $this->writeln('### QUERIES GENERATION ###')->generateQueries();
         } catch (\InvalidArgumentException $e) {
-            fwrite(STDERR, $e->getMessage());
+            $this->writeln($e->getMessage(), Output::VERBOSITY_NORMAL);
             exit;
         }
     }

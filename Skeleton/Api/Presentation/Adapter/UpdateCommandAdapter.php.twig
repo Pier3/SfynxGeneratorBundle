@@ -20,10 +20,15 @@ class UpdateCommandAdapter implements CommandAdapterInterface
      * @param CommandRequestInterface $request
      * @return UpdateCommand
      */
-    public function createCommandFromRequest(CommandRequestInterface $request)
+    public function createCommandFromRequest(CommandRequestInterface $request): UpdateCommand
     {
         $parameters = $request->getRequestParameters();
 
-        return new UpdateCommand({% for field in entityFields %}$parameters['{{ field.name }}']{% if loop.index < entityFields|length %}, {% endif %}{% endfor %});
+        return new UpdateCommand(
+{% for field in entityFields %}
+            $parameters['{{ field.name }}']{% if loop.index < entityFields|length %},{% endif %}
+
+{% endfor %}
+        );
     }
 }

@@ -4,20 +4,27 @@ declare(strict_types = 1);
 namespace {{ projectName }}\Domain\Service\{{ entityName }}\Manager;
 
 use Sfynx\DddBundle\Layer\Domain\Service\Generalisation\Factory\RepositoryFactoryInterface;
-use Sfynx\DddBundle\Layer\Domain\Service\Generalisation\Manager\AbstractManager;
-use Sfynx\DddBundle\Layer\Domain\Service\Generalisation\Manager\TraitDeleteMany;
-use Sfynx\DddBundle\Layer\Domain\Service\Generalisation\Manager\TraitDeleteOne;
-use Sfynx\DddBundle\Layer\Domain\Service\Generalisation\Manager\TraitGetAll;
-use Sfynx\DddBundle\Layer\Domain\Service\Generalisation\Manager\TraitGetByIds;
-use Sfynx\DddBundle\Layer\Domain\Service\Generalisation\Manager\TraitGetOne;
-use Sfynx\DddBundle\Layer\Domain\Service\Generalisation\Manager\TraitSearchBy;
-use Sfynx\DddBundle\Layer\Domain\Generalisation\Processor\ProcessorInterface;
-use Sfynx\DddBundle\Layer\Domain\Generalisation\Processor\TraitProcessor;
+use Sfynx\DddBundle\Layer\Domain\Service\Generalisation\Manager\{
+    AbstractManager,
+    TraitDeleteMany,
+    TraitDeleteOne,
+    TraitGetAll,
+    TraitGetByIds,
+    TraitGetOne,
+    TraitSearchBy
+};
+use Sfynx\DddBundle\Layer\Domain\Generalisation\Processor\{
+    ProcessorInterface,
+    TraitProcessor
+};
 use Sfynx\DddBundle\Layer\Infrastructure\Logger\Generalisation\TraitLogger;
 use {{ projectName }}\Domain\Entity\{{ entityName }};
+{% for vo in valueObjects %}use {{ vo.type|trim("\\") }};
+{% endfor %}
+use Sfynx\DddBundle\Layer\Infrastructure\Exception\DomainException;
 
 /**
- * Class {{ entityName }}Manager
+ * Class {{ entityName }}Manager.
  *
  * @category {{ projectName }}
  * @package Domain
@@ -36,14 +43,18 @@ class {{ entityName }}Manager extends AbstractManager implements ProcessorInterf
 
     /**
      * Hydrate the entity then call the New Repository.
-{% for field in entityFields %}     * @param {{ field.type }} ${{ field.name }}
+{% for field in entityFields %}     * @param {% if field.type == "id" %}{% if field.voName is defined %}{{ field.voName }}{% else %}int{% endif %}{% else %}string{% endif %} ${{ field.name }}
 {% endfor %}
      * @return {{ entityName }}
+     * @throws DomainException
      */
-    public function create({{ constructorArgs }})
+    public function create({{ constructorArgs }}): {{ entityName }}
     {
         //hydrate with VO
-        $entity = {{ entityName }}::makeInstance($_SERVER['HTTP_X_TENANT_ID'], {{ constructorArgs }});
+        $entity = {{ entityName }}::makeInstance(
+            $_SERVER['HTTP_X_TENANT_ID'],
+            {{ paramsString|replace({'!#MARKER#!': "\n" ~ '            '}) }}
+        );
 
         //execute prepersist processor
         $this->executeProcess('prepersist_create', $entity);
@@ -64,28 +75,46 @@ class {{ entityName }}Manager extends AbstractManager implements ProcessorInterf
 
     /**
      * Get the current entity, hydrate it with updated values and call the Update Repository.
-{% for field in entityFields %}     * @param {{ field.type }} ${{ field.name }}
+{% for field in entityFields %}     * @param {% if field.type == "id" %}{% if field.voName is defined %}{{ field.voName }}{% else %}int{% endif %}{% elseif field.type == "idVO" %}string{% else %}{{ field.type }}{% endif %} ${{ field.name }}
 {% endfor %}
      * @return {{ entityName }}
+     * @throws DomainException
      */
-    public function update({{ constructorArgs }})
+    public function update({{ constructorArgs }}): {{ entityName }}
     {
         //get {{ entityName }} by id
         $object = new \stdClass();
 {% for field in entityFields %}
 {% if field.type == "id" %}
         $object->entityId = ${{ field.name }}->id();
+
+        /** @var $entity {{ entityName }} */
         $entity = $this->factory->buildRepository(RepositoryFactoryInterface::ONE_REPOSITORY)->execute($object);
 {% endif %}
 {% endfor %}
 
-        if (null === $entity) {
-            //todo: manage exception
-        }
+        //todo: manage exception if entity is null.
+        //if (null === $entity) {
+        //}
 
         //hydrate with VO
 {% for field in entityFields %}
-        $entity->set{{ field.name|capitalize }}(${{ field.name }});
+{% if field.type == "id" or field.type == "idVO" %}
+        $entity->set{{ field.type|ucfirst }}(${{ field.name }});
+{% else %}
+{% if field.type == "valueObject" %}
+{% if valueObjects[field.voName]["name"] == field.voName %}
+{% set namespace = valueObjects[field.voName]["type"]|split('\\') %}
+{% set key = namespace|length - 1 %}
+{% set namespace = namespace[key] %}
+{% else %}
+{% set namespace = "" %}
+{% endif %}
+{% else %}
+{% set namespace = "" %}
+{% endif %}
+        $entity->set{{ field.name|ucfirst }}(${{ field.name }});
+{% endif %}
 {% endfor %}
 
         //execute prepersist processor

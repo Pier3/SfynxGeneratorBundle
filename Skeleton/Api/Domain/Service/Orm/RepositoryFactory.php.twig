@@ -3,15 +3,22 @@ declare(strict_types = 1);
 
 namespace {{ projectName }}\Domain\Service\{{ entityName }}\Factory\Orm;
 
-use Sfynx\DddBundle\Layer\Domain\Service\Generalisation\Factory\RepositoryFactoryInterface;
-use Sfynx\DddBundle\Layer\Domain\Service\Generalisation\Factory\TraitRepositoryFactory;
 use Sfynx\DddBundle\Layer\Infrastructure\Persistence\Generalisation\Orm\SaveRepository;
-use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\GetAllRepository;
-use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\DeleteManyRepository;
-use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\DeleteRepository;
-use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\GetByIdsRepository;
-use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\GetRepository;
-use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\SearchByRepository;
+
+use Sfynx\DddBundle\Layer\Domain\Service\Generalisation\Factory\{
+    RepositoryFactoryInterface,
+    TraitRepositoryFactory
+};
+
+use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\{
+    GetAllRepository,
+    DeleteManyRepository,
+    DeleteRepository,
+    GetByIdsRepository,
+    OneRepository,
+    SearchByRepository
+};
+use {{ projectName }}\Domain\Repository\{{ entityName }}RepositoryInterface;
 
 /**
  * Class RepositoryFactory for entity {{ entityName }} using Orm DBMS.
@@ -26,12 +33,14 @@ class RepositoryFactory implements RepositoryFactoryInterface
 
     /**
      * Build the repository depending on required action.
+     *
      * @param string $action
      * @throws \Exception
+     * @return {{ entityName }}RepositoryInterface
      */
-    public function buildRepository($action)
+    public function buildRepository(string $action): {{ entityName }}RepositoryInterface
     {
-        switch($action) {
+        switch ($action) {
             case RepositoryFactoryInterface::ONE_REPOSITORY:
                 return new GetRepository($this->manager);
             case RepositoryFactoryInterface::SEARCHBY_REPOSITORY:

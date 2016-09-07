@@ -6,19 +6,32 @@ namespace {{ projectName }}\InfrastructureBundle\DependencyInjection\Compiler;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\Exception\{
+    InvalidArgumentException,
+    ServiceNotFoundException
+};
 
+/**
+ * Class CreateDynamicConnectionPass.
+ *
+ * @category {{ projectName }}
+ * @package InfrastructureBundle
+ * @subpackage DependencyInjection\Compiler
+ */
 class CreateDynamicConnectionPass implements CompilerPassInterface
 {
     const TYPE_DBMS = [
-        'ORM' => 'doctrine.orm.entity_manager',
-        'ODM' => 'doctrine_mongodb.odm.default_document_manager',
-        'COUCHDB' => 'doctrine_couchdb.odm.default_document_manager'
+        'orm' => 'doctrine.orm.entity_manager',
+        'odm' => 'doctrine_mongodb.odm.default_document_manager',
+        'couchdb' => 'doctrine_couchdb.odm.default_document_manager'
     ];
 
     /**
      * You can modify the container here before it is dumped to PHP code.
      *
      * @param ContainerBuilder $container
+     * @throws ServiceNotFoundException
+     * @throws InvalidArgumentException
      */
     public function process(ContainerBuilder $container)
     {
@@ -26,11 +39,12 @@ class CreateDynamicConnectionPass implements CompilerPassInterface
         $type = strtoupper($container->getParameter('database_type'));
 
         // create service
-        $class = $container->getParameter("project.dddcontext.listener.kernel.request.dynamic_database_${type}.class");
+        $parameterName = 'project.dddcontext.listener.kernel.request.dynamic_database_%s.class';
+        $class = $container->getParameter(sprintf($parameterName, $type));
         $id = 'project.dddcontext.listener.kernel.request.dynamic_database';
         // set service
         $definition = $container->getDefinition($id);
         $definition->setClass($class);
-        $definition->addArgument(new Reference(self::TYPE_DBMS[$type]);
+        $definition->addArgument(new Reference(self::TYPE_DBMS[$type]));
     }
 }

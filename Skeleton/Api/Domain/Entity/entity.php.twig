@@ -1,3 +1,7 @@
+{% set throwException = false %}
+{% for field in entityFields %}
+{% if field.type == "id" and field.voName is defined and field.voName == 'IdVO' %}{% set throwException = true %}{% endif %}
+{% endfor %}
 <?php
 declare(strict_types = 1);
 
@@ -8,6 +12,8 @@ use Doctrine\ORM\Mapping as Orm;
 use Doctrine\ODM\CouchDB\Mapping\Annotations as CouchDB;
 use Symfony\Component\Validator\Constraints as Assert;
 use Sfynx\DddBundle\Layer\Domain\Generalisation\Traits\TraitTenant;
+{% if throwException %}use Sfynx\DddBundle\Layer\Infrastructure\Exception\DomainException;
+{% endif %}
 {% for vo in valueObjects %}use {{ vo.type|trim("\\") }};
 {% endfor %}
 
@@ -93,20 +99,22 @@ class {{ entityName }}
     /**
      * Create a new instance of {{ entityName }} entity.
      * @param int $tenantId
-{% for field in entityFields %}     * @param {% if field.type == "id" %}int{% elseif field.type == "IdVO" %}string{% else %}{{ field.type }}{% endif %} ${{ field.name }}
-{% endfor %}
+{% for field in entityFields %}     * @param {% if field.type == "id" %}int{% elseif field.type == "idVO" %}string{% else %}{{ field.type }}{% endif %} ${{ field.name }}
+{% endfor %}{% if throwException %}     * @throws DomainException
+{% endif %}
      * @return {{ entityName }}
      */
-     public static function makeInstance($tenantId, {{ constructorArgs }})
-     {
-         return new self($tenantId, {% for field in entityFields %}${{ field.name }}{% if loop.index < entityFields|length %}, {% endif %}{% endfor %});
-     }
+    public static function makeInstance($tenantId, {{ constructorArgs }})
+    {
+        return new self($tenantId, {% for field in entityFields %}${{ field.name }}{% if loop.index < entityFields|length %}, {% endif %}{% endfor %});
+    }
 
     /**
      * Constructor
      * @param int $tenantId
-{% for field in entityFields %}     * @param {% if field.type == "id" %}int{% elseif field.type == "IdVO" %}string{% else %}{{ field.type }}{% endif %} ${{ field.name }}
-{% endfor %}
+{% for field in entityFields %}     * @param {% if field.type == "id" %}int{% elseif field.type == "idVO" %}string{% else %}{{ field.type }}{% endif %} ${{ field.name }}
+{% endfor %}{% if throwException %}     * @throws DomainException
+{% endif %}
      */
     protected function __construct($tenantId, {{ constructorArgs }})
     {
@@ -126,22 +134,29 @@ class {{ entityName }}
 {% if field.type == "id" or field.type == "idVO" %}
     /**
      * Get the id of entity.
-     * @return {% if field.type == "id" %}int
+     * @return {% if field.type == "id" %}{% if field.voName is defined %}{{ field.voName }}
+{% else %}int
+{% endif %}
 {% else %}string
 {% endif %}
      */
-    public function get{{ field.type|ucfirst }}()
+    public function get{{ field.type|ucfirst }}(): {% if field.type == "id" %}{% if field.voName is defined %}{{ field.voName }}
+{% else %}int
+{% endif %}
+{% else %}string
+{% endif %}
     {
         return $this->{{ field.type }};
     }
 
     /**
      * Set the id of entity.
-     * @return $this
+     * @param {% if field.type == "id" %}{% if field.voName is defined %}{{ field.voName }}{% else %}int{% endif %}{% else %}string{% endif %} $value
+     * @return {{ entityName }}
      */
-    public function set{{ field.name|ucfirst }}($value)
+    public function set{{ field.type|ucfirst }}({% if field.type == "id" %}{% if field.voName is defined %}{{ field.voName }}{% else %}int{% endif %}{% else %}string{% endif %} $value): self
     {
-        $this->{{ field.name }} = $value;
+        $this->{{ field.type }} = $value;
         return $this;
     }
 {% else %}
@@ -160,17 +175,17 @@ class {{ entityName }}
      * Get the {{ field.name }} attribute value.
      * @return {{ field.type }}
      */
-    public function get{{ field.name|ucfirst }}()
+    public function get{{ field.name|ucfirst }}(): {{ field.type }}
     {
         return $this->{{ field.name }};
     }
 
     /**
      * Set the {{ field.name|ucfirst }} attribute.
-     * @param {% if namespace %}{{ namespace }} {% endif %}{{ field.type }} $value
-     * @return $this
+     * @param {% if namespace %}{{ namespace }}{% else %}{{ field.type }}{% endif %} $value
+     * @return {{ entityName }}
      */
-    public function set{{ field.name|ucfirst }}({% if namespace %}{{ namespace }} {% endif %}$value)
+    public function set{{ field.name|ucfirst }}({% if namespace %}{{ namespace }}{% else %}{{ field.type }}{% endif %} $value): self
     {
         $this->{{ field.name }} = $value;
         return $this;

@@ -6,19 +6,28 @@ namespace {{ projectName }}\InfrastructureBundle\DependencyInjection\Compiler;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 
+/**
+ * Class CreateRepositoryFactoryPass.
+ *
+ * @category {{ projectName }}
+ * @package InfrastructureBundle
+ * @subpackage DependencyInjection\Compiler
+ */
 class CreateRepositoryFactoryPass implements CompilerPassInterface
 {
     const TYPE_DBMS = [
-        'ORM' => 'doctrine.orm.entity_manager',
-        'ODM' => 'doctrine_mongodb.odm.default_document_manager',
-        'COUCHDB' => 'doctrine_couchdb.odm.default_document_manager'
+        'orm' => 'doctrine.orm.entity_manager',
+        'odm' => 'doctrine_mongodb.odm.default_document_manager',
+        'couchdb' => 'doctrine_couchdb.odm.default_document_manager'
     ];
 
     /**
      * You can modify the container here before it is dumped to PHP code.
      *
      * @param ContainerBuilder $container
+     * @throws InvalidArgumentException
      */
     public function process(ContainerBuilder $container)
     {
@@ -27,13 +36,12 @@ class CreateRepositoryFactoryPass implements CompilerPassInterface
 {% for entityName,Vo in entities %}
 
         // {{ entityName|upper }} entity
-        $class = $container->getParameter("project.{{ projectName|lower }}.{{ entityName|lower }}.${type}.repository.factory.class");
+        $class = $container->getParameter('project.{{ projectName|lower }}.{{ entityName|lower }}.' . $type . '.repository.factory.class');
         $id = 'project.{{ projectName|lower }}.{{ entityName|lower }}.repository.factory';
 
         // set service
         $definition = $container->register($id, $class);
-        $definition->addArgument(new Reference(self::TYPE_DBMS[$type]);
-
+        $definition->addArgument(new Reference(self::TYPE_DBMS[$type]));
 {% endfor %}
     }
 }

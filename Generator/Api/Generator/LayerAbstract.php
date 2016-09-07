@@ -32,6 +32,8 @@ abstract class LayerAbstract
     const COMMAND = 'Command';
     const QUERY = 'Query';
 
+    const PATTERN_MARKER = '!#MARKER#!';
+
     /** @var DddApiGenerator */
     protected $generator;
     /** @var array[] */
@@ -137,6 +139,22 @@ abstract class LayerAbstract
     }
 
     /**
+     * Build a string which value is equal to the argument list of a value object definition of any generated class.
+     *
+     * @param array $fields List of fields used to build the argument list string.
+     * @return string
+     */
+    protected function buildValueObjectParamsString(array $fields): string
+    {
+        $voParamsString = '';
+        foreach ($fields as $field) {
+            $voParamsString .= '$' . $field['name'] . ', ';
+        }
+
+        return trim($voParamsString, ', ');
+    }
+
+    /**
      * Build a string which value is equal to the argument list of a constructor of any generated class.
      *
      * @param string $entityName Name of the entity to parse all attributes in order to build a valid constructor
@@ -154,23 +172,19 @@ abstract class LayerAbstract
     }
 
     /**
-     * Build a string which value is equal to the argument list of a manager of any generated class.
+     * Build a string which value is equal to the argument list of any generated class.
      *
-     * @param string $entityName Name of the entity to parse all attributes in order to build a valid manager argument
-     *                           list.
-     * @param string $action     Name of the action the manager argument list will be used. If the action is 'new', the
-     *                           field 'id' will not be part of the manager argument list.
+     * @param string $entityName Name of the entity to parse all attributes in order to build a valid function
+     *                           or make instance argument list.
      * @return string
      */
-    protected function buildManagerParamsString(string $entityName, string $action): string
+    protected function buildParamsString(string $entityName): string
     {
-        $managerParamsString = '';
+        $paramsString = '';
         foreach ($this->entitiesToCreate[$entityName] as $field) {
-            if (('new' === $action && 'id' !== $field['type']) || ('new' !== $action)) {
-                $managerParamsString .= '$' . $field['name'] . ', ';
-            }
+            $paramsString .= '$' . $field['name'] . ',' . self::PATTERN_MARKER;
         }
 
-        return trim($managerParamsString, ', ');
+        return trim($paramsString, ',' . self::PATTERN_MARKER);
     }
 }

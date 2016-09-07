@@ -43,12 +43,12 @@ class WFSaveEntity implements ObserverInterface
     public function update(ObservableInterface $wfHandler)
     {
 {% set ifString = "" %}
-{% set paramsString = "" %}
+
 {% for field in entityFields %}
         ${{ field.name }} = !empty($wfHandler->data->{{ field.name }}) ? end($wfHandler->data->{{ field.name }}) : null;
 {% if field.type == "valueObject" and field.type != "id" %}{% set ifString = ifString ~ "null == $" ~ field.name ~ " && " %}{% endif %}
-{% set paramsString = paramsString ~ "$" ~ field.name ~ ", " %}
 {% endfor %}
+
 {% set ifString = ifString|trim(" && ") %}
 {% if ifString != "" %}
         if ({{ ifString }}) {
@@ -62,7 +62,9 @@ class WFSaveEntity implements ObserverInterface
 
         //If the command is not a Patch or an Update, run creation in the manager.
         if (!($wfHandlerCommand instanceof UpdateCommand) && !($wfHandlerCommand instanceof PatchCommand)) {
-            $wfHandler->data->entity[] = $this->manager->create({{ paramsString|trim(', ') }});
+            $wfHandler->data->entity[] = $this->manager->create(
+                {{ paramsString|replace({'!#MARKER#!': "\n" ~ '                '}) }}
+            );
             return;
         }
 
@@ -73,6 +75,8 @@ class WFSaveEntity implements ObserverInterface
             $this->logger->error($message);
             throw new \Exception($message);
         }
-        $wfHandler->data->entity[] = $this->manager->update({{ paramsString|trim(', ') }});
+        $wfHandler->data->entity[] = $this->manager->update(
+            {{ paramsString|replace({'!#MARKER#!': "\n" ~ '            '}) }}
+        );
     }
 }

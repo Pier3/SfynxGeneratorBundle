@@ -21,6 +21,7 @@ use Sfynx\DddBundle\Layer\Infrastructure\Logger\Generalisation\TraitLogger;
 use {{ projectName }}\Domain\Entity\{{ entityName }};
 {% for vo in valueObjects %}use {{ vo.type|trim("\\") }};
 {% endfor %}
+use Sfynx\DddBundle\Layer\Infrastructure\Exception\DomainException;
 
 /**
  * Class {{ entityName }}Manager.
@@ -45,11 +46,15 @@ class {{ entityName }}Manager extends AbstractManager implements ProcessorInterf
 {% for field in entityFields %}     * @param {% if field.type == "id" %}{% if field.voName is defined %}{{ field.voName }}{% else %}int{% endif %}{% else %}string{% endif %} ${{ field.name }}
 {% endfor %}
      * @return {{ entityName }}
+     * @throws DomainException
      */
     public function create({{ constructorArgs }}): {{ entityName }}
     {
         //hydrate with VO
-        $entity = {{ entityName }}::makeInstance($_SERVER['HTTP_X_TENANT_ID'], {{ constructorArgs }});
+        $entity = {{ entityName }}::makeInstance(
+            $_SERVER['HTTP_X_TENANT_ID'],
+            {{ paramsString|replace({'!#MARKER#!': "\n" ~ '            '}) }}
+        );
 
         //execute prepersist processor
         $this->executeProcess('prepersist_create', $entity);
@@ -73,6 +78,7 @@ class {{ entityName }}Manager extends AbstractManager implements ProcessorInterf
 {% for field in entityFields %}     * @param {% if field.type == "id" %}{% if field.voName is defined %}{{ field.voName }}{% else %}int{% endif %}{% elseif field.type == "idVO" %}string{% else %}{{ field.type }}{% endif %} ${{ field.name }}
 {% endfor %}
      * @return {{ entityName }}
+     * @throws DomainException
      */
     public function update({{ constructorArgs }}): {{ entityName }}
     {

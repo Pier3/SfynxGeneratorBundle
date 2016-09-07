@@ -15,6 +15,7 @@ use {{ projectName }}\Application\{{ entityName }}\Command\PatchCommand;
 use Sfynx\DddBundle\Layer\Domain\ValueObject\{{ field.voName }};
 {% endif %}
 {% endfor %}
+use Sfynx\DddBundle\Layer\Infrastructure\Exception\DomainException;
 
 /**
  * Class WFGenerateVOListener
@@ -23,12 +24,12 @@ use Sfynx\DddBundle\Layer\Domain\ValueObject\{{ field.voName }};
  * @package Domain
  * @subpackage Workflow\Listener
  *
- * TODO change all array with SqlQueue and test performance
  */
 class WFGenerateVOListener implements ObserverInterface
 {
     /**
      * @param ObservableInterface $wfHandler
+     * @throws DomainException
      */
     public function update(ObservableInterface $wfHandler)
     {
@@ -46,6 +47,7 @@ class WFGenerateVOListener implements ObserverInterface
     /**
      * @param ObservableInterface $wfHandler
      * @return $this
+     * @throws DomainException
      */
     public function set{{ field.name|capitalize }}(ObservableInterface $wfHandler)
     {

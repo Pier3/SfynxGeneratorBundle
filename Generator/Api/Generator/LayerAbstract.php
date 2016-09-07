@@ -9,7 +9,6 @@ use Sfynx\DddGeneratorBundle\Generator\Api\DddApiGenerator;
 use Sfynx\DddGeneratorBundle\Generator\Api\ValueObjects\LayerVO;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\Handler;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\OutputManagerTrait;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
 

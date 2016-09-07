@@ -53,8 +53,11 @@ class Infrastructure extends LayerAbstract
             $this->parameters['constructorArgs'] = $this->buildConstructorParamsString($entityName);
             $this->parameters['entityFields'] = $this->entitiesToCreate[$entityName];
 
-            $this->addCQRSRepositoriesToGenerator($entityGroups, self::COMMAND)
-                ->addCQRSRepositoriesToGenerator($entityGroups, self::QUERY);
+            //Fetch all actionName and add the handler for this actionName
+            foreach (array_merge(LayerAbstract::COMMANDS_LIST, LayerAbstract::QUERIES_LIST) as $actionName) {
+                $this->parameters['actionName'] = ucfirst($actionName);
+                $this->addHandlers('ormRepositoryHandler', 'odmRepositoryHandler', 'couchDbRepositoryHandler');
+            }
 
             $this->addHandler('traitEntityNameHandler');
         }
@@ -82,27 +85,5 @@ class Infrastructure extends LayerAbstract
             );
         }
         $this->generator->execute()->clear();
-    }
-
-    /**
-     * Add Repositories handlers to the generator. For use in a loop for all C.Q.R.S. actions from Layer Abstract.
-     *
-     * @param array $entityGroups
-     * @param string $group
-     * @return self
-     * @throws \InvalidArgumentException
-     */
-    private function addCQRSRepositoriesToGenerator(array $entityGroups, string $group): self
-    {
-        //Set the parameter $group to its good value (might be a reset)
-        $this->parameters['group'] = $group;
-
-        //Fetch all actionName and add the handler for this actionName
-        foreach (array_merge(LayerAbstract::COMMANDS_LIST, LayerAbstract::QUERIES_LIST) as $name) {
-            $this->parameters['actionName'] = ucfirst($name);
-            $this->addHandlers('ormRepositoryHandler', 'odmRepositoryHandler', 'couchDbRepositoryHandler');
-        }
-
-        return $this;
     }
 }

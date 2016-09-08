@@ -24,14 +24,18 @@ class NewCommandHandlerDecoratorTest extends \PHPUnit_Framework_TestCase
         $this->command = Phake::mock(NewCommand::class);
         $this->commandHandler = Phake::mock(NewCommandHandler::class);
 
-        Phake::when($this->commandHandler)->process(Phake::anyParameters())->thenReturn("some result");
+        Phake::when($this->commandHandler)->process(Phake::anyParameters())->thenReturn('some result');
 
         $this->validationHandler = Phake::mock(NewCommandValidationHandler::class);
 
         $this->specHandler = Phake::mock(NewCommandSpecHandler::class);
         Phake::when($this->specHandler )->process(Phake::anyParameters())->thenReturn(null);
 
-        $this->commandHandlerDecorator = new NewCommandHandlerDecorator($this->commandHandler, $this->validationHandler,$this->specHandler);
+        $this->commandHandlerDecorator = new NewCommandHandlerDecorator(
+                                                $this->commandHandler,
+                                                $this->validationHandler,
+                                                $this->specHandler
+                                         );
     }
 
     public function testInterfaces()
@@ -42,7 +46,7 @@ class NewCommandHandlerDecoratorTest extends \PHPUnit_Framework_TestCase
     public function testProcess()
     {
         $result = $this->commandHandlerDecorator->process($this->command);
-        $this->assertEquals("some result", $result);
+        $this->assertEquals('some result', $result);
         Phake::verify($this->validationHandler, Phake::times(1))->process(Phake::anyParameters());
         Phake::verify($this->commandHandler, Phake::times(1))->process(Phake::anyParameters());
 

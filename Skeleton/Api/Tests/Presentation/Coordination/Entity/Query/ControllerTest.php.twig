@@ -34,9 +34,9 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 
         Phake::when($this->responseHandler)->create(Phake::anyParameters())->thenReturn($this->responseHandler);
         Phake::when($this->responseHandler)->getResponse(Phake::anyParameters())->thenReturn(Phake::mock(Response::class));
-        Phake::when($this->request)->getContent(Phake::anyParameters())->thenReturn(json_encode(["id"=>123456]));
+        Phake::when($this->request)->getContent(Phake::anyParameters())->thenReturn(json_encode(['id'=>123456]));
 
-        $this->entity = ["id" => "00c1ab20-6e1e-4c54-83b4-62e677aba7ec"];
+        $this->entity = ['id' => '00c1ab20-6e1e-4c54-83b4-62e677aba7ec'];
 
 {% set controllerArgs ="" %}
 {% for commandQueryResponsibilitySegregation in controllerData %}

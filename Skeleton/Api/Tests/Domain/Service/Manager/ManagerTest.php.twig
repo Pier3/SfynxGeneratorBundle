@@ -49,10 +49,10 @@ class {{ entityName }}ManagerTest extends  \PHPUnit_Framework_TestCase
 
         $processor = Phake::mock(PrePersistProcess::class);
 
-        $this->manager->addProcess("prepersist_create", $processor);
-        $this->manager->addProcess("postpersist_create", $processor);
-        $this->manager->addProcess("prepersist_update", $processor);
-        $this->manager->addProcess("postpersist_update", $processor);
+        $this->manager->addProcess('prepersist_create', $processor);
+        $this->manager->addProcess('postpersist_create', $processor);
+        $this->manager->addProcess('prepersist_update', $processor);
+        $this->manager->addProcess('postpersist_update', $processor);
 
         Phake::when($this->repo)->buildRepository(Phake::anyParameters())->thenReturn($this->saveReposiroty);
         Phake::when($this->saveReposiroty)->execute(Phake::anyParameters())->thenReturn($this->entity);
@@ -62,7 +62,7 @@ class {{ entityName }}ManagerTest extends  \PHPUnit_Framework_TestCase
     public function testCreate()
     {
         if(!isset($_SERVER['HTTP_X_TENANT_ID'])) {
-            $_SERVER['HTTP_X_TENANT_ID']="1000";
+            $_SERVER['HTTP_X_TENANT_ID']='1000';
             $this->manager->create(null,{{ args|trim(",") }});
             Phake::verify($this->repo)->buildRepository(RepositoryFactoryInterface::NEW_REPOSITORY);
         }

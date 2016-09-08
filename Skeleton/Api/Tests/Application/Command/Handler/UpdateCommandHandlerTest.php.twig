@@ -31,7 +31,7 @@ class UpdateCommandHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function testProcess()
     {
-        $entity = [["id"=>"123465"]];
+        $entity = [['id'=>'123465']];
         $this->workflowHandler->data->entity = $entity;
 
         $result = $this->commandHandler->process($this->command);

@@ -175,7 +175,7 @@ class {{ entityName }}
      * Get the {{ field.name }} attribute value.
      * @return {% if field.type == "number" %}int{% else %}{{ field.type }}{% endif %}
      */
-    public function get{{ field.name|ucfirst }}(): {% if field.type = ="number" %}int{% else %}{% if field.type == "boolean" %}bool{% else %}{{ field.type }}{% endif %}{% endif %}
+    public function get{{ field.name|ucfirst }}(): {% if field.type == "number" %}int{% else %}{% if field.type == "boolean" %}bool{% else %}{{ field.type }}{% endif %}{% endif %}
     {
         return $this->{{ field.name }};
     }
@@ -185,7 +185,7 @@ class {{ entityName }}
      * @param {% if namespace %}{{ namespace }}{% else %}{{ field.type }}{% endif %} $value
      * @return {{ entityName }}
      */
-    public function set{{ field.name|ucfirst }}({% if namespace %}{{ namespace }}{% else %}{% if field.type == "number" %}int{% else %}{% if field.type = ="boolean" %}bool{% else %}{{ field.type }}{% endif %}{% endif %}{% endif %} $value): self
+    public function set{{ field.name|ucfirst }}({% if namespace %}{{ namespace }}{% else %}{% if field.type == "number" %}int{% else %}{% if field.type == "boolean" %}bool{% else %}{{ field.type }}{% endif %}{% endif %}{% endif %} $value): self
     {
         $this->{{ field.name }} = $value;
         return $this;

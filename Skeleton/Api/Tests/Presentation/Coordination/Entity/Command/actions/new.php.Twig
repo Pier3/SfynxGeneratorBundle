@@ -1,11 +1,11 @@
-public function testNewAction()
-{
-    $adapter = new NewCommandAdapter();
-    $command = $adapter->createCommandFromRequest(
-        new NewRequest($this->request, $this->resolver)
-    );
+    public function testNewAction()
+    {
+        $adapter = new NewCommandAdapter();
+        $command = $adapter->createCommandFromRequest(
+            new NewRequest($this->request, $this->resolver)
+        );
 
-    $this->controller->newAction();
-    Phake::verify($this->newHandler, Phake::times(1))->process($command);
-    Phake::verify($this->responseHandler, Phake::times(1))->create($this->entity, Response::HTTP_CREATED);
-}
+        $this->controller->newAction();
+        Phake::verify($this->newHandler, Phake::times(1))->process($command);
+        Phake::verify($this->responseHandler, Phake::times(1))->create($this->entity, Response::HTTP_CREATED);
+    }

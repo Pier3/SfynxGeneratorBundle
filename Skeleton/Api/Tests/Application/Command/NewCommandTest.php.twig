@@ -16,7 +16,7 @@ class NewCommandTest extends \PHPUnit_Framework_TestCase
     {
 {% set constructorArgs = "" %}
 {% for field in entityFields %}
-        $this->{{ field.name }}="123456";
+        $this->{{ field.name }} = "123456";
 {% set constructorArgs = constructorArgs ~ "$this->" ~ field.name ~ "," %}
 {% endfor %}
         $this->command = new NewCommand({{ constructorArgs|trim(",")}});
@@ -31,7 +31,7 @@ class NewCommandTest extends \PHPUnit_Framework_TestCase
     {
 {% for field in entityFields %}
 {% if field.type != "id" %}
-    $this->assertEquals($this->{{ field.name }}, $this->command->get{{ field.name|ucfirst }}());
+        $this->assertEquals($this->{{ field.name }}, $this->command->get{{ field.name|ucfirst }}());
 {% endif %}
 {% endfor %}
     }

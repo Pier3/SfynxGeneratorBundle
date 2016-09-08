@@ -15,14 +15,13 @@ class UpdateCommandTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->entityId="132456";
-        $this->libelle="FRANCe";
-        $this->indicatif="033";
-        $this->iso="FR";
-        $this->selectable=true;
-        $this->reference="001";
+{% set constructorArgs = "" %}
+{% for field in entityFields %}
+        $this->{{ field.name }} = "123456";
+{% set constructorArgs = constructorArgs ~ "$this->" ~ field.name ~ ", " %}
+{% endfor %}
 
-        $this->command = new UpdateCommand($this->entityId, $this->libelle,$this->indicatif,$this->iso,$this->selectable,$this->reference);
+        $this->command = new UpdateCommand({{ constructorArgs|trim(', ') }});
     }
 
     public function testInterface()

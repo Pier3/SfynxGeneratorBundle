@@ -42,6 +42,7 @@ class Test extends LayerAbstract
             $this->generateDomainTests();
             $this->output->writeln('### GENERATE PRESENTATION TESTS ###');
             $this->generatePresentationTests();
+            $this->generatePhpunitXML();
         } catch (\InvalidArgumentException $e) {
             fwrite(STDERR, $e->getMessage());
             exit;
@@ -153,5 +154,11 @@ class Test extends LayerAbstract
             $this->generator->execute()->clear();
         }
         return $this;
+    }
+
+    public function generatePhpunitXML()
+    {
+        $this->addHandlers('TestPHpunitXML');
+        $this->generator->execute()->clear();
     }
 }

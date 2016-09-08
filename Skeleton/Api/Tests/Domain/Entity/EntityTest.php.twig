@@ -23,54 +23,39 @@ class CountryTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->uid = "2e647197-5b18-11e6-a55f-f8b156c6181f";
-        $this->libelle="FRANCe";
-        $this->indicatif="033";
-        $this->iso="FR";
-        $this->selectable=true;
-        $this->reference="001";
-
+{% set constructorArgs = "" %}
+{% for field in entityFields %}
+{% if field.type="id" %}
+        $this->{{ field.name }} = "2e647197-5b18-11e6-a55f-f8b156c6181f";
+{% set constructorArgs = constructorArgs ~ "$"{{ field.name }} ~ ", " %}
+{% else %}
+        $this->{{ field.name }} = "abcd";
+{% endif %}
         $this->country = Country::makeInstance(
-            $this->uid, $this->libelle, $this->indicatif, $this->iso, $this->selectable, $this->reference
+            {{ constructorArgs|trim(", ") }}
         );
     }
 
     public function testGetters()
     {
-
-        $this->assertEquals($this->uid, $this->country->getId());
-        $this->assertEquals($this->libelle, $this->country->getLibelle());
-        $this->assertEquals($this->indicatif, $this->country->getIndicatif());
-        $this->assertEquals($this->iso, $this->country->getIso());
-        $this->assertEquals($this->selectable, $this->country->getSelectable());
-        $this->assertEquals($this->reference, $this->country->getReference());
-
+{% for field in entityFields %}
+        $this->assertEquals($this->{{ field.name }}, $this->country->ge{{ field.name|ucfirst }}());
+{% endfor %}
 
     }
 
     public function testSetters()
     {
+{% for field in entityFields %}
+{% if %} field.type == "id"
+    $this->country->setEntityId('2e647197-5b18-11e6-a55f-f8b156c6181f');
+    $this->assertEquals('2e647197-5b18-11e6-a55f-f8b156c6181f', $this->country->getId()->id());
+{% else %}
+    $this->country->set{{ field.name|ucfirst }}('abc');
+    $this->assertEquals('abc', $this->country->get{{ field.name|ucfirst }}());
+{% endif %}
+{% endfor %}
 
-        $this->country->setEntityId('2e647197-5b18-11e6-a55f-f8b156c6181f');
-        $this->assertEquals('2e647197-5b18-11e6-a55f-f8b156c6181f', $this->country->getId()->id());
-
-        $this->country->setIndicatif('032');
-        $this->assertEquals('032', $this->country->getIndicatif());
-
-        $this->country->setLibelle('Luxembourg');
-        $this->assertEquals('Luxembourg', $this->country->getLibelle());
-
-        $this->country->setLibelle('Luxembourg');
-        $this->assertEquals('Luxembourg', $this->country->getLibelle());
-
-        $this->country->setIso('LU');
-        $this->assertEquals('LU', $this->country->getIso());
-
-        $this->country->setSelectable(true);
-        $this->assertEquals(true, $this->country->getSelectable());
-
-        $this->country->setReference("0001");
-        $this->assertEquals("0001", $this->country->getReference());
     }
 
 }

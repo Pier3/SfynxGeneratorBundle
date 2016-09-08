@@ -34,14 +34,17 @@ class Test extends LayerAbstract
             $this->writeln('### GENERATE APPLICATION TESTS ###')->generateApplicationTests();
             $this->writeln('### GENERATE DOMAIN TESTS ###')->generateDomainTests();
             $this->writeln('### GENERATE PRESENTATION TESTS ###')->generatePresentationTests();
-            $this->generatePhpunitXML();
+            $this->writeln('### GENERATE PHP UNIT XML ###')->generatePhpUnitXML();
         } catch (\InvalidArgumentException $e) {
             $this->errWriteln($e->getMessage());
             exit;
         }
     }
 
-    public function generateApplicationTests()
+    /**
+     * @return Test
+     */
+    public function generateApplicationTests(): self
     {
         foreach ($this->commandsQueriesList[self::COMMAND] as $data) {
             $constructorParams = '';
@@ -62,7 +65,7 @@ class Test extends LayerAbstract
             $this->parameters['constructorArgs'] = trim($constructorParams, ', ');
             $this->parameters['managerArgs'] = trim($managerArgs, ', ');
 
-            $this->addHandlers('TestCommand', 'TestCommandHandlerDecorator', 'TestCommandHandler');
+            $this->addHandlers('testCommand', 'testCommandHandlerDecorator', 'testCommandHandler');
 
             $this->generator->execute();
             $this->generator->clear();
@@ -76,7 +79,7 @@ class Test extends LayerAbstract
 
             $this->writeln(' - ' . $this->parameters['actionName'] . ' - ');
 
-            $this->addHandlers('TestQuery');
+            $this->addHandler('testQuery');
 
             $this->generator->execute();
             $this->generator->clear();
@@ -85,13 +88,16 @@ class Test extends LayerAbstract
         return $this;
     }
 
-    public function generateDomainTests()
+    /**
+     * @return Test
+     */
+    public function generateDomainTests(): self
     {
         foreach (array_keys($this->entitiesToCreate) as $entityName) {
             $this->parameters['entityName'] = $entityName;
             $this->parameters['entityFields'] = $this->entitiesToCreate[$entityName];
 
-            $this->addHandlers('TestManager', 'TestRepositoryFactory');
+            $this->addHandlers('testManager', 'testRepositoryFactory');
 
             $this->generator->execute();
             $this->generator->clear();
@@ -100,15 +106,17 @@ class Test extends LayerAbstract
         return $this;
     }
 
-    public function generatePresentationTests()
+    /**
+     * @return Test
+     */
+    public function generatePresentationTests(): self
     {
-
         foreach ($this->commandsQueriesList[self::COMMAND] as $data) {
             $this->parameters['actionName'] = ucfirst($data['action']);
             $this->parameters['entityName'] = ucfirst($data['entity']);
             $this->parameters['entityFields'] = $this->entitiesToCreate[$data['entity']];
 
-            $this->addHandlers('TestCommandAdapter');
+            $this->addHandler('testCommandAdapter');
         }
 
         $this->generator->execute()->clear();
@@ -129,7 +137,7 @@ class Test extends LayerAbstract
                 $this->parameters['controllerData'][] = $entityCommandData;
             }
             //Add the Handlers to the generator's stack.
-            $this->addHandlers('TestControllerQuery');
+            $this->addHandler('testControllerQuery');
             $this->generator->execute()->clear();
 
             // Command
@@ -141,16 +149,21 @@ class Test extends LayerAbstract
                 $this->parameters['controllerData'][] = $entityCommandData;
             }
             //Add the Handlers to the generator's stack.
-            $this->addHandlers('TestControllerCommand');
+            $this->addHandler('testControllerCommand');
 
             $this->generator->execute()->clear();
         }
         return $this;
     }
 
-    public function generatePhpunitXML()
+    /**
+     * @return Test
+     */
+    public function generatePhpUnitXML(): self
     {
-        $this->addHandlers('TestPHpunitXML');
+        $this->addHandler('testPhpUnitXML');
         $this->generator->execute()->clear();
+
+        return $this;
     }
 }

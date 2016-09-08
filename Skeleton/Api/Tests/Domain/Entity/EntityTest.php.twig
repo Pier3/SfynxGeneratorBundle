@@ -38,7 +38,6 @@ class CountryTest extends \PHPUnit_Framework_TestCase
 
     public function testGetters()
     {
-
 {% for field in entityFields %}
         $this->assertEquals($this->{{ field.name }}, $this->country->ge{{ field.name|ucfirst }}());
 {% endfor %}
@@ -47,7 +46,6 @@ class CountryTest extends \PHPUnit_Framework_TestCase
 
     public function testSetters()
     {
-
 {% for field in entityFields %}
 {% if %} field.type == "id"
     $this->country->setEntityId('2e647197-5b18-11e6-a55f-f8b156c6181f');

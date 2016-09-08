@@ -24,7 +24,7 @@ use {{ projectName }}\Domain\Repository\{{ entityName }}RepositoryInterface;
  */
 class RepositoryFactory implements RepositoryFactoryInterface
 {
-    //use TraitRepositoryFactory;
+    use TraitRepositoryFactory;
 
     /**
      * Build the repository depending on required action.

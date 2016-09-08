@@ -19,10 +19,10 @@ use Sfynx\DddBundle\Layer\Infrastructure\Validator\Constraint\IdValidator;
 {% set args = "" %}
 {% for field in entityFields %}
     {% if field.type != "id" %}
-        {% if field.type=="number" %}
+        {% if field.type == "number" %}
             {% set args = args ~ "123,"  %}
         {% else %}
-            {% if field.type=="boolean" %}
+            {% if field.type == "boolean" %}
                 {% set args = args ~ "true,"  %}
             {% else %}
                 {% set args = args ~ "'abc',"  %}
@@ -31,22 +31,18 @@ use Sfynx\DddBundle\Layer\Infrastructure\Validator\Constraint\IdValidator;
     {% endif %}
 {% endfor %}
 
-class CountryManagerTest extends  \PHPUnit_Framework_TestCase
+class {{ entityName }}ManagerTest extends  \PHPUnit_Framework_TestCase
 {
     protected $emailManager;
     protected $repo;
 
     public function setUp()
     {
-
-
         $this->repo = Phake::mock(RepositoryFactoryInterface::class);
         $this->saveReposiroty = Phake::mock(SaveRepository::class);
         $this->getOneRepository = Phake::mock(GetRepository::class);
         $this->entity = Phake::mock(Country::class);
         $logger = Phake::mock(Logger::class);
-
-
 
         $this->manager = new {{ entityName }}Manager($this->repo);
         $this->manager->setLogger($logger);
@@ -71,7 +67,6 @@ class CountryManagerTest extends  \PHPUnit_Framework_TestCase
             Phake::verify($this->repo)->buildRepository(RepositoryFactoryInterface::NEW_REPOSITORY);
         }
     }
-
 
     public function testUpdate()
     {

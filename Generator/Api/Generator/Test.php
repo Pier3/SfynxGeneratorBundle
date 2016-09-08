@@ -156,7 +156,8 @@ class Test extends LayerAbstract
         return $this;
     }
 
-    public function generatePhpunitXML() {
+    public function generatePhpunitXML()
+    {
         $this->addHandlers('TestPHpunitXML');
         $this->generator->execute()->clear();
     }

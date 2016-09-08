@@ -18,8 +18,7 @@ class DomainTest extends \PHPUnit_Framework_TestCase
     protected $valueObjects;
     protected $environment;
 
-    public function setup()
-    {
+    public function setup() {
         $this->assertNotNull($_ENV["swaggerFile"]);
         $this->assertNotNull($_ENV["contextName"]);
         $this->environment = $_ENV["contextName"];
@@ -34,8 +33,7 @@ class DomainTest extends \PHPUnit_Framework_TestCase
         $this->routes = $this->dddApiCommand->parseRoutes();
     }
 
-    public function hasMethod($method, $class)
-    {
+    public function hasMethod($method, $class) {
         $methods = $class->getMethods();
         foreach ($methods as $classMethod) {
             if ($classMethod->name == $method) {
@@ -45,8 +43,7 @@ class DomainTest extends \PHPUnit_Framework_TestCase
         return false;
     }
 
-    public function checkNamespace($namespace, $file)
-    {
+    public function checkNamespace($namespace, $file) {
 
         $content = file_get_contents($file);
         
@@ -57,8 +54,7 @@ class DomainTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function checkClassName($className, $file)
-    {
+    public function checkClassName($className, $file) {
         $content = file_get_contents($file);
 
         if (preg_match('#\s*([Cc]lass|[Ii]nterface)\s*' . $className . '\s*#', $content)) {
@@ -68,8 +64,7 @@ class DomainTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testfilesExist()
-    {
+    public function testfilesExist() {
         $this->assertFileExists(__DIR__ . "/../../../../src/" . $this->environment . "/Domain");
         $this->assertFileExists(__DIR__ . "/../../../../src/" . $this->environment . "/Domain/Entity");
         foreach ($this->entities as $entity => $fields) {

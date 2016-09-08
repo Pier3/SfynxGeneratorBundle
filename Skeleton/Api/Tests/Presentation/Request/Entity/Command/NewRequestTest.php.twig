@@ -33,12 +33,12 @@ class NewRequestTest extends \PHPUnit_Framework_TestCase
     {
         $this->SymfonyStrategy = Phake::mock(SymfonyStrategy::class);
         $this->resolver = Phake::mock(ResolverStrategy::class);
-        $this->request = new NewRequest($this->SymfonyStrategy,$this->resolver);
+        $this->request = new NewRequest($this->SymfonyStrategy, $this->resolver);
 
     }
 
     public function testGetRequestInterface()
     {
-        $this->assertInstanceof(CommandRequestInterface::class,$this->request);
+        $this->assertInstanceof(CommandRequestInterface::class, $this->request);
     }
 }

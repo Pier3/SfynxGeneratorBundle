@@ -22,21 +22,21 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $this->swaggerFile = $_ENV["swaggerFile"];
 
         $ymlParser = new Parser();
-        $this->dddApiCommand= new GenerateDddApiCommand();
+        $this->dddApiCommand = new GenerateDddApiCommand();
         $this->dddApiCommand->setConfig($ymlParser->parse(file_get_contents($this->swaggerFile)));
     }
 
 
     public function testParsingValueObject() {
-        $this->assertCount(1,$this->dddApiCommand->parseValueObjects());
+        $this->assertCount(1, $this->dddApiCommand->parseValueObjects());
     }
 
     public function testParsingEntities() {
-        $this->assertCount(1,$this->dddApiCommand->parseEntities());
+        $this->assertCount(1, $this->dddApiCommand->parseEntities());
     }
 
     public function testParseRoutes() {
-        $this->assertCount(4,$this->dddApiCommand->parseRoutes());
+        $this->assertCount(4, $this->dddApiCommand->parseRoutes());
     }
 
 }

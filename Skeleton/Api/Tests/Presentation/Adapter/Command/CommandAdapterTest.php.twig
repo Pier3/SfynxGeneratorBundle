@@ -30,13 +30,13 @@ class {{ actionName }}CommandAdapterTest extends \PHPUnit_Framework_TestCase
 
     public function testInterfaces()
     {
-        $this->assertInstanceOf(CommandAdapterInterface::class,$this->adapter);
+        $this->assertInstanceOf(CommandAdapterInterface::class, $this->adapter);
     }
 
     public function testCreateCommandFromRequest()
     {
         $this->adapter->createCommandFromRequest($this->request);
-        Phake::verify($this->request,Phake::times(1))->getRequestParameters();
+        Phake::verify($this->request, Phake::times(1))->getRequestParameters();
 
     }
 }

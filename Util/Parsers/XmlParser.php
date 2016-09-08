@@ -19,7 +19,9 @@ class XmlParser implements ParserInterface
      */
     public function parse(string $fileName): array
     {
-        //TODO: implement the XML parser.
+        //TODO: implement the XML parser, then use the $content in the parser so remove the @noinspection tag.
+        /** @noinspection PhpUnusedLocalVariableInspection */
+        $content = file_get_contents($fileName);
         die('TODO: implement the XML parser.');
     }
 }

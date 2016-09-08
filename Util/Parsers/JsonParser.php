@@ -19,7 +19,9 @@ class JsonParser implements ParserInterface
      */
     public function parse(string $fileName): array
     {
-        //TODO: implement the JSON parser.
+        //TODO: implement the JSON parser, then use the $content in the parser so remove the @noinspection tag.
+        /** @noinspection PhpUnusedLocalVariableInspection */
+        $content = file_get_contents($fileName);
         die('TODO: implement the Json parser.');
     }
 }

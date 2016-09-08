@@ -4,14 +4,13 @@ declare(strict_types = 1);
 namespace Sfynx\DddGeneratorBundle\Generator\Generalisation;
 
 use Exception;
+use Sfynx\DddGeneratorBundle\Twig\DDDExtension;
 use Sfynx\DddGeneratorBundle\Util\StringManipulation;
+use Symfony\Component\Console\Output\OutputInterface;
 use Twig_Environment;
 use Twig_Error_Loader;
 use Twig_Error_Runtime;
 use Twig_Error_Syntax;
-
-use Sfynx\DddGeneratorBundle\Util\PiFileManager;
-use Sfynx\DddGeneratorBundle\Twig\DDDExtension;
 use Twig_Loader_Filesystem;
 use Twig_SimpleFilter;
 
@@ -23,6 +22,8 @@ use Twig_SimpleFilter;
  */
 class Handler implements HandlerInterface
 {
+    use OutputManagerTrait;
+
     /** @var string */
     protected $rootSkeletonDir;
     /** @var string[] */
@@ -45,8 +46,9 @@ class Handler implements HandlerInterface
     /**
      * AbstractHandler constructor.
      * @param array $commonParameters
+     * @param OutputInterface $output
      */
-    public function __construct(array $commonParameters)
+    public function __construct(array $commonParameters, OutputInterface $output)
     {
         $this->parameters = $commonParameters;
         //If key "skeletonDir" is set, give its value to $this->skeletonDir, otherwise, set null.
@@ -54,26 +56,27 @@ class Handler implements HandlerInterface
         $this->skeletonTpl = $commonParameters['skeletonTpl'] ?? null;
         $this->targetPattern = $commonParameters['targetPattern'] ?? null;
         $this->handlerName = $commonParameters['handlerName'] ?? null;
-
         $this->rootSkeletonDir = dirname(dirname(__DIR__)) . '/Skeleton';
+
+        $this->setOutput($output);
         $this->setTarget();
         $this->setTemplateName();
     }
 
+    /**
+     * Execute the handler to render a template with parameters into a target file.
+     */
     public function execute()
     {
         try {
-            $this->setSkeletonDirs($this->getRootSkeletonDir() . '/' . $this->skeletonDir);
-            $targetDir = PiFileManager::getFileDirectoryName($this->target);
-            if (!file_exists(PiFileManager::getFileDirectoryName($this->target))) {
-                mkdir($targetDir, 0777, true);
-            }
-            $this->renderFile($this->getTemplateName(), $this->target, $this->getParameters());
+            $this->setSkeletonDirs($this->getRootSkeletonDir() . '/' . $this->skeletonDir)
+                ->renderFile($this->getTemplateName(), $this->target, $this->getParameters());
             $this->setPermissions($this->target);
         } catch (Exception $e) {
             $errorMessage = PHP_EOL . ' # /!\ Exception occurs during the execution of handler "%s":' . PHP_EOL
-                . '    %s' . PHP_EOL . PHP_EOL;
-            fwrite(STDERR, sprintf($errorMessage, $this->handlerName, $e->getMessage()));
+                . '    %s' . PHP_EOL;
+            $errorMessage = sprintf($errorMessage, $this->handlerName, $e->getMessage());
+            $this->errWriteln($errorMessage);
         }
     }
 
@@ -121,37 +124,23 @@ class Handler implements HandlerInterface
     }
 
     /**
-     * Set an array of directories to look for templates.
-     * The directories must be sorted from the most specific to the most generic directory.
+     * Render the template file with parameters to the target file given in argument.
      *
-     * @param array|string $skeletonDirs An array of skeleton dirs
-     * @return Handler
-     */
-    public function setSkeletonDirs($skeletonDirs): self
-    {
-        $this->skeletonDirs = is_array($skeletonDirs) ? $skeletonDirs : [$skeletonDirs];
-        return $this;
-    }
-
-    /**
-     * Set the permissions to the target giving it the good owners and rights.
-     *
+     * @param string $template
      * @param string $target
-     * @param string $owner
-     * @param string $group
+     * @param array  $parameters
+     * @throws Twig_Error_Syntax
+     * @throws Twig_Error_Runtime
+     * @throws Twig_Error_Loader
      */
-    public function setPermissions(string $target, string $owner = 'www-data', string $group = 'www-data')
+    public function renderFile(string $template, string $target, array $parameters)
     {
-        //If you are on linux, there is an issue on the chown/chmod command so we have to execute directly the `sudo`
-        //command here. Otherwise, just call the php internal functions
-        if (0 !== stripos(PHP_OS, 'win')) {
-            `sudo chown {$owner}:{$group} {$target}`;
-            `sudo chmod 777 {$target}`;
-        } else {
-            chown($target, $owner);
-            chgrp($target, $group);
-            chmod($target, '0777');
+        if (!is_dir(dirname($target))) {
+            mkdir(dirname($target), 0777, true);
         }
+
+        file_put_contents($target, $this->render($template, $parameters));
+        $this->writeln('    # ' . $target, OutputInterface::VERBOSITY_VERY_VERBOSE);
     }
 
     /**
@@ -180,7 +169,7 @@ class Handler implements HandlerInterface
     protected function getTwigEnvironment(): Twig_Environment
     {
         return new Twig_Environment(
-            new Twig_Loader_Filesystem($this->skeletonDirs),
+            new Twig_Loader_Filesystem($this->getSkeletonDirs()),
             [
                 'debug' => true,
                 'cache' => false,
@@ -191,22 +180,47 @@ class Handler implements HandlerInterface
     }
 
     /**
-     * Render the template file with parameters to the target file given in argument.
+     * Get an array of directories to look for templates.
+     * The directories must be sorted from the most specific to the most generic directory.
      *
-     * @param string $template
-     * @param string $target
-     * @param array  $parameters
-     * @throws Twig_Error_Syntax
-     * @throws Twig_Error_Runtime
-     * @throws Twig_Error_Loader
+     * @return array|string $skeletonDirs An array of skeleton dirs.
      */
-    public function renderFile(string $template, string $target, array $parameters)
+    public function getSkeletonDirs()
     {
-        if (!is_dir(dirname($target))) {
-            mkdir(dirname($target), 0777, true);
-        }
+        return $this->skeletonDirs;
+    }
 
-        echo '    # ' . $target . PHP_EOL;
-        file_put_contents($target, $this->render($template, $parameters));
+    /**
+     * Set an array of directories to look for templates.
+     * The directories must be sorted from the most specific to the most generic directory.
+     *
+     * @param array|string $skeletonDirs An array of skeleton dirs
+     * @return self
+     */
+    public function setSkeletonDirs($skeletonDirs): self
+    {
+        $this->skeletonDirs = is_array($skeletonDirs) ? $skeletonDirs : [$skeletonDirs];
+        return $this;
+    }
+
+    /**
+     * Set the permissions to the target giving it the good owners and rights.
+     *
+     * @param string $target
+     * @param string $owner
+     * @param string $group
+     */
+    public function setPermissions(string $target, string $owner = 'www-data', string $group = 'www-data')
+    {
+        //If you are on linux, there is an issue on the chown/chmod command so we have to execute directly the `sudo`
+        //command here. Otherwise, just call the php internal functions
+        if (0 !== stripos(PHP_OS, 'win')) {
+            `sudo chown {$owner}:{$group} {$target}`;
+            `sudo chmod 777 {$target}`;
+        } else {
+            chown($target, $owner);
+            chgrp($target, $group);
+            chmod($target, '0777');
+        }
     }
 }

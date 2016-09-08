@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Sfynx\DddGeneratorBundle\Generator\Api\Generator;
 
 /**
- * Class Domain
+ * Class Test
  *
  * @category Generator
  * @package Api
@@ -19,32 +19,24 @@ class Test extends LayerAbstract
     protected static $skeletonDir = 'Api/Tests';
 
     /**
-     * Entry point of the generation of the 'Domain' layer in DDD.
-     * Call the generation of :
-     * - Entities and Repositories Interfaces ;
-     * - Services ;
-     * - Workflow ;
-     * - Value objects ;
-     * - Tests of the whole 'Domain' layer.
+     * Entry point of the generation of the Tests part of the whole DDD application.
+     * Call the generation of tests for each DDD layers.
      */
     public function generate()
     {
-        $this->output->writeln('');
-        $this->output->writeln('##############################################');
-        $this->output->writeln('#          GENERATE TESTS                    #');
-        $this->output->writeln('##############################################');
-        $this->output->writeln('');
+        $this->writeln('')
+            ->writeln('##############################################')
+            ->writeln('#               GENERATE TESTS               #')
+            ->writeln('##############################################')
+            ->writeln('');
 
         try {
-            $this->output->writeln('### GENERATE APPLICATION TESTS ###');
-            $this->generateApplicationTests();
-            $this->output->writeln('### GENERATE DOMAIN TESTS ###');
-            $this->generateDomainTests();
-            $this->output->writeln('### GENERATE PRESENTATION TESTS ###');
-            $this->generatePresentationTests();
+            $this->writeln('### GENERATE APPLICATION TESTS ###')->generateApplicationTests();
+            $this->writeln('### GENERATE DOMAIN TESTS ###')->generateDomainTests();
+            $this->writeln('### GENERATE PRESENTATION TESTS ###')->generatePresentationTests();
             $this->generatePhpunitXML();
         } catch (\InvalidArgumentException $e) {
-            fwrite(STDERR, $e->getMessage());
+            $this->errWriteln($e->getMessage());
             exit;
         }
     }
@@ -59,7 +51,7 @@ class Test extends LayerAbstract
             $this->parameters['entityName'] = ucfirst(strtolower($data['entity']));
             $this->parameters['entityFields'] = $this->entitiesToCreate[$data['entity']];
 
-            $this->output->writeln(' - ' . $this->parameters['actionName'] . ' - ');
+            $this->writeln(' - ' . $this->parameters['actionName'] . ' - ');
 
             foreach ($this->entitiesToCreate[$data['entity']] as $field) {
                 $constructorParams .= '$' . $field['name'] . ', ';
@@ -82,7 +74,7 @@ class Test extends LayerAbstract
             $this->parameters['entityName'] = ucfirst(strtolower($data['entity']));
             $this->parameters['entityFields'] = $this->entitiesToCreate[$data['entity']];
 
-            $this->output->writeln(' - ' . $this->parameters['actionName'] . ' - ');
+            $this->writeln(' - ' . $this->parameters['actionName'] . ' - ');
 
             $this->addHandlers('TestQuery');
 

@@ -36,11 +36,13 @@ final class LayerVO
     public $commandsQueriesList;
     /** @var array[] */
     public $entitiesGroups;
+    /** @var OutputInterface */
+    public $output;
 
     /**
      * Layer VO constructor, used by all layers.
      *
-     * @param GeneratorVO     $voGenerator
+     * @param GeneratorVO $voGenerator
      * @param OutputInterface $output
      */
     public function __construct(GeneratorVO $voGenerator, OutputInterface $output)

@@ -27,19 +27,17 @@ class PresentationBundle extends LayerAbstract
      */
     public function generate()
     {
-        $this->output->writeln('');
-        $this->output->writeln('######################################################');
-        $this->output->writeln('#       GENERATE PRESENTATION BUNDLE STRUCTURE       #');
-        $this->output->writeln('######################################################');
-        $this->output->writeln('');
+        $this->writeln('')
+            ->writeln('######################################################')
+            ->writeln('#       GENERATE PRESENTATION BUNDLE STRUCTURE       #')
+            ->writeln('######################################################')
+            ->writeln('');
 
         try {
-            $this->output->writeln('### BUNDLE GENERATION ###');
-            $this->generateBundle();
-            $this->output->writeln('### RESOURCES CONFIGURATION GENERATION ###');
-            $this->generateResourcesConfiguration();
+            $this->writeln('### BUNDLE GENERATION ###')->generateBundle();
+            $this->writeln('### RESOURCES CONFIGURATION GENERATION ###')->generateResourcesConfiguration();
         } catch (\InvalidArgumentException $e) {
-            fwrite(STDERR, $e->getMessage());
+            $this->errWriteln($e->getMessage());
             exit;
         }
     }

@@ -26,17 +26,16 @@ class InfrastructureBundle extends LayerAbstract
      */
     public function generate()
     {
-        $this->output->writeln('');
-        $this->output->writeln('#############################################');
-        $this->output->writeln('# GENERATE INFRASTRUCTURE BUNDLE STRUCTURE  #');
-        $this->output->writeln('#############################################');
-        $this->output->writeln('');
+        $this->writeln('')
+            ->writeln('#############################################')
+            ->writeln('# GENERATE INFRASTRUCTURE BUNDLE STRUCTURE  #')
+            ->writeln('#############################################')
+            ->writeln('');
 
         try {
-            $this->output->writeln('### BUNDLE GENERATION ###');
-            $this->generateBundle();
+            $this->writeln('### BUNDLE GENERATION ###')->generateBundle();
         } catch (\InvalidArgumentException $e) {
-            fwrite(STDERR, $e->getMessage());
+            $this->errWriteln($e->getMessage());
             exit;
         }
     }

@@ -8,6 +8,7 @@ use Sfynx\DddGeneratorBundle\Bin\Generator;
 use Sfynx\DddGeneratorBundle\Generator\Api\DddApiGenerator;
 use Sfynx\DddGeneratorBundle\Generator\Api\ValueObjects\LayerVO;
 use Sfynx\DddGeneratorBundle\Generator\Generalisation\Handler;
+use Sfynx\DddGeneratorBundle\Generator\Generalisation\OutputManagerTrait;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
 
@@ -20,6 +21,11 @@ use Symfony\Component\Yaml\Parser;
  */
 abstract class LayerAbstract
 {
+    use OutputManagerTrait;
+
+    /** @var bool */
+    public static $verbose = false;
+
     /** @var string */
     protected static $handlersFileName;
 
@@ -74,7 +80,7 @@ abstract class LayerAbstract
         $this->projectDir = $layerVO->projectDir;
         $this->destinationPath = $layerVO->destinationPath;
 
-        $this->output = $layerVO->output;
+        $this->setOutput($layerVO->output);
 
         $this->commandsQueriesList = $layerVO->commandsQueriesList;
         $this->parameters = $layerVO->parameters;
@@ -86,7 +92,8 @@ abstract class LayerAbstract
         } catch (ParseException $e) {
             $errorMessage = '# Error in layer "%s": configuration handler file "%s" does not exist.' . PHP_EOL
                 . 'Error reported is: "%s".' . PHP_EOL;
-            fwrite(STDERR, sprintf($errorMessage, static::class, $handlersFileName, $e->getMessage()));
+            $errorMessage = sprintf($errorMessage, static::class, $handlersFileName, $e->getMessage());
+            $this->errWriteln($errorMessage);
             exit;
         }
     }
@@ -119,7 +126,7 @@ abstract class LayerAbstract
         $this->parameters['handlerName'] = $handlerName;
 
         //Add the handler with the configured parameters.
-        $this->generator->addHandler(new Handler($this->parameters));
+        $this->generator->addHandler(new Handler($this->parameters, $this->output));
 
         return $this;
     }

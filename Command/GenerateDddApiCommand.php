@@ -57,6 +57,7 @@ class GenerateDddApiCommand extends Command
     const ARG_DESTINATION_FILE_NAME = 'destination-path';
     const ARG_CONTEXT_NAME = 'context-name';
     const ARG_CREATE_ALL = 'create-all';
+    const ARG_VERBOSE_MODE = 'verbose';
 
     /** @var DddApiGenerator */
     protected $generator;

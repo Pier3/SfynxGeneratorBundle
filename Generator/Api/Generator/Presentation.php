@@ -29,23 +29,19 @@ class Presentation extends LayerAbstract
      */
     public function generate()
     {
-        $this->output->writeln('');
-        $this->output->writeln('##############################################');
-        $this->output->writeln('#      GENERATE PRESENTATION STRUCTURE       #');
-        $this->output->writeln('##############################################');
-        $this->output->writeln('');
+        $this->writeln('')
+            ->writeln('##############################################')
+            ->writeln('#      GENERATE PRESENTATION STRUCTURE       #')
+            ->writeln('##############################################')
+            ->writeln('');
 
         try {
-            $this->output->writeln('### COMMAND ADAPTERS GENERATION ###');
-            $this->generateCommandsAdapter();
-            $this->output->writeln('### QUERY ADAPTERS GENERATION ###');
-            $this->generateQueriesAdapter();
-            $this->output->writeln('### COORDINATION CONTROLLERS GENERATION ###');
-            $this->generateCoordinationControllers();
-            $this->output->writeln('### REQUESTS GENERATION ###');
-            $this->generateRequest();
+            $this->writeln('### COMMAND ADAPTERS GENERATION ###')->generateCommandsAdapter();
+            $this->writeln('### QUERY ADAPTERS GENERATION ###')->generateQueriesAdapter();
+            $this->writeln('### COORDINATION CONTROLLERS GENERATION ###')->generateCoordinationControllers();
+            $this->writeln('### REQUESTS GENERATION ###')->generateRequest();
         } catch (\InvalidArgumentException $e) {
-            fwrite(STDERR, $e->getMessage());
+            $this->errWriteln($e->getMessage());
             exit;
         }
     }

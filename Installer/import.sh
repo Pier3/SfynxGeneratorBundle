@@ -130,7 +130,8 @@ if [ "false" = "$QUIET" ]; then
     echo ''
     echo '# Copy the Swagger file into the new project.'
 fi
-cp "$SWAGGER_PATH" "$PROJECT_NAME"/entities.yml
+SWAGGER_COPY="${PROJECT_NAME}/entities.${SWAGGER_PATH##*.}"
+cp "$SWAGGER_PATH" "${SWAGGER_COPY}"
 
 ####
 # 2. ACTION of defining the environment variables to bootstrap the generator
@@ -141,7 +142,7 @@ if [ "false" = "$QUIET" ]; then
 fi
 
 #Define the environment variable setting the Swagger file path
-SYMFONY_SFYNX_PATH_TO_SWAGGER_FILE="$PROJECT_NAME"/entities.yml
+SYMFONY_SFYNX_PATH_TO_SWAGGER_FILE="${SWAGGER_COPY}"
 export SYMFONY_SFYNX_PATH_TO_SWAGGER_FILE
 
 #Define the environment variable setting the project name with Uppercase

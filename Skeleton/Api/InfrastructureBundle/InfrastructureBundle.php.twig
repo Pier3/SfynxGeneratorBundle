@@ -5,7 +5,7 @@ namespace {{ projectName }}\InfrastructureBundle;
 
 use {{ projectName }}\InfrastructureBundle\DependencyInjection\{{ projectName }}InfrastructureBundleExtension;
 
-use {{ projectName }}\InfrastructureBundle\DependencyInjection\Compiler {
+use {{ projectName }}\InfrastructureBundle\DependencyInjection\Compiler\{
     CreateRepositoryFactoryPass,
     CreateDynamicConnectionPass
 };
@@ -18,6 +18,12 @@ use Doctrine\DBAL\Types as Orm;
 use Doctrine\ODM\MongoDB\Types as Odm;
 use Doctrine\ODM\CouchDB\Types as CouchDB;
 
+/**
+ * Class {{ projectName }}InfrastructureBundle.
+ *
+ * @category {{ projectName }}
+ * @package InfrastructureBundle
+ */
 class {{ projectName }}InfrastructureBundle extends Bundle
 {
     /**
@@ -30,6 +36,11 @@ class {{ projectName }}InfrastructureBundle extends Bundle
         return new {{ projectName }}InfrastructureBundleExtension();
     }
 
+    /**
+     * Dynamically load the database types depending on the driver set in the configuration.
+     *
+     * @throws \Exception
+     */
     public function boot()
     {
         switch ($this->container->getParameter('database.driver')) {
@@ -41,7 +52,7 @@ class {{ projectName }}InfrastructureBundle extends Bundle
                 $this->loadOdmTypes();
                 break;
             case MultipleDatabase::COUCHDB_DATABASE_TYPE:
-                $this->loadCouchDbTypes();
+                $this->loadCouchDBTypes();
                 break;
         }
     }

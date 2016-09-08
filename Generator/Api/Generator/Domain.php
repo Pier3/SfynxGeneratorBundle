@@ -59,6 +59,7 @@ class Domain extends LayerAbstract
             $this->parameters['entityFields'] = $fields;
             $this->parameters['constructorArgs'] = $this->buildConstructorParamsString($entityName);
             $this->parameters['paramsString'] = $this->buildParamsString($entityName);
+            $this->parameters['useRepository'] = $this->buildActionName();
 
             $this->addHandlers(
                 //Entities and Repository Interfaces

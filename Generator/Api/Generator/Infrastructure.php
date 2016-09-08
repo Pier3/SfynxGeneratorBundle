@@ -87,7 +87,7 @@ class Infrastructure extends LayerAbstract
     }
 
     /**
-     * Add Repositories handlers to the generator. For use in a loop for each C.Q.R.S. actions.
+     * Add Repositories handlers to the generator. For use in a loop for all C.Q.R.S. actions from Layer Abstract.
      *
      * @param array $entityGroups
      * @param string $group
@@ -100,8 +100,8 @@ class Infrastructure extends LayerAbstract
         $this->parameters['group'] = $group;
 
         //Fetch all actionName and add the handler for this actionName
-        foreach ($entityGroups[$group] as $data) {
-            $this->parameters['actionName'] = ucfirst($data['action']);
+        foreach (array_merge(LayerAbstract::COMMANDS_LIST, LayerAbstract::QUERIES_LIST) as $name) {
+            $this->parameters['actionName'] = ucfirst($name);
             $this->addHandlers('ormRepositoryHandler', 'odmRepositoryHandler', 'couchDbRepositoryHandler');
         }
 

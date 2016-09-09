@@ -16,7 +16,13 @@ use Phake;
 use Sfynx\DddBundle\Layer\Domain\Service\Generalisation\Factory\RepositoryFactoryInterface;
 use Sfynx\DddBundle\Layer\Infrastructure\Persistence\Generalisation\Orm\SaveRepository;
 
-
+/**
+* Class RepositoryFactoryTest
+* This class permits to test the RepositoryFactory class
+* @category {{ projectName }}
+* @package Test
+* @subpackage Service\Factory\Orm
+**/
 class RepositoryFactoryTest extends  \PHPUnit_Framework_TestCase
 {
 
@@ -27,13 +33,29 @@ class RepositoryFactoryTest extends  \PHPUnit_Framework_TestCase
 
     public function testBuildRepository()
     {
-        $this->assertInstanceOf(GetAllRepository::class,$this->repositoryFactory->buildRepository(RepositoryFactoryInterface::ALL_REPOSITORY));
-        $this->assertInstanceOf(GetRepository::class,$this->repositoryFactory->buildRepository(RepositoryFactoryInterface::ONE_REPOSITORY));
-        $this->assertInstanceOf(SearchByRepository::class,$this->repositoryFactory->buildRepository(RepositoryFactoryInterface::SEARCHBY_REPOSITORY));
-        //$this->assertInstanceOf(GetByIdsRepository::class,$this->repositoryFactory->buildRepository(RepositoryFactoryInterface::GETBYIDS_REPOSITORY));
-        $this->assertInstanceOf(DeleteRepository::class,$this->repositoryFactory->buildRepository(RepositoryFactoryInterface::DELETEONE_REPOSITORY));
-        //$this->assertInstanceOf(DeleteManyRepository::class,$this->repositoryFactory->buildRepository(RepositoryFactoryInterface::DELETEMANY_REPOSITORY));
-        $this->assertInstanceOf(SaveRepository::class,$this->repositoryFactory->buildRepository(RepositoryFactoryInterface::NEW_REPOSITORY));
-        $this->assertInstanceOf(SaveRepository::class,$this->repositoryFactory->buildRepository(RepositoryFactoryInterface::UPDATE_REPOSITORY));
+        $this->assertInstanceOf(GetAllRepository::class,$this->repositoryFactory->buildRepository(
+                                                                            RepositoryFactoryInterface::ALL_REPOSITORY
+                                                        ));
+        $this->assertInstanceOf(GetRepository::class,$this->repositoryFactory->buildRepository(
+                                                                            RepositoryFactoryInterface::ONE_REPOSITORY
+                                                        ));
+        $this->assertInstanceOf(SearchByRepository::class,$this->repositoryFactory->buildRepository(
+                                                                            RepositoryFactoryInterface::SEARCHBY_REPOSITORY
+                                                        ));
+        //$this->assertInstanceOf(GetByIdsRepository::class,$this->repositoryFactory->buildRepository(
+                                                                            RepositoryFactoryInterface::GETBYIDS_REPOSITORY
+                                                        ));
+        $this->assertInstanceOf(DeleteRepository::class,$this->repositoryFactory->buildRepository(
+                                                                            RepositoryFactoryInterface::DELETEONE_REPOSITORY
+                                                        ));
+        //$this->assertInstanceOf(DeleteManyRepository::class,$this->repositoryFactory->buildRepository(
+                                                                            RepositoryFactoryInterface::DELETEMANY_REPOSITORY
+                                                        ));
+        $this->assertInstanceOf(SaveRepository::class,$this->repositoryFactory->buildRepository(
+                                                                            RepositoryFactoryInterface::NEW_REPOSITORY
+                                                        ));
+        $this->assertInstanceOf(SaveRepository::class,$this->repositoryFactory->buildRepository(
+                                                                            RepositoryFactoryInterface::UPDATE_REPOSITORY
+                                                        ));
     }
 }

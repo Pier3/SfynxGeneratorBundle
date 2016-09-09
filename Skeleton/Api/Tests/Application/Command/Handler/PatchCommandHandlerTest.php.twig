@@ -9,12 +9,22 @@ use {{ projectName }}\Application\{{ entityName }}\Command\PatchCommand;
 use {{ projectName }}\Domain\Workflow\{{ entityName }}\Handler\PatchWFHandler;
 use \Phake;
 
+/**
+* Class PatcheCommandHandlerTest
+* This class permits to test the PatchCommandHandler class
+* @category {{ projectName }}
+* @package Test
+* @subpackage Application\Command\Handler
+**/
 class PatchCommandHandlerTest extends \PHPUnit_Framework_TestCase
 {
     protected $workflowHandler;
     protected $commandHandler;
     protected $command;
 
+    /**
+    * Configure the tests
+    */
     public function setUp()
     {
         $this->command = Phake::mock(PatchCommand::class);

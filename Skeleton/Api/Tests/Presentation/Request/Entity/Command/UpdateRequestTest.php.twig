@@ -13,7 +13,13 @@ use DemoCountry\Presentation\Request\Country\Command\UpdateRequest;
 use \Phake;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Resolver\ResolverStrategy;
 
-
+/**
+* Class UpdateRequestTest
+* This class permits to test the PatchRequest class
+* @category {{ projectName }}
+* @package Test
+* @subpackage Presentation\Request\Command
+**/
 class UpdateRequestTest extends \PHPUnit_Framework_TestCase
 {
 
@@ -30,6 +36,7 @@ class UpdateRequestTest extends \PHPUnit_Framework_TestCase
      */
     protected $request;
 
+    /* configure the test */
     public function setUp()
     {
         $this->SymfonyStrategy = Phake::mock(SymfonyStrategy::class);
@@ -38,6 +45,7 @@ class UpdateRequestTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    /* Verify that request implements QueryRequestInterface */
     public function testGetRequestInterface()
     {
         $this->assertInstanceof(CommandRequestInterface::class, $this->request);

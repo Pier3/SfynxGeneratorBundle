@@ -13,7 +13,13 @@ use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Resolver\ResolverI
 use \Phake;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Resolver\ResolverStrategy;
 
-
+/**
+* Class SearchByRequestTest
+* This class permits to test the SearchByRequest class
+* @category {{ projectName }}
+* @package Test
+* @subpackage Presentation\Request\Query
+**/
 class SearchByRequestTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -29,6 +35,7 @@ class SearchByRequestTest extends \PHPUnit_Framework_TestCase
      */
     protected $request;
 
+    /* Configure the test */
     public function setUp()
     {
         $this->SymfonyStrategy = Phake::mock(SymfonyStrategy::class);
@@ -37,6 +44,7 @@ class SearchByRequestTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    /* Verify that request implements QueryRequestInterface */
     public function testGetRequestInterface()
     {
         $this->assertInstanceof(QueryRequestInterface::class, $this->request);

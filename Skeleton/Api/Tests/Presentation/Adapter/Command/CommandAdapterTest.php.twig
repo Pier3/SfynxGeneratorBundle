@@ -10,6 +10,13 @@ use Sfynx\DddBundle\Layer\Presentation\Adapter\Generalisation\CommandAdapterInte
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\CommandRequestInterface;
 use \Phake;
 
+/**
+* Class {{ actionName }}CommandAdapterTest
+* This class permits to test the {{ actionName }}CommandAdapter class
+* @category {{ projectName }}
+* @package Test
+* @subpackage Presentation\Adapter\Command
+**/
 class {{ actionName }}CommandAdapterTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -22,17 +29,26 @@ class {{ actionName }}CommandAdapterTest extends \PHPUnit_Framework_TestCase
      */
     protected $request;
 
+    /**
+    * Configure the tests
+    */
     public function setUp()
     {
         $this->adapter = new UpdateCommandAdapter();
         $this->request  = Phake::mock(UpdateRequest::class);
     }
 
+    /**
+    * Test if adapter implements CommandAdapterInterface
+    */
     public function testInterfaces()
     {
         $this->assertInstanceOf(CommandAdapterInterface::class, $this->adapter);
     }
 
+    /**
+    * Test CreateCommandFromRequest method
+    */
     public function testCreateCommandFromRequest()
     {
         $this->adapter->createCommandFromRequest($this->request);

@@ -11,12 +11,22 @@ use {{ projectName }}\Application\{{ entityName }}\Command\DeleteCommand;
 use {{ projectName }}\Domain\Workflow\{{ entityName }}\Handler\DeleteManyWFHandler;
 use \Phake;
 
+/**
+* Class DeleteManyCommandHandlerTest
+* This class permits to test the DeleteManyCommandHandler class
+* @category {{ projectName }}
+* @package Test
+* @subpackage Application\Command\Handler
+**/
 class DeleteManyCommandHandlerTest extends \PHPUnit_Framework_TestCase
 {
     protected $manager;
     protected $commandHandler;
     protected $command;
 
+    /**
+    * Configure the tests
+    */
     public function setUp()
     {
         $this->manager = \Phake::mock(CountryManager::class);

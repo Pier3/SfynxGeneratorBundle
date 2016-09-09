@@ -18,7 +18,7 @@ class UpdateCommandTest extends \PHPUnit_Framework_TestCase
 {% set constructorArgs = "" %}
 {% for field in entityFields %}
         $this->{{ field.name }} = '123456';
-{% set constructorArgs = constructorArgs ~ "$this->" ~ field.name ~ ", " %}
+{% set constructorArgs = constructorArgs ~ "$this->" ~ field.name ~ ',\n ' %}
 {% endfor %}
 
         $this->command = new UpdateCommand({{ constructorArgs|trim(', ') }});

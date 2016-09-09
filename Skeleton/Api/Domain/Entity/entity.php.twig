@@ -182,7 +182,7 @@ class {{ entityName }}
 
     /**
      * Set the {{ field.name|ucfirst }} attribute.
-     * @param {% if namespace %}{{ namespace }}{% else %}{{ field.type }}{% endif %} $value
+     * @param {% if namespace %}{{ namespace }}{% else %}{% if field.type == "number" %}int{% else %}{{ field.type }}{% endif %}{% endif %} $value
      * @return {{ entityName }}
      */
     public function set{{ field.name|ucfirst }}({% if namespace %}{{ namespace }}{% else %}{% if field.type == "number" %}int{% else %}{% if field.type == "boolean" %}bool{% else %}{{ field.type }}{% endif %}{% endif %}{% endif %} $value): self

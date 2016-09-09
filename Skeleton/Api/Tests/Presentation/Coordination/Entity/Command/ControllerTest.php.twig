@@ -46,7 +46,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         Phake::when($this->responseHandler)->getResponse(Phake::anyParameters())->thenReturn(Phake::mock(Response::class));
         Phake::when($this->request)->getContent(Phake::anyParameters())->thenReturn(json_encode(['id'=>123456]));
 
-{% set controllerArgs ="" %}
+{% set controllerArgs ="                                           " %}
 {% for commandQueryResponsibilitySegregation in controllerData %}
 {% if  commandQueryResponsibilitySegregation.group == group %}
 

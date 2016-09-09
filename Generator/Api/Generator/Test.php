@@ -55,7 +55,7 @@ class Test extends LayerAbstract
 
     public function generateCommands()
     {
-        foreach (array_merge($this->commandsQueriesList[self::COMMAND] ) as $data) {
+        foreach ($this->commandsQueriesList[self::COMMAND]) as $data) {
             $constructorParams = '';
             $managerArgs = '';
 
@@ -91,6 +91,7 @@ class Test extends LayerAbstract
 
         $this->generator->execute()->clear();
     }
+
     /**
      * @return Test
      */
@@ -146,8 +147,6 @@ class Test extends LayerAbstract
 
         return $this;
     }
-
-
 
     /**
      * Add Controller (Coordination) Handler to the generator. For use in a loop for each C.Q.R.S. actions.

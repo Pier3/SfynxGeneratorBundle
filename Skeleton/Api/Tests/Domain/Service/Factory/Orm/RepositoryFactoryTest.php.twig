@@ -5,7 +5,7 @@ namespace Tests\Domain\Service\{{ entityName }}\Factory\Orm;
 
 
 use {{ projectName }}\Domain\Service\{{ entityName }}\Factory\Orm\RepositoryFactory;
-use {{ projectName }}\Domain\Service\{{ entityName }}\Manager\{{ entityName|ucfirst }}yManager;
+use {{ projectName }}\Domain\Service\{{ entityName }}\Manager\{{ entityName|ucfirst }}Manager;
 use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\DeleteManyRepository;
 use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\DeleteRepository;
 use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\GetAllRepository;
@@ -48,15 +48,15 @@ class RepositoryFactoryTest extends  \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(SearchByRepository::class,$this->repositoryFactory->buildRepository(
                                                                             RepositoryFactoryInterface::SEARCHBY_REPOSITORY
                                                         ));
-        //$this->assertInstanceOf(GetByIdsRepository::class,$this->repositoryFactory->buildRepository(
+        /*$this->assertInstanceOf(GetByIdsRepository::class,$this->repositoryFactory->buildRepository(
                                                                             RepositoryFactoryInterface::GETBYIDS_REPOSITORY
-                                                        ));
+                                                        ));*/
         $this->assertInstanceOf(DeleteRepository::class,$this->repositoryFactory->buildRepository(
                                                                             RepositoryFactoryInterface::DELETEONE_REPOSITORY
                                                         ));
-        //$this->assertInstanceOf(DeleteManyRepository::class,$this->repositoryFactory->buildRepository(
+        /*$this->assertInstanceOf(DeleteManyRepository::class,$this->repositoryFactory->buildRepository(
                                                                             RepositoryFactoryInterface::DELETEMANY_REPOSITORY
-                                                        ));
+                                                        ));*/
         $this->assertInstanceOf(SaveRepository::class,$this->repositoryFactory->buildRepository(
                                                                             RepositoryFactoryInterface::NEW_REPOSITORY
                                                         ));

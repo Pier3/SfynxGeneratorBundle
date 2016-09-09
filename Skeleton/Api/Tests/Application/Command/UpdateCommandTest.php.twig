@@ -16,9 +16,7 @@ use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandInterface
 class UpdateCommandTest extends \PHPUnit_Framework_TestCase
 {
     protected $command;
-    protected $message;
-    protected $transaction;
-    protected $jsonRequest;
+
 
     /**
     * Configure the tests
@@ -27,6 +25,7 @@ class UpdateCommandTest extends \PHPUnit_Framework_TestCase
     {
 {% set constructorArgs = "" %}
 {% for field in entityFields %}
+        $this->{{ field.name }} = '123456';
 {% set constructorArgs = constructorArgs ~ "                                        " ~ "$this->" ~ field.name ~ ",\n" %}
 {% endfor %}
 

@@ -6,6 +6,6 @@
         );
 
         $this->controller->getAction();
-        Phake::verify($this->getQueryHandler, Phake::times(1))->process($query);
+        Phake::verify($this->getHandler, Phake::times(1))->process($query);
         Phake::verify($this->responseHandler, Phake::times(1))->create($this->entity, Response::HTTP_OK);
     }

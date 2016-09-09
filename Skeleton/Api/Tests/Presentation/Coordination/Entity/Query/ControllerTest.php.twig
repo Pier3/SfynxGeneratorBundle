@@ -48,17 +48,16 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 {% set controllerArgs ="" %}
 {% for commandQueryResponsibilitySegregation in controllerData %}
 {% if  commandQueryResponsibilitySegregation.group == group %}
-        $this->{{ commandQueryResponsibilitySegregation.action }}{{ group }}Handler = Phake::mock({{ commandQueryResponsibilitySegregation.action }}{{ group }}Handler::class);;
-        Phake::when($this->{{ commandQueryResponsibilitySegregation.action }}{{ group }}Handler)->process(Phake::anyParameters())->thenReturn($this->entity);
+        $this->{{ commandQueryResponsibilitySegregation.action }}Handler = Phake::mock({{ commandQueryResponsibilitySegregation.action }}{{ group }}Handler::class);;
+        Phake::when($this->{{ commandQueryResponsibilitySegregation.action }}Handler)->process(Phake::anyParameters())->thenReturn($this->entity);
 {% endif %}
-        {% set controllerArgs = controllerArgs  ~ "                                           " ~ "$this->" ~ commandQueryResponsibilitySegregation.action ~ group ~ 'Handler,\n'%}
+        {% set controllerArgs = controllerArgs  ~ "                                          " ~ "$this->" ~ commandQueryResponsibilitySegregation.action ~ 'Handler,\n'%}
 {% endfor %}
 
         $this->controller = new Controller($this->request,
                                            $this->resolver,
                                            $this->responseHandler,
-{{ controllerArgs|trim(',\n') }});
-
+                                           {{ controllerArgs|trim(',\n') }});
     }
 
 {% for commandQueryResponsibilitySegregation in controllerData %}

@@ -9,12 +9,22 @@ use {{ projectName }}\Application\{{ entityName }}\Command\UpdateCommand;
 use {{ projectName }}\Domain\Workflow\{{ entityName }}\Handler\UpdateWFHandler;
 use \Phake;
 
+/**
+* Class UpdateCommandHandlerTest
+* This class permits to test the UpdateCommandHandler class
+* @category {{ projectName }}
+* @package Test
+* @subpackage Application\Command\Handler
+**/
 class UpdateCommandHandlerTest extends \PHPUnit_Framework_TestCase
 {
     protected $workflowHandler;
     protected $commandHandler;
     protected $command;
 
+    /**
+    * Configure the tests
+    */
     public function setUp()
     {
         $this->command = Phake::mock(UpdateCommand::class);

@@ -12,6 +12,13 @@ use {{ projectName }}\Application\{{ entityName }}\Command\Validation\Validation
 use \Phake;
 
 
+/**
+* Class NewCommandHandlerDecoratorTest
+* This class permits to test the NewCommandHandlerDecorator class
+* @category {{ projectName }}
+* @package Test
+* @subpackage Application\Command\Handler\Decorator
+**/
 class NewCommandHandlerDecoratorTest extends \PHPUnit_Framework_TestCase
 {
     protected $commandHandlerDecorator;
@@ -19,6 +26,9 @@ class NewCommandHandlerDecoratorTest extends \PHPUnit_Framework_TestCase
     protected $commandHandler;
     protected $command;
 
+    /**
+    * Configure the tests
+    */
     public function setUp()
     {
         $this->command = Phake::mock(NewCommand::class);

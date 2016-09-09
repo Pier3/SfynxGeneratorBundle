@@ -6,6 +6,13 @@ namespace  Tests\Application\{{ entityName }}\Command;
 use {{ projectName }}\Application\{{ entityName }}\Command\UpdateCommand;
 use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandInterface;
 
+/**
+* Class UpdateCommandTest
+* This class permits to test the UpdateCommand class
+* @category {{ projectName }}
+* @package Test
+* @subpackage Application\Command
+**/
 class UpdateCommandTest extends \PHPUnit_Framework_TestCase
 {
     protected $command;
@@ -13,17 +20,24 @@ class UpdateCommandTest extends \PHPUnit_Framework_TestCase
     protected $transaction;
     protected $jsonRequest;
 
+    /**
+    * Configure the tests
+    */
     public function setUp()
     {
 {% set constructorArgs = "" %}
 {% for field in entityFields %}
-        $this->{{ field.name }} = '123456';
-{% set constructorArgs = constructorArgs ~ "$this->" ~ field.name ~ ',\n ' %}
+{% set constructorArgs = constructorArgs ~ "                                        " ~ "$this->" ~ field.name ~ ",\n" %}
 {% endfor %}
 
-        $this->command = new UpdateCommand({{ constructorArgs|trim(', ') }});
+        $this->command = new UpdateCommand(
+{{ constructorArgs|trim(',\n') }}
+                          );
     }
 
+    /**
+    * Test UpdateCommand is instanceof CommandInterface
+    */
     public function testInterface()
     {
         $this->assertInstanceOf(CommandInterface::class, $this->command);

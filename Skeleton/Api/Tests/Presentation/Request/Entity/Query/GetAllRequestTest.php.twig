@@ -16,6 +16,13 @@ use \Phake;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Resolver\ResolverStrategy;
 use Tests\src\Email\TraitVerifyResolver;
 
+/**
+* ClassGetAllRequestTest
+* This class permits to test the GetAllRequest class
+* @category {{ projectName }}
+* @package Test
+* @subpackage Presentation\Request\Query
+**/
 class GetAllRequestTest extends \PHPUnit_Framework_TestCase
 {
 
@@ -32,6 +39,7 @@ class GetAllRequestTest extends \PHPUnit_Framework_TestCase
      */
     protected $request;
 
+    /* Configure the test */
     public function setUp()
     {
         $this->SymfonyStrategy = Phake::mock(SymfonyStrategy::class);
@@ -40,6 +48,7 @@ class GetAllRequestTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    /* Verify that request implements QueryRequestInterface */
     public function testGetRequestInterface()
     {
         $this->assertInstanceof(QueryRequestInterface::class ,$this->request);

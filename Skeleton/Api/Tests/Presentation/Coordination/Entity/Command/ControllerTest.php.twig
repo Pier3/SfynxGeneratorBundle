@@ -23,10 +23,17 @@ use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Resolver\ResolverS
 use Sfynx\DddBundle\Layer\Presentation\Response\Handler\ResponseHandler;
 use Symfony\Component\HttpFoundation\Response;
 
-
+/**
+* Class ControllerTest
+* This class permits to test the Controller class
+* @category {{ projectName }}
+* @package Test
+* @subpackage Presentation\Coordination\Command
+**/
 class ControllerTest extends \PHPUnit_Framework_TestCase
 {
 
+    /* Configure the test */
     public function setUp()
     {
         $this->request = Phake::mock(SymfonyStrategy::class);

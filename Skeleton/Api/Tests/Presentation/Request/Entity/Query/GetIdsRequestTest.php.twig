@@ -14,7 +14,13 @@ use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Resolver\ResolverI
 use \Phake;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Resolver\ResolverStrategy;
 
-
+/**
+* Class GetIdsRequestTest
+* This class permits to test the GetIdsRequest class
+* @category {{ projectName }}
+* @package Test
+* @subpackage Presentation\Request\Query
+**/
 class GetIdsRequestTest extends \PHPUnit_Framework_TestCase
 {
 
@@ -31,6 +37,7 @@ class GetIdsRequestTest extends \PHPUnit_Framework_TestCase
      */
     protected $request;
 
+    /* configure the test */
     public function setUp()
     {
         $this->SymfonyStrategy = Phake::mock(SymfonyStrategy::class);
@@ -39,6 +46,7 @@ class GetIdsRequestTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    /* Verify that request implements QueryRequestInterface */
     public function testGetRequestInterface()
     {
         $this->assertInstanceof(QueryRequestInterface::class, $this->request);

@@ -11,7 +11,13 @@ use {{ projectName }}\Application\{{ entityName }}\Command\Handler\Decorator\Upd
 use {{ projectName }}\Application\{{ entityName }}\Command\Validation\ValidationHandler\UpdateCommandValidationHandler;
 use \Phake;
 
-
+/**
+* Class UpdateCommandHandlerDecoratorTest
+* This class permits to test theUpdateCommandHandlerDecorator class
+* @category {{ projectName }}
+* @package Test
+* @subpackage Application\Command\Handler
+**/
 class UpdateCommandHandlerDecoratorTest extends \PHPUnit_Framework_TestCase
 {
     protected $commandHandlerDecorator;
@@ -19,6 +25,9 @@ class UpdateCommandHandlerDecoratorTest extends \PHPUnit_Framework_TestCase
     protected $commandHandler;
     protected $command;
 
+    /**
+    * Configure the tests
+    */
     public function setUp()
     {
         $this->command = Phake::mock(UpdateCommand::class);

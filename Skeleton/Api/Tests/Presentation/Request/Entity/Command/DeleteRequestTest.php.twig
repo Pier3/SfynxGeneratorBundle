@@ -14,6 +14,13 @@ use \Phake;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Resolver\ResolverStrategy;
 
 
+/**
+* Class DeleteRequestTest
+* This class permits to test the DeleteRequest class
+* @category {{ projectName }}
+* @package Test
+* @subpackage Presentation\Request\Command
+**/
 class DeleteRequestTest extends \PHPUnit_Framework_TestCase
 {
 
@@ -30,6 +37,7 @@ class DeleteRequestTest extends \PHPUnit_Framework_TestCase
      */
     protected $request;
 
+    /* configure the test */
     public function setUp()
     {
         $this->SymfonyStrategy = Phake::mock(SymfonyStrategy::class);
@@ -38,6 +46,8 @@ class DeleteRequestTest extends \PHPUnit_Framework_TestCase
 
     }
 
+
+    /* Verify that request implements QueryRequestInterface */
     public function testGetRequestInterface()
     {
         $this->assertInstanceof(CommandRequestInterface::class, $this->request);

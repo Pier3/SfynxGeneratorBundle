@@ -19,11 +19,17 @@ class GetAllQueryHandlerTest extends \PHPUnit_Framework_TestCase
     protected $transaction;
     protected $jsonRequest;
 
+    /*
+    * Configure the tests
+    */
     public function setUp()
     {
         $this->query = new GetAllQuery();
     }
 
+    /*
+    * Verify that query implements QueryInterface
+    */
     public function testInterface()
     {
         $this->assertInstanceOf(QueryInterface::class, $this->query);

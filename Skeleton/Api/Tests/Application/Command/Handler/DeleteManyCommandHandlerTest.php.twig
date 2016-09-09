@@ -36,11 +36,17 @@ class DeleteManyCommandHandlerTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    /**
+    * Verify that CommandHandler implements CommandHandlerInterface
+    */
     public function testInterfaces()
     {
         $this->assertInstanceOf(CommandHandlerInterface::class, $this->commandHandler);
     }
 
+    /**
+    * Verify the testProcess function
+    */
     public function testProcess()
     {
     }

@@ -19,7 +19,7 @@ class GetAllQueryTest extends \PHPUnit_Framework_TestCase
     protected $transaction;
     protected $jsonRequest;
 
-    /**
+    /*
     * Configure the tests
     */
     public function setUp()
@@ -27,8 +27,8 @@ class GetAllQueryTest extends \PHPUnit_Framework_TestCase
         $this->query = new GetAllQuery();
     }
 
-    /**
-    *   Verify that
+    /*
+    *   Verify that Query implements QueryInterface
     */
     public function testInterface()
     {

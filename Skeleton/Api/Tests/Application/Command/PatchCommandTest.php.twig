@@ -45,12 +45,15 @@ class PatchCommandTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(CommandInterface::class, $this->command);
     }
 
+    /**
+    * Verify that getters works
+    */
     public function testGetters()
     {
-        $this->assertEquals($this->libelle, $this->command->getLibelle());
-        $this->assertEquals($this->indicatif, $this->command->getIndicatif());
-        $this->assertEquals($this->iso, $this->command->getIso());
-        $this->assertEquals($this->selectable, $this->command->getSelectable());
-        $this->assertEquals($this->reference, $this->command->getReference());
+{% for field in entityFields %}
+    {% if field.type != 'id' %}
+        $this->assertEquals($this->{{ field.name }}, $this->command->get{{ field.name|ucfirst }}());
+    {% endif %}
+{% endfor %}
     }
 }

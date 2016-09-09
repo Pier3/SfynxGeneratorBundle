@@ -19,11 +19,17 @@ class GetQueryHandlerTest extends \PHPUnit_Framework_TestCase
     protected $transaction;
     protected $jsonRequest;
 
+    /*
+    * Configure the tests
+    */
     public function setUp()
     {
         $this->query = new GetQuery("00c1ab20-6e1e-4c54-83b4-62e677aba7ec");
     }
 
+    /*
+    * Verify that query implements QueryInterface
+    */
     public function testInterface()
     {
         $this->assertInstanceOf(QueryInterface::class, $this->query);

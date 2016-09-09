@@ -25,7 +25,7 @@ class UpdateCommandHandlerDecoratorTest extends \PHPUnit_Framework_TestCase
     protected $commandHandler;
     protected $command;
 
-    /**
+    /*
     * Configure the tests
     */
     public function setUp()
@@ -47,11 +47,17 @@ class UpdateCommandHandlerDecoratorTest extends \PHPUnit_Framework_TestCase
                                          );
     }
 
+    /*
+    * Test that CommandHandlerDecorator implements CommandHandlerInterface
+    */
     public function testInterfaces()
     {
         $this->assertInstanceOf(CommandHandlerInterface::class, $this->commandHandlerDecorator);
     }
 
+    /*
+    * Test the process function
+    */
     public function testProcess()
     {
         $result = $this->commandHandlerDecorator->process($this->command);

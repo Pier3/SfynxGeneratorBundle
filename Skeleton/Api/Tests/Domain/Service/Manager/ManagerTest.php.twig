@@ -44,7 +44,9 @@ class {{ entityName }}ManagerTest extends  \PHPUnit_Framework_TestCase
     protected $emailManager;
     protected $repo;
 
-    /* configure tests */
+    /*
+    * configure tests
+    */
     public function setUp()
     {
         $this->repo = Phake::mock(RepositoryFactoryInterface::class);
@@ -69,7 +71,8 @@ class {{ entityName }}ManagerTest extends  \PHPUnit_Framework_TestCase
     }
 
     /* Test the create function */
-    public function testCreate()
+    * public function testCreate()
+    */
     {
         if(!isset($_SERVER['HTTP_X_TENANT_ID'])) {
             $_SERVER['HTTP_X_TENANT_ID']='1000';
@@ -78,7 +81,9 @@ class {{ entityName }}ManagerTest extends  \PHPUnit_Framework_TestCase
         }
     }
 
-    /* Test the update function */
+    /*
+    * Test the update function
+    */
     public function testUpdate()
     {
         $this->manager->update(new IdVO(),{{ args|trim(",") }});

@@ -36,7 +36,9 @@ class PatchRequestTest extends \PHPUnit_Framework_TestCase
      */
     protected $request;
 
-    /* Configure the test */
+    /*
+    * Configure the test
+    */
     public function setUp()
     {
         $this->SymfonyStrategy = Phake::mock(SymfonyStrategy::class);
@@ -45,7 +47,9 @@ class PatchRequestTest extends \PHPUnit_Framework_TestCase
 
     }
 
-    /* Verify that request implements QueryRequestInterface */
+    /*
+    * Verify that request implements QueryRequestInterface
+    */
     public function testGetRequestInterface()
     {
         $this->assertInstanceof(CommandRequestInterface::class, $this->request);

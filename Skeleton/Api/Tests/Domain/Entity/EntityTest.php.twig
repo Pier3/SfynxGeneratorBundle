@@ -27,6 +27,9 @@ class {{ entityName }}Test extends \PHPUnit_Framework_TestCase
     protected ${{ field.name }};
 {% endfor %}
 
+    /*
+    * Configure the tests
+    */
     public function setUp()
     {
 {% set constructorArgs = "" %}
@@ -42,6 +45,9 @@ class {{ entityName }}Test extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /*
+    * Test getters
+    */
     public function testGetters()
     {
 {% for field in entityFields %}
@@ -50,6 +56,9 @@ class {{ entityName }}Test extends \PHPUnit_Framework_TestCase
 
     }
 
+    /*
+    * Test setters
+    */
     public function testSetters()
     {
 {% for field in entityFields %}

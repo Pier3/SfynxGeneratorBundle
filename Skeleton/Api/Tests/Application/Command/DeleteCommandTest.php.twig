@@ -42,6 +42,9 @@ class DeleteCommandTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(CommandInterface::class, $this->command);
     }
 
+    /**
+    * Verify that getters works
+    */
     public function testGetters()
     {
         $this->assertEquals($this->entityId, $this->command->getEntityId());

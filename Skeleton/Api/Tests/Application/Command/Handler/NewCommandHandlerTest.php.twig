@@ -34,11 +34,18 @@ class NewCommandHandlerTest extends \PHPUnit_Framework_TestCase
         $this->commandHandler = new NewCommandHandler($this->workflowHandler);
     }
 
+
+    /**
+    * Vertify that commandHandler implements the CommandHandlerInterface
+    */
     public function testInterfaces()
     {
         $this->assertInstanceOf(CommandHandlerInterface::class, $this->commandHandler);
     }
 
+    /**
+    * Verify the testProcess function
+    */
     public function testProcess()
     {
         $entity = [['id'=>'123465']];

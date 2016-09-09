@@ -26,11 +26,17 @@ use Sfynx\DddBundle\Layer\Infrastructure\Persistence\Generalisation\Orm\SaveRepo
 class RepositoryFactoryTest extends  \PHPUnit_Framework_TestCase
 {
 
+    /*
+    * Configure the tests
+    */
     public function setUp() {
         $this->manager = Phake::mock(CountryManager::class);
         $this->repositoryFactory = new RepositoryFactory($this->manager);
     }
 
+    /*
+    * Test that BuildRepository returns good objects
+    */
     public function testBuildRepository()
     {
         $this->assertInstanceOf(GetAllRepository::class,$this->repositoryFactory->buildRepository(

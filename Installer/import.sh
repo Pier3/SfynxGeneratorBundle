@@ -174,7 +174,9 @@ rm -f ${SYMFONY_SFYNX_PATH_TO_SWAGGER_FILE}
 ####
 if [ 0 = "$phpStatus" ]
 then
-    echo "# SUCCESS. The import of all entities succeed. Your project $PROJECT_NAME is now available."
+    if [ "false" = "$QUIET" ]; then
+        echo "# SUCCESS. The import of all entities succeed. Your project $PROJECT_NAME is now available."
+    fi
     exit 0
 else
     echo "# FAILURE. The import of all entities failed."

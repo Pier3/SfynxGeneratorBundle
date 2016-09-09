@@ -1,50 +1,49 @@
 # Application
-TestCommand:
+testCommand:
     skeletonTpl: "Application/Command/%actionName$sCommandTest.php.twig"
     targetPattern: "%destinationPath$s/%projectDir$s/Test/Application/%entityName$s/Command/%actionName$sCommandTest.php"
 
-TestCommandHandlerDecorator:
+testCommandHandlerDecorator:
     skeletonTpl: "Application/Command/Handler/Decorator/%actionName$sCommandHandlerDecoratorTest.php.twig"
     targetPattern: "%destinationPath$s/%projectDir$s/Test/Application/%entityName$s/Query/Handler/Decorator/%actionName$sCommandHandlerDecorator.php"
 
-TestCommandHandler:
+testCommandHandler:
     skeletonTpl: "Application/Command/Handler/%actionName$sCommandHandlerTest.php.twig"
     targetPattern: "%destinationPath$s/%projectDir$s/Test/Application/%entityName$s/Command/Handler/%actionName$sCommandHandlerTest.php"
 
-TestQuery:
+testQuery:
     skeletonTpl: "Application/Query/%actionName$sQueryTest.php.twig"
     targetPattern: "%destinationPath$s/%projectDir$s/Test/Application/%entityName$s/Query/%actionName$sQueryTest.php"
 
 
 # Domain
-TestManager:
+testManager:
       skeletonTpl: "Domain/Service/Manager/ManagerTest.php.twig"
       targetPattern: "%destinationPath$s/%projectDir$s/Test/Domain/%entityName$s/Manager/%entityName$sManagerTest.php"
 
-TestRepositoryFactory:
+testRepositoryFactory:
       skeletonTpl: "Domain/Service/Factory/Orm/RepositoryFactoryTest.php.twig"
       targetPattern: "%destinationPath$s/%projectDir$s/Test/Domain/Service/%entityName$s/Factory/Orm/RepositoryFactoryTest.php"
 
 
 # Presentation
-
-TestCommandAdapter:
+testCommandAdapter:
     skeletonTpl: "Presentation/Adapter/Command/CommandAdapterTest.php.twig"
     targetPattern: "%destinationPath$s/%projectDir$s/Test/Presentation/Adapter/%entityName$s/Command/%actionName$sAdapterTest.php"
 
-TestQueryAdapter:
+testQueryAdapter:
     skeletonTpl: "Presentation/Adapter/Query/CommandAdapterTest.php.twig"
     targetPattern: "%destinationPath$s/%projectDir$s/Test/Presentation/Adapter/%entityName$s/Query/%actionName$sAdapterTest.php"
 
-TestControllerQuery:
+testControllerQuery:
     skeletonTpl: "Presentation/Coordination/Entity/Query/ControllerTest.php.twig"
     targetPattern: "%destinationPath$s/%projectDir$s/Test/Presentation/Coordination/%entityName$s/Query/ControllerTest.php"
 
-TestControllerCommand:
+testControllerCommand:
     skeletonTpl: "Presentation/Coordination/Entity/Command/ControllerTest.php.twig"
     targetPattern: "%destinationPath$s/%projectDir$s/Test/Presentation/Coordination/%entityName$s/Command/ControllerTest.php"
 
 #Phpunit
-TestPHpunitXML:
+testPhpUnitXML:
     skeletonTpl: "phpunit.php.twig"
     targetPattern: "%destinationPath$s/%projectDir$s/Test/phpunit.xml"

@@ -31,11 +31,20 @@ use Sfynx\DddBundle\Layer\Infrastructure\Validator\Constraint\IdValidator;
     {% endif %}
 {% endfor %}
 
+
+/**
+* Class {{ entityName }}ManagerTest
+* This class permits to test the {{ entityName }}Manager class
+* @category {{ projectName }}
+* @package Test
+* @subpackage Service\Manager
+**/
 class {{ entityName }}ManagerTest extends  \PHPUnit_Framework_TestCase
 {
     protected $emailManager;
     protected $repo;
 
+    /* configure tests */
     public function setUp()
     {
         $this->repo = Phake::mock(RepositoryFactoryInterface::class);
@@ -59,6 +68,7 @@ class {{ entityName }}ManagerTest extends  \PHPUnit_Framework_TestCase
         Phake::when($this->repo)->create(Phake::anyParameters())->thenReturn(null);
     }
 
+    /* Test the create function */
     public function testCreate()
     {
         if(!isset($_SERVER['HTTP_X_TENANT_ID'])) {
@@ -68,6 +78,7 @@ class {{ entityName }}ManagerTest extends  \PHPUnit_Framework_TestCase
         }
     }
 
+    /* Test the update function */
     public function testUpdate()
     {
         $this->manager->update(new IdVO(),{{ args|trim(",") }});

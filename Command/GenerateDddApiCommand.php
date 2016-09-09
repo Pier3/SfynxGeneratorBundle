@@ -4,15 +4,13 @@ declare(strict_types = 1);
 namespace Sfynx\DddGeneratorBundle\Command;
 
 use InvalidArgumentException;
+use Sfynx\DddGeneratorBundle\Util\Parsers\ParserFactory;
 use Symfony\Component\Console\Exception\{
     InvalidArgumentException as SFConsoleInvalidArgumentException,
     LogicException as SFConsoleLogicException,
     RuntimeException as SFConsoleRuntimeException
 };
 
-use Symfony\Component\Yaml\Exception\ParseException as SFYMLParseException;
-
-use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Console\{
     Command\Command,
     Helper\QuestionHelper,
@@ -141,7 +139,6 @@ class GenerateDddApiCommand extends Command
      * @throws SFConsoleInvalidArgumentException
      * @throws SFConsoleLogicException
      * @throws SFConsoleRuntimeException
-     * @throws SFYMLParseException
      */
     public function interact(InputInterface $input, OutputInterface $output)
     {
@@ -198,11 +195,10 @@ class GenerateDddApiCommand extends Command
      * @throws SFConsoleRuntimeException
      * @throws SFConsoleLogicException
      * @throws SFConsoleInvalidArgumentException
-     * @throws SFYMLParseException
      */
     protected function parseSwaggerFile(InputInterface $input, OutputInterface $output): self
     {
-        $this->config = (new Parser())->parse(file_get_contents($input->getArgument(self::ARG_SWAGGER_PATH_NAME)));
+        $this->config = ParserFactory::parse($input->getArgument(self::ARG_SWAGGER_PATH_NAME));
 
         $this->buildAllValueObjects($input, $output)
             ->buildAllEntities($input, $output)

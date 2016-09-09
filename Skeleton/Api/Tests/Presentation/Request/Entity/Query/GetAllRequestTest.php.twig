@@ -1,17 +1,17 @@
 <?php
 declare(strict_types = 1);
 
-namespace Tests\Presentation\Request\Country\Command;
+namespace Tests\Presentation\Request\{{ entityName }}\Command;
 
 require_once __DIR__.'/../../../../TraitVerifyResolver.php';
 
-use DemoCountry\Presentation\Request\Country\Query\GetAllRequest;
+use {{ projectName }}\Presentation\Request\{{ entityName }}\Query\GetAllRequest;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\CommandRequestInterface;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\QueryRequestInterface;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Request\RequestInterface;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Request\SymfonyStrategy;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Resolver\ResolverInterface;
-use DemoCountry\Presentation\Request\Country\Command\DeleteRequest;
+use {{ projectName }}\Presentation\Request\{{ entityName }}\Command\DeleteRequest;
 use \Phake;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Resolver\ResolverStrategy;
 use Tests\src\Email\TraitVerifyResolver;

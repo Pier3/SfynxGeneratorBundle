@@ -29,7 +29,7 @@ class DeleteManyCommandHandlerTest extends \PHPUnit_Framework_TestCase
     */
     public function setUp()
     {
-        $this->manager = \Phake::mock(CountryManager::class);
+        $this->manager = \Phake::mock({{ entityName|ucfirst }}Manager::class);
         $this->command = \Phake::mock(DeleteCommand::class);
 
         $this->commandHandler = new DeleteManyCommandHandler($this->manager);

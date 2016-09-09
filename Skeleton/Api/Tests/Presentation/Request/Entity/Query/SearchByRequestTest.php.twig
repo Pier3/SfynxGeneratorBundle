@@ -1,11 +1,11 @@
 <?php
 declare(strict_types = 1);
 
-namespace Tests\Presentation\Request\Country\Command;
+namespace Tests\Presentation\Request\{{ entityName }}\Command;
 
 require_once __DIR__.'/../../../../TraitVerifyResolver.php';
 
-use DemoCountry\Presentation\Request\Country\Query\SearchByRequest;
+use {{ projectName }}\Presentation\Request\{{ entityName }}\Query\SearchByRequest;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\QueryRequestInterface;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Request\RequestInterface;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Request\SymfonyStrategy;

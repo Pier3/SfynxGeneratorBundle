@@ -5,7 +5,7 @@ namespace Tests\Domain\Service\{{ entityName }}\Factory\Orm;
 
 
 use {{ projectName }}\Domain\Service\{{ entityName }}\Factory\Orm\RepositoryFactory;
-use {{ projectName }}\Domain\Service\{{ entityName }}\Manager\CountryManager;
+use {{ projectName }}\Domain\Service\{{ entityName }}\Manager\{{ entityName|ucfirst }}yManager;
 use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\DeleteManyRepository;
 use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\DeleteRepository;
 use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\GetAllRepository;
@@ -30,7 +30,7 @@ class RepositoryFactoryTest extends  \PHPUnit_Framework_TestCase
     * Configure the tests
     */
     public function setUp() {
-        $this->manager = Phake::mock(CountryManager::class);
+        $this->manager = Phake::mock({{ entityName|ucfirst }}Manager::class);
         $this->repositoryFactory = new RepositoryFactory($this->manager);
     }
 

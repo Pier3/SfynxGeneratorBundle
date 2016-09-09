@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Tests\Presentation\Request\Country\Command;
+namespace Tests\Presentation\Request\{{ entityName }}\Command;
 
 require_once __DIR__.'/../../../../TraitVerifyResolver.php';
 
@@ -9,7 +9,7 @@ use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\CommandRequestInte
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Request\RequestInterface;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Request\SymfonyStrategy;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Resolver\ResolverInterface;
-use DemoCountry\Presentation\Request\Country\Command\PatchRequest;
+use {{ projectName }}\Presentation\Request\{{ entityName }}\Command\PatchRequest;
 use \Phake;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Resolver\ResolverStrategy;
 

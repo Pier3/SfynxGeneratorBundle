@@ -4,7 +4,7 @@ namespace Tests\src\Email\Domain\Entity;
 
 require_once __DIR__.'/../../TraitPrivateMethod.php';
 
-use DemoCountry\Domain\Entity\Country;
+use {{ projectName }}\Domain\Entity\{{ entityName }};
 use Phake;
 use Tests\TraitPrivateMethod;
 
@@ -63,10 +63,10 @@ class {{ entityName }}Test extends \PHPUnit_Framework_TestCase
     {
 {% for field in entityFields %}
 {% if %} field.type == "id"
-    $this->country->setEntityId('2e647197-5b18-11e6-a55f-f8b156c6181f');
+    $this->entity->setEntityId('2e647197-5b18-11e6-a55f-f8b156c6181f');
     $this->assertEquals('2e647197-5b18-11e6-a55f-f8b156c6181f', $this->entity->getId()->id());
 {% else %}
-    $this->country->set{{ field.name|ucfirst }}('abc');
+    $this->entity->set{{ field.name|ucfirst }}('abc');
     $this->assertEquals('abc', $this->entity->get{{ field.name|ucfirst }}());
 {% endif %}
 {% endfor %}

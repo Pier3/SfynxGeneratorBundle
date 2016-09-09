@@ -1,11 +1,11 @@
 <?php
 declare(strict_types = 1);
 
-namespace Tests\Domain\Service\Manager\CountryManager;
+namespace Tests\Domain\Service\Manager
 
 
 use {{ projectName }}\Domain\Entity\{{ entityName }};
-use {{ projectName }}\Domain\Service\{{ entityName }}\Manager\CountryManager;
+use {{ projectName }}\Domain\Service\{{ entityName }}\Manager\{{ entityName|ucfirst }}Manager;
 use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\GetRepository;
 use {{ projectName }}\Domain\Service\{{ entityName }}\Processor\PrePersistProcess;
 use Phake;
@@ -50,7 +50,7 @@ class {{ entityName }}ManagerTest extends  \PHPUnit_Framework_TestCase
         $this->repo = Phake::mock(RepositoryFactoryInterface::class);
         $this->saveReposiroty = Phake::mock(SaveRepository::class);
         $this->getOneRepository = Phake::mock(GetRepository::class);
-        $this->entity = Phake::mock(Country::class);
+        $this->entity = Phake::mock({{ entityName }}::class);
         $logger = Phake::mock(Logger::class);
 
         $this->manager = new {{ entityName }}Manager($this->repo);
@@ -89,5 +89,5 @@ class {{ entityName }}ManagerTest extends  \PHPUnit_Framework_TestCase
         Phake::verify($this->repo)->buildRepository(RepositoryFactoryInterface::UPDATE_REPOSITORY);
     }
 
-    //can't test if repository load or not an Country...
+    //can't test if repository load or not an {{ entityName }}...
 }

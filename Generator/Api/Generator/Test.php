@@ -55,7 +55,7 @@ class Test extends LayerAbstract
 
     public function generateCommands()
     {
-        foreach ($this->commandsQueriesList[self::COMMAND]) as $data) {
+        foreach ($this->commandsQueriesList[self::COMMAND] as $data) {
             $constructorParams = '';
             $managerArgs = '';
 

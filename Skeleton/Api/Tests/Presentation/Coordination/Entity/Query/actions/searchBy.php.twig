@@ -1,10 +1,10 @@
-
+    /**
+     * Test the Query Adapter "SearchBy".
+     */
     public function testSearchByAction()
-        {
+    {
         $adapter = new SearchByQueryAdapter();
-        $query = $adapter->createQueryFromRequest(
-            new SearchByRequest($this->request, $this->resolver)
-        );
+        $query = $adapter->createQueryFromRequest(new SearchByRequest($this->request, $this->resolver));
 
         $this->controller->searchByAction();
         Phake::verify($this->searchByHandler, Phake::times(1))->process($query);

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace  Tests\Application\{{ entityName }}\Command\Handler;
+namespace Tests\Application\{{ entityName }}\Command\Handler;
 
 use {{ projectName }}\Domain\Service\{{ entityName }}\Manager\{{ entityName }}Manager;
 use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandHandlerInterface;
@@ -11,21 +11,25 @@ use {{ projectName }}\Domain\Workflow\{{ entityName }}\Handler\DeleteWFHandler;
 use \Phake;
 
 /**
-* Class DeleteCommandHandlerTest
-* This class permits to test the DeleteCommandHandler class
-* @category {{ projectName }}
-* @package Test
-* @subpackage Application\Command\Handler
-**/
+ * Class DeleteCommandHandlerTest.
+ * This class permits to test the DeleteCommandHandler class.
+ *
+ * @category {{ projectName }}
+ * @package Test
+ * @subpackage Application\Command\Handler
+ */
 class DeleteCommandHandlerTest extends \PHPUnit_Framework_TestCase
 {
-    protected $amanager;
+    protected $manager;
+
+    /** @var DeleteCommandHandler */
     protected $commandHandler;
+
     protected $command;
 
     /**
-    * Configure the tests
-    */
+     * Configure the tests.
+     */
     public function setUp()
     {
         $this->manager = \Phake::mock({{ entityName|ucfirst }}Manager::class);
@@ -35,22 +39,19 @@ class DeleteCommandHandlerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * Verify that commandHandler implements CommandHandlerInterface
-    */
+     * Verify that commandHandler implements CommandHandlerInterface.
+     */
     public function testInterfaces()
     {
         $this->assertInstanceOf(CommandHandlerInterface::class, $this->commandHandler);
     }
 
     /**
-    * Verify the testProcess function
-    */
+     * Verify the testProcess function.
+     */
     public function testProcess()
     {
         $this->commandHandler->process($this->command);
         Phake::verify($this->manager,\Phake::times(1))->removeById(\Phake::anyParameters());
-
     }
-
-
 }

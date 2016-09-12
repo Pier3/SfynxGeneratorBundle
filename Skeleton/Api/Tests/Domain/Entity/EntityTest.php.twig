@@ -1,68 +1,65 @@
 <?php
 declare(strict_types = 1);
-namespace Tests\src\Email\Domain\Entity;
 
-require_once __DIR__.'/../../TraitPrivateMethod.php';
+namespace Tests\src\Email\Domain\Entity;
 
 use {{ projectName }}\Domain\Entity\{{ entityName }};
 use Phake;
 use Tests\TraitPrivateMethod;
 
-
 /**
-* Class EntityTest
-* This class permits to test the {{ entityName }} class
-* @category {{ projectName }}
-* @package Test
-* @subpackage Domain\Entity
-**/
+ * Class {{ entityName }}Test.
+ * This class permits to test the {{ entityName }} class.
+ *
+ * @category {{ projectName }}
+ * @package Test
+ * @subpackage Domain\Entity
+ */
 class {{ entityName }}Test extends \PHPUnit_Framework_TestCase
 {
     use TraitPrivateMethod;
 
-    /**
-     * @var Message
-     */
 {% for field in entityFields %}
+    /** @var {% if field.type="id" %}string{% else %}{{ field.type }}{% endif %} */
     protected ${{ field.name }};
 {% endfor %}
 
-    /*
-    * Configure the tests
-    */
+    /**
+     * Configure the tests.
+     */
     public function setUp()
     {
 {% set constructorArgs = "" %}
 {% for field in entityFields %}
 {% if field.type="id" %}
-        $this->{{ field.name }} = "2e647197-5b18-11e6-a55f-f8b156c6181f";
-{% set constructorArgs = constructorArgs ~ "$"{{ field.name }} ~ ", " %}
+        $this->{{ field.name }} = '2e647197-5b18-11e6-a55f-f8b156c6181f';
+{% set constructorArgs = constructorArgs ~ "            $"{{ field.name }} ~ ",\n" %}
 {% else %}
-        $this->{{ field.name }} = 'abcd';
+        $this->{{ field.name }} = 'Abcd';
 {% endif %}
         $this->entity = {{ entityName|ucfirst }}::makeInstance(
-            {{ constructorArgs|trim(", ") }}
+{{ constructorArgs|trim(",\n") }}
         );
     }
 
-    /*
-    * Test getters
-    */
+    /**
+     * Test getters.
+     */
     public function testGetters()
     {
 {% for field in entityFields %}
-        $this->assertEquals($this->{{ field.name }}, $this->entity->ge{{ field.name|ucfirst }}());
+        $this->assertEquals($this->{{ field.name }}, $this->entity->get{{ field.name|ucfirst }}());
 {% endfor %}
 
     }
 
-    /*
-    * Test setters
-    */
+    /**
+     * Test setters.
+     */
     public function testSetters()
     {
 {% for field in entityFields %}
-{% if %} field.type == "id"
+{% if field.type == "id" %}
     $this->entity->setEntityId('2e647197-5b18-11e6-a55f-f8b156c6181f');
     $this->assertEquals('2e647197-5b18-11e6-a55f-f8b156c6181f', $this->entity->getId()->id());
 {% else %}
@@ -70,7 +67,5 @@ class {{ entityName }}Test extends \PHPUnit_Framework_TestCase
     $this->assertEquals('abc', $this->entity->get{{ field.name|ucfirst }}());
 {% endif %}
 {% endfor %}
-
     }
-
 }

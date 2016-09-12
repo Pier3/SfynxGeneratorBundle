@@ -1,50 +1,56 @@
 <?php
 declare(strict_types = 1);
 
-namespace  Tests\Application\{{ entityName }}\Command;
+namespace Tests\Application\{{ entityName }}\Command;
 
 use {{ projectName }}\Application\{{ entityName }}\Command\UpdateCommand;
 use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandInterface;
 
 /**
-* Class UpdateCommandTest
-* This class permits to test the UpdateCommand class
-* @category {{ projectName }}
-* @package Test
-* @subpackage Application\Command
-**/
+ * Class UpdateCommandTest.
+ * This class permits to test the UpdateCommand class.
+ *
+ * @category {{ projectName }}
+ * @package Test
+ * @subpackage Application\Command
+ */
 class UpdateCommandTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var UpdateCommand */
     protected $command;
+{% for field in entityFields %}
 
+    /** @var string */
+    protected ${{ field.name }};
+{% endfor %}
 
     /**
-    * Configure the tests
-    */
+     * Configure the tests.
+     */
     public function setUp()
     {
 {% set constructorArgs = "" %}
 {% for field in entityFields %}
         $this->{{ field.name }} = '123456';
-{% set constructorArgs = constructorArgs ~ "                                        " ~ "$this->" ~ field.name ~ ",\n" %}
+{% set constructorArgs = constructorArgs ~ "            " ~ "$this->" ~ field.name ~ ",\n" %}
 {% endfor %}
 
         $this->command = new UpdateCommand(
 {{ constructorArgs|trim(',\n') }}
-                          );
+        );
     }
 
     /**
-    * Test UpdateCommand is instanceof CommandInterface
-    */
+     * Test UpdateCommand is instance of CommandInterface.
+     */
     public function testInterface()
     {
         $this->assertInstanceOf(CommandInterface::class, $this->command);
     }
 
     /**
-    * Verify that getters works
-    */
+     * Verify that getters works.
+     */
     public function testGetters()
     {
 {% for field in entityFields %}

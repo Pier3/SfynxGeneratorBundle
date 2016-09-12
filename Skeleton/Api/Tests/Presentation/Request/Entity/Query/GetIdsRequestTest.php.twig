@@ -3,9 +3,6 @@ declare(strict_types = 1);
 
 namespace Tests\Presentation\Request\{{ entityName }}\Command;
 
-require_once __DIR__.'/../../../../TraitVerifyResolver.php';
-
-
 use {{ projectName }}\Presentation\Request\{{ entityName }}\Query\GetByIdsRequest;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\QueryRequestInterface;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Request\RequestInterface;
@@ -15,43 +12,37 @@ use \Phake;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Resolver\ResolverStrategy;
 
 /**
-* Class GetIdsRequestTest
-* This class permits to test the GetIdsRequest class
-* @category {{ projectName }}
-* @package Test
-* @subpackage Presentation\Request\Query
-**/
+ * Class GetIdsRequestTest
+ * This class permits to test the GetIdsRequest class
+ * @category {{ projectName }}
+ * @package Test
+ * @subpackage Presentation\Request\Query
+ */
 class GetIdsRequestTest extends \PHPUnit_Framework_TestCase
 {
-
-    /**
-     * @var RequestInterface
-     */
+    /** @var RequestInterface */
     protected $requestStrategy;
-    /**
-     * @var ResolverInterface
-     */
+
+    /** @var ResolverInterface */
     protected $resolverStrategy;
-    /**
-     * @var NewRequest
-     */
+
+    /** @var GetByIdsRequest */
     protected $request;
 
-    /*
-     * configure the test
+    /**
+     * Configure the test.
      */
     public function setUp()
     {
         $this->SymfonyStrategy = Phake::mock(SymfonyStrategy::class);
         $this->resolver = Phake::mock(ResolverStrategy::class);
         $this->request = new GetByIdsRequest($this->SymfonyStrategy, $this->resolver);
-
     }
 
-    /*
-    * Verify that request implements QueryRequestInterface
-    */
-    public function testGetRequestInterface()
+    /**
+     * Verify that request implements QueryRequestInterface.
+     */
+    public function testGetByIdsRequestInterface()
     {
         $this->assertInstanceof(QueryRequestInterface::class, $this->request);
     }

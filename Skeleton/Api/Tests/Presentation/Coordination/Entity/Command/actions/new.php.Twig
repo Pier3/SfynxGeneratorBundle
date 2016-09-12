@@ -1,9 +1,10 @@
+    /**
+     * Test the Command Adapter "New".
+     */
     public function testNewAction()
     {
         $adapter = new NewCommandAdapter();
-        $command = $adapter->createCommandFromRequest(
-            new NewRequest($this->request, $this->resolver)
-        );
+        $command = $adapter->createCommandFromRequest(new NewRequest($this->request, $this->resolver));
 
         $this->controller->newAction();
         Phake::verify($this->newHandler, Phake::times(1))->process($command);

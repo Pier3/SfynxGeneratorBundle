@@ -3,65 +3,82 @@ declare(strict_types = 1);
 
 namespace Tests\Domain\Service\{{ entityName }}\Factory\Orm;
 
-
 use {{ projectName }}\Domain\Service\{{ entityName }}\Factory\Orm\RepositoryFactory;
 use {{ projectName }}\Domain\Service\{{ entityName }}\Manager\{{ entityName|ucfirst }}Manager;
-use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\DeleteManyRepository;
-use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\DeleteRepository;
-use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\GetAllRepository;
-use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\GetByIdsRepository;
-use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\GetRepository;
-use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\SearchByRepository;
+use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\{
+//    DeleteManyRepository,
+    DeleteRepository,
+    GetAllRepository,
+//    GetByIdsRepository,
+    GetRepository,
+    SearchByRepository
+};
 use Phake;
 use Sfynx\DddBundle\Layer\Domain\Service\Generalisation\Factory\RepositoryFactoryInterface;
 use Sfynx\DddBundle\Layer\Infrastructure\Persistence\Generalisation\Orm\SaveRepository;
 
 /**
-* Class RepositoryFactoryTest
-* This class permits to test the RepositoryFactory class
-* @category {{ projectName }}
-* @package Test
-* @subpackage Service\Factory\Orm
-**/
+ * Class RepositoryFactoryTest
+ * This class permits to test the RepositoryFactory class
+ * @category {{ projectName }}
+ * @package Test
+ * @subpackage Service\Factory\Orm
+ */
 class RepositoryFactoryTest extends  \PHPUnit_Framework_TestCase
 {
+    /** @var RepositoryFactory */
+    protected $repositoryFactory;
 
-    /*
-    * Configure the tests
-    */
+    protected $manager;
+
+    /**
+     * Configure the tests.
+     */
     public function setUp() {
         $this->manager = Phake::mock({{ entityName|ucfirst }}Manager::class);
         $this->repositoryFactory = new RepositoryFactory($this->manager);
     }
 
-    /*
-    * Test that BuildRepository returns good objects
-    */
+    /**
+     * Test that BuildRepository returns good objects.
+     */
     public function testBuildRepository()
     {
-        $this->assertInstanceOf(GetAllRepository::class,$this->repositoryFactory->buildRepository(
-                                                                            RepositoryFactoryInterface::ALL_REPOSITORY
-                                                        ));
-        $this->assertInstanceOf(GetRepository::class,$this->repositoryFactory->buildRepository(
-                                                                            RepositoryFactoryInterface::ONE_REPOSITORY
-                                                        ));
-        $this->assertInstanceOf(SearchByRepository::class,$this->repositoryFactory->buildRepository(
-                                                                            RepositoryFactoryInterface::SEARCHBY_REPOSITORY
-                                                        ));
-        /*$this->assertInstanceOf(GetByIdsRepository::class,$this->repositoryFactory->buildRepository(
-                                                                            RepositoryFactoryInterface::GETBYIDS_REPOSITORY
-                                                        ));*/
-        $this->assertInstanceOf(DeleteRepository::class,$this->repositoryFactory->buildRepository(
-                                                                            RepositoryFactoryInterface::DELETEONE_REPOSITORY
-                                                        ));
-        /*$this->assertInstanceOf(DeleteManyRepository::class,$this->repositoryFactory->buildRepository(
-                                                                            RepositoryFactoryInterface::DELETEMANY_REPOSITORY
-                                                        ));*/
-        $this->assertInstanceOf(SaveRepository::class,$this->repositoryFactory->buildRepository(
-                                                                            RepositoryFactoryInterface::NEW_REPOSITORY
-                                                        ));
-        $this->assertInstanceOf(SaveRepository::class,$this->repositoryFactory->buildRepository(
-                                                                            RepositoryFactoryInterface::UPDATE_REPOSITORY
-                                                        ));
+        $this->assertInstanceOf(
+            GetAllRepository::class,
+            $this->repositoryFactory->buildRepository(RepositoryFactoryInterface::ALL_REPOSITORY)
+        );
+        $this->assertInstanceOf(
+            GetRepository::class,
+            $this->repositoryFactory->buildRepository(RepositoryFactoryInterface::ONE_REPOSITORY)
+        );
+        $this->assertInstanceOf(
+            SearchByRepository::class,
+            $this->repositoryFactory->buildRepository(RepositoryFactoryInterface::SEARCHBY_REPOSITORY)
+        );
+        /*
+        $this->assertInstanceOf(
+            GetByIdsRepository::class,
+            $this->repositoryFactory->buildRepository(RepositoryFactoryInterface::GETBYIDS_REPOSITORY)
+        );
+        */
+        $this->assertInstanceOf(
+            DeleteRepository::class,
+            $this->repositoryFactory->buildRepository(RepositoryFactoryInterface::DELETEONE_REPOSITORY)
+        );
+        /*
+        $this->assertInstanceOf(
+            DeleteManyRepository::class,
+            $this->repositoryFactory->buildRepository(RepositoryFactoryInterface::DELETEMANY_REPOSITORY)
+        );
+        */
+        $this->assertInstanceOf(
+            SaveRepository::class,
+            $this->repositoryFactory->buildRepository(RepositoryFactoryInterface::NEW_REPOSITORY)
+        );
+        $this->assertInstanceOf(
+            SaveRepository::class,
+            $this->repositoryFactory->buildRepository(RepositoryFactoryInterface::UPDATE_REPOSITORY)
+        );
     }
 }

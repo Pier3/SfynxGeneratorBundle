@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace Tests\Domain\Service\Manager;
 
-
 use {{ projectName }}\Domain\Entity\{{ entityName }};
 use {{ projectName }}\Domain\Service\{{ entityName }}\Manager\{{ entityName|ucfirst }}Manager;
 use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\GetRepository;
@@ -13,7 +12,6 @@ use Sfynx\DddBundle\Layer\Domain\Service\Generalisation\Factory\RepositoryFactor
 use Sfynx\DddBundle\Layer\Domain\ValueObject\IdVO;
 use Sfynx\DddBundle\Layer\Infrastructure\Logger\Logger;
 use Sfynx\DddBundle\Layer\Infrastructure\Persistence\Generalisation\CouchDB\SaveRepository;
-
 {% set args = "" %}
 {% for field in entityFields %}
 {% if field.type != "id" %}
@@ -29,31 +27,39 @@ use Sfynx\DddBundle\Layer\Infrastructure\Persistence\Generalisation\CouchDB\Save
 {% endif %}
 {% endfor %}
 
-
 /**
-* Class {{ entityName }}ManagerTest
-* This class permits to test the {{ entityName }}Manager class
-* @category {{ projectName }}
-* @package Test
-* @subpackage Service\Manager
-**/
+ * Class {{ entityName }}ManagerTest.
+ * This class permits to test the {{ entityName }}Manager class.
+ *
+ * @category {{ projectName }}
+ * @package Test
+ * @subpackage Service\Manager
+ */
 class {{ entityName }}ManagerTest extends  \PHPUnit_Framework_TestCase
 {
-    protected $emailManager;
-    protected $repo;
+    /** @var {{ entityName }}Manager */
+    protected $manager;
 
-    /*
-    * configure tests
-    */
+    protected $repository;
+
+    protected $saveRepository;
+
+    protected $getOneRepository;
+
+    protected $entity;
+
+    /**
+     * Configure tests.
+     */
     public function setUp()
     {
-        $this->repo = Phake::mock(RepositoryFactoryInterface::class);
-        $this->saveReposiroty = Phake::mock(SaveRepository::class);
+        $this->repository = Phake::mock(RepositoryFactoryInterface::class);
+        $this->saveRepository = Phake::mock(SaveRepository::class);
         $this->getOneRepository = Phake::mock(GetRepository::class);
         $this->entity = Phake::mock({{ entityName }}::class);
         $logger = Phake::mock(Logger::class);
 
-        $this->manager = new {{ entityName }}Manager($this->repo);
+        $this->manager = new {{ entityName }}Manager($this->repository);
         $this->manager->setLogger($logger);
 
         $processor = Phake::mock(PrePersistProcess::class);
@@ -63,31 +69,29 @@ class {{ entityName }}ManagerTest extends  \PHPUnit_Framework_TestCase
         $this->manager->addProcess('prepersist_update', $processor);
         $this->manager->addProcess('postpersist_update', $processor);
 
-        Phake::when($this->repo)->buildRepository(Phake::anyParameters())->thenReturn($this->saveReposiroty);
-        Phake::when($this->saveReposiroty)->execute(Phake::anyParameters())->thenReturn($this->entity);
-        Phake::when($this->repo)->create(Phake::anyParameters())->thenReturn(null);
+        Phake::when($this->repository)->buildRepository(Phake::anyParameters())->thenReturn($this->saveRepository);
+        Phake::when($this->saveRepository)->execute(Phake::anyParameters())->thenReturn($this->entity);
+        Phake::when($this->repository)->create(Phake::anyParameters())->thenReturn(null);
     }
 
-    /*
-    * Test the create function
-    */
+    /**
+     * Test the create function.
+     */
     public function testCreate()
     {
-        if(!isset($_SERVER['HTTP_X_TENANT_ID'])) {
-            $_SERVER['HTTP_X_TENANT_ID']='1000';
-            $this->manager->create(null,{{ args|trim(",") }});
-            Phake::verify($this->repo)->buildRepository(RepositoryFactoryInterface::NEW_REPOSITORY);
+        if (!isset($_SERVER['HTTP_X_TENANT_ID'])) {
+            $_SERVER['HTTP_X_TENANT_ID'] = '1000';
+            $this->manager->create(null, {{ args|trim(', ') }});
+            Phake::verify($this->repository)->buildRepository(RepositoryFactoryInterface::NEW_REPOSITORY);
         }
     }
 
-    /*
-    * Test the update function
-    */
+    /**
+     * Test the update function.
+     */
     public function testUpdate()
     {
-        $this->manager->update(new IdVO(),{{ args|trim(",") }});
-        Phake::verify($this->repo)->buildRepository(RepositoryFactoryInterface::UPDATE_REPOSITORY);
+        $this->manager->update(new IdVO(), {{ args|trim(', ') }});
+        Phake::verify($this->repository)->buildRepository(RepositoryFactoryInterface::UPDATE_REPOSITORY);
     }
-
-    //can't test if repository load or not an {{ entityName }}...
 }

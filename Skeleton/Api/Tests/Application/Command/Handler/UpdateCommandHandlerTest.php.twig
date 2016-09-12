@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace  Tests\Application\{{ entityName }}\Command\Handler;
+namespace Tests\Application\{{ entityName }}\Command\Handler;
 
 use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandHandlerInterface;
 use {{ projectName }}\Application\{{ entityName }}\Command\Handler\UpdateCommandHandler;
@@ -10,21 +10,25 @@ use {{ projectName }}\Domain\Workflow\{{ entityName }}\Handler\UpdateWFHandler;
 use \Phake;
 
 /**
-* Class UpdateCommandHandlerTest
-* This class permits to test the UpdateCommandHandler class
-* @category {{ projectName }}
-* @package Test
-* @subpackage Application\Command\Handler
-**/
+ * Class UpdateCommandHandlerTest.
+ * This class permits to test the UpdateCommandHandler class.
+ *
+ * @category {{ projectName }}
+ * @package Test
+ * @subpackage Application\Command\Handler
+ */
 class UpdateCommandHandlerTest extends \PHPUnit_Framework_TestCase
 {
     protected $workflowHandler;
+
+    /** @var UpdateCommandHandler */
     protected $commandHandler;
+
     protected $command;
 
     /**
-    * Configure the tests
-    */
+     * Configure the tests.
+     */
     public function setUp()
     {
         $this->command = Phake::mock(UpdateCommand::class);
@@ -35,25 +39,24 @@ class UpdateCommandHandlerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * Verify that commandHandler implements CommanderHandlerInterface
-    */
+     * Verify that commandHandler implements CommanderHandlerInterface.
+     */
     public function testInterfaces()
     {
         $this->assertInstanceOf(CommandHandlerInterface::class, $this->commandHandler);
     }
 
     /**
-    * Verify the testProcess function
-    */
+     * Verify the testProcess function.
+     */
     public function testProcess()
     {
-        $entity = [['id'=>'123465']];
+        $entity = [['id' => '123465']];
         $this->workflowHandler->data->entity = $entity;
 
         $result = $this->commandHandler->process($this->command);
         $this->assertEquals(end($entity), $result);
         Phake::verify($this->workflowHandler, Phake::times(1))->process(Phake::anyParameters());
-
     }
 
     /**
@@ -61,7 +64,8 @@ class UpdateCommandHandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function testException()
     {
-        $this->workflowHandler->data->entity = [];//force exception with that
+        //This line force to run an exception.
+        $this->workflowHandler->data->entity = [];
 
         $result = $this->commandHandler->process($this->command);
     }

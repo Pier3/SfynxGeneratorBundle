@@ -11,24 +11,28 @@ use {{ projectName }}\Application\{{ entityName }}\Command\Handler\Decorator\New
 use {{ projectName }}\Application\{{ entityName }}\Command\Validation\ValidationHandler\NewCommandValidationHandler;
 use \Phake;
 
-
 /**
-* Class NewCommandHandlerDecoratorTest
-* This class permits to test the NewCommandHandlerDecorator class
-* @category {{ projectName }}
-* @package Test
-* @subpackage Application\Command\Handler\Decorator
-**/
+ * Class NewCommandHandlerDecoratorTest.
+ * This class permits to test the NewCommandHandlerDecorator class.
+ *
+ * @category {{ projectName }}
+ * @package Test
+ * @subpackage Application\Command\Handler\Decorator
+ */
 class NewCommandHandlerDecoratorTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var NewCommandHandlerDecorator */
     protected $commandHandlerDecorator;
+
     protected $validationHandler;
+
     protected $commandHandler;
+
     protected $command;
 
-    /*
-    * Configure the tests
-    */
+    /**
+     * Configure the tests
+     */
     public function setUp()
     {
         $this->command = Phake::mock(NewCommand::class);
@@ -39,33 +43,31 @@ class NewCommandHandlerDecoratorTest extends \PHPUnit_Framework_TestCase
         $this->validationHandler = Phake::mock(NewCommandValidationHandler::class);
 
         $this->specHandler = Phake::mock(NewCommandSpecHandler::class);
-        Phake::when($this->specHandler )->process(Phake::anyParameters())->thenReturn(null);
+        Phake::when($this->specHandler)->process(Phake::anyParameters())->thenReturn(null);
 
         $this->commandHandlerDecorator = new NewCommandHandlerDecorator(
-                                                $this->commandHandler,
-                                                $this->validationHandler,
-                                                $this->specHandler
-                                         );
+            $this->commandHandler,
+            $this->validationHandler,
+            $this->specHandler
+        );
     }
 
-    /*
-    * Test that commander handler decorator iimplement CommandHandlerInterface
-    */
+    /**
+     * Test that commander handler decorator implement CommandHandlerInterface.
+     */
     public function testInterfaces()
     {
         $this->assertInstanceOf(CommandHandlerInterface::class, $this->commandHandlerDecorator);
     }
 
 
-    /*
-    * Test the process method
-    */
+    /**
+     * Test the process method.
+     */
     public function testProcess()
     {
-        $result = $this->commandHandlerDecorator->process($this->command);
-        $this->assertEquals('some result', $result);
+        $this->assertEquals('some result', $this->commandHandlerDecorator->process($this->command));
         Phake::verify($this->validationHandler, Phake::times(1))->process(Phake::anyParameters());
         Phake::verify($this->commandHandler, Phake::times(1))->process(Phake::anyParameters());
-
     }
 }

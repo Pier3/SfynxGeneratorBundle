@@ -13,7 +13,7 @@ use \Exception;
 trait TraitPrivateMethod
 {
     /**
-     * call private/protected method
+     * Call private/protected method.
      *
      * @param   string    $class  class which will call private/protected method
      * @param   string    $method private/protected method to call
@@ -31,11 +31,9 @@ trait TraitPrivateMethod
      *    );
      * </code>
      */
-    protected function callPrivateMethod($class, $method, $object, $args = null)
+    protected function callPrivateMethod(string $class, string $method, $object, $args = null)
     {
-        $method = new ReflectionMethod(
-            $class, $method
-        );
+        $method = new ReflectionMethod($class, $method);
         $method->setAccessible(true);
         if (is_null($args)) {
             return $method->invoke($object);

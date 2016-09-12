@@ -1,9 +1,10 @@
+    /**
+     * Test the Query Adapter "GetAll".
+     */
     public function testGetAllAction()
     {
         $adapter = new GetAllQueryAdapter();
-        $query = $adapter->createQueryFromRequest(
-            new GetAllRequest($this->request, $this->resolver)
-        );
+        $query = $adapter->createQueryFromRequest(new GetAllRequest($this->request, $this->resolver));
 
         $this->controller->getAllAction();
         Phake::verify($this->getAllHandler, Phake::times(1))->process($query);

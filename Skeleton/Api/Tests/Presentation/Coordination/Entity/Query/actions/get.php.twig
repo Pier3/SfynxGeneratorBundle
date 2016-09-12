@@ -1,9 +1,10 @@
+    /**
+     * Test the Query Adapter "Get".
+     */
     public function testGetAction()
     {
         $adapter = new GetQueryAdapter();
-        $query = $adapter->createQueryFromRequest(
-            new GetRequest($this->request, $this->resolver)
-        );
+        $query = $adapter->createQueryFromRequest(new GetRequest($this->request, $this->resolver));
 
         $this->controller->getAction();
         Phake::verify($this->getHandler, Phake::times(1))->process($query);

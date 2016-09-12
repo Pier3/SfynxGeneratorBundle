@@ -3,8 +3,6 @@ declare(strict_types = 1);
 
 namespace Tests\Presentation\Request\{{ entityName }}\Command;
 
-require_once __DIR__.'/../../../../TraitVerifyResolver.php';
-
 use {{ projectName }}\Presentation\Request\{{ entityName }}\Query\SearchByRequest;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\QueryRequestInterface;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Request\RequestInterface;
@@ -14,41 +12,37 @@ use \Phake;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Resolver\ResolverStrategy;
 
 /**
-* Class SearchByRequestTest
-* This class permits to test the SearchByRequest class
-* @category {{ projectName }}
-* @package Test
-* @subpackage Presentation\Request\Query
-**/
+ * Class SearchByRequestTest.
+ * This class permits to test the SearchByRequest class.
+ *
+ * @category {{ projectName }}
+ * @package Test
+ * @subpackage Presentation\Request\Query
+ */
 class SearchByRequestTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var RequestInterface
-     */
+    /** @var RequestInterface */
     protected $requestStrategy;
-    /**
-     * @var ResolverInterface
-     */
+
+    /** @var ResolverInterface */
     protected $resolverStrategy;
-    /**
-     * @var NewRequest
-     */
+
+    /** @var SearchByRequest */
     protected $request;
 
-    /*
-    * Configure the test
-    */
+    /**
+     * Configure the test.
+     */
     public function setUp()
     {
         $this->SymfonyStrategy = Phake::mock(SymfonyStrategy::class);
         $this->resolver = Phake::mock(ResolverStrategy::class);
         $this->request = new SearchByRequest($this->SymfonyStrategy, $this->resolver);
-
     }
 
-    /*
-    * Verify that request implements QueryRequestInterface
-    */
+    /**
+     * Verify that request implements QueryRequestInterface.
+     */
     public function testGetRequestInterface()
     {
         $this->assertInstanceof(QueryRequestInterface::class, $this->request);

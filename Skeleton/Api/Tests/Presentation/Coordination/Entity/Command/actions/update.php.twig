@@ -1,9 +1,10 @@
-    public function testupdateAction()
+    /**
+     * Test the Command Adapter "Update".
+     */
+    public function testUpdateAction()
     {
         $adapter = new UpdateCommandAdapter();
-        $command = $adapter->createCommandFromRequest(
-            new UpdateRequest($this->request, $this->resolver)
-        );
+        $command = $adapter->createCommandFromRequest(new UpdateRequest($this->request, $this->resolver));
 
         $this->controller->updateAction();
         Phake::verify($this->updateHandler, Phake::times(1))->process($command);

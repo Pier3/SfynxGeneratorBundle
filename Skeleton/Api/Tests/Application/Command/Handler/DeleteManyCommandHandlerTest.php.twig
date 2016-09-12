@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace  Tests\Application\{{ entityName }}\Command\Handler;
+namespace Tests\Application\{{ entityName }}\Command\Handler;
 
 use {{ projectName }}\Application\{{ entityName }}\Command\DeletManyeCommand;
 use {{ projectName }}\Domain\Service\{{ entityName }}\Manager\{{ entityName }}Manager;
@@ -12,44 +12,45 @@ use {{ projectName }}\Domain\Workflow\{{ entityName }}\Handler\DeleteManyWFHandl
 use \Phake;
 
 /**
-* Class DeleteManyCommandHandlerTest
-* This class permits to test the DeleteManyCommandHandler class
-* @category {{ projectName }}
-* @package Test
-* @subpackage Application\Command\Handler
-**/
+ * Class DeleteManyCommandHandlerTest.
+ * This class permits to test the DeleteManyCommandHandler class.
+ *
+ * @category {{ projectName }}
+ * @package Test
+ * @subpackage Application\Command\Handler
+ */
 class DeleteManyCommandHandlerTest extends \PHPUnit_Framework_TestCase
 {
     protected $manager;
+
+    /** @var DeleteManyCommandHandler */
     protected $commandHandler;
+
     protected $command;
 
     /**
-    * Configure the tests
-    */
+     * Configure the tests.
+     */
     public function setUp()
     {
         $this->manager = \Phake::mock({{ entityName|ucfirst }}Manager::class);
         $this->command = \Phake::mock(DeleteCommand::class);
 
         $this->commandHandler = new DeleteManyCommandHandler($this->manager);
-
     }
 
     /**
-    * Verify that CommandHandler implements CommandHandlerInterface
-    */
+     * Verify that CommandHandler implements CommandHandlerInterface.
+     */
     public function testInterfaces()
     {
         $this->assertInstanceOf(CommandHandlerInterface::class, $this->commandHandler);
     }
 
     /**
-    * Verify the testProcess function
-    */
+     * Verify the testProcess function.
+     */
     public function testProcess()
     {
     }
-
-
 }

@@ -3,8 +3,6 @@ declare(strict_types = 1);
 
 namespace Tests\Presentation\Request\{{ entityName }}\Command;
 
-require_once __DIR__.'/../../../../TraitVerifyResolver.php';
-
 use {{ projectName }}\Presentation\Request\{{ entityName }}\Query\GetAllRequest;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\CommandRequestInterface;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\QueryRequestInterface;
@@ -17,42 +15,36 @@ use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Resolver\ResolverS
 use Tests\src\Email\TraitVerifyResolver;
 
 /**
-* ClassGetAllRequestTest
-* This class permits to test the GetAllRequest class
-* @category {{ projectName }}
-* @package Test
-* @subpackage Presentation\Request\Query
-**/
+ * ClassGetAllRequestTest
+ * This class permits to test the GetAllRequest class
+ * @category {{ projectName }}
+ * @package Test
+ * @subpackage Presentation\Request\Query
+ */
 class GetAllRequestTest extends \PHPUnit_Framework_TestCase
 {
-
-    /**
-     * @var RequestInterface
-     */
+    /** @var RequestInterface */
     protected $requestStrategy;
-    /**
-     * @var ResolverInterface
-     */
+
+    /** @var ResolverInterface */
     protected $resolverStrategy;
-    /**
-     * @var NewRequest
-     */
+
+    /** @var GetAllRequest */
     protected $request;
 
-    /*
-    * Configure the test
-    */
+    /**
+     * Configure the test.
+     */
     public function setUp()
     {
         $this->SymfonyStrategy = Phake::mock(SymfonyStrategy::class);
         $this->resolver = Phake::mock(ResolverStrategy::class);
         $this->request = new GetAllRequest($this->SymfonyStrategy, $this->resolver);
-
     }
 
-    /*
-    * Verify that request implements QueryRequestInterface
-    */
+    /**
+     * Verify that request implements QueryRequestInterface.
+     */
     public function testGetRequestInterface()
     {
         $this->assertInstanceof(QueryRequestInterface::class ,$this->request);

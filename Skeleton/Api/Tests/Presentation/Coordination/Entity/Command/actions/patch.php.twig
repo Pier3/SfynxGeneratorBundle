@@ -1,9 +1,10 @@
+    /**
+     * Test the Command Adapter "Patch".
+     */
     public function testPatchAction()
     {
         $adapter = new PatchCommandAdapter();
-        $command = $adapter->createCommandFromRequest(
-             new PatchRequest($this->request, $this->resolver)
-        );
+        $command = $adapter->createCommandFromRequest(new PatchRequest($this->request, $this->resolver));
 
         $this->controller->patchAction();
         Phake::verify($this->patchHandler, Phake::times(1))->process($command);

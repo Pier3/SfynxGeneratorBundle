@@ -1,19 +1,19 @@
 <?php
+declare(strict_types = 1);
 
 namespace Tests\Presentation\Coordination\{{ entityName }}\Query;
 
-
-use {{ projectName}}\Application\{{ entityName }}\Query\Handler\GetAllQueryHandler;
-use {{ projectName}}\Application\{{ entityName }}\Query\Handler\GetQueryHandler;
-use {{ projectName}}\Application\{{ entityName }}\Query\Handler\SearchByQueryHandler;
-use {{ projectName}}\Application\{{ entityName }}\Query\Handler\GetByIdsQueryHandler;
-use {{ projectName}}\Presentation\Adapter\{{ entityName }}\Query\GetAllQueryAdapter;
-use {{ projectName}}\Presentation\Adapter\{{ entityName }}\Query\GetQueryAdapter;
-use {{ projectName}}\Presentation\Adapter\{{ entityName }}\Query\SearchByQueryAdapter;
-use {{ projectName}}\Presentation\Coordination\{{ entityName }}\Query\Controller;
-use {{ projectName}}\Presentation\Request\{{ entityName }}\Query\GetAllRequest;
-use {{ projectName}}\Presentation\Request\{{ entityName }}\Query\GetRequest;
-use {{ projectName}}\Presentation\Request\{{ entityName }}\Query\SearchByRequest;
+use {{ projectName }}\Application\{{ entityName }}\Query\Handler\GetAllQueryHandler;
+use {{ projectName }}\Application\{{ entityName }}\Query\Handler\GetQueryHandler;
+use {{ projectName }}\Application\{{ entityName }}\Query\Handler\SearchByQueryHandler;
+use {{ projectName }}\Application\{{ entityName }}\Query\Handler\GetByIdsQueryHandler;
+use {{ projectName }}\Presentation\Adapter\{{ entityName }}\Query\GetAllQueryAdapter;
+use {{ projectName }}\Presentation\Adapter\{{ entityName }}\Query\GetQueryAdapter;
+use {{ projectName }}\Presentation\Adapter\{{ entityName }}\Query\SearchByQueryAdapter;
+use {{ projectName }}\Presentation\Coordination\{{ entityName }}\Query\Controller;
+use {{ projectName }}\Presentation\Request\{{ entityName }}\Query\GetAllRequest;
+use {{ projectName }}\Presentation\Request\{{ entityName }}\Query\GetRequest;
+use {{ projectName }}\Presentation\Request\{{ entityName }}\Query\SearchByRequest;
 use \Phake;
 
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Request\SymfonyStrategy;
@@ -23,49 +23,71 @@ use Sfynx\DddBundle\Layer\Presentation\Response\Handler\ResponseHandler;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
-* Class ControllerTest
-* This class permits to test the Controller class
-* @category {{ projectName }}
-* @package Test
-* @subpackage Presentation\Coordination\Presentation
-**/
+ * Class ControllerTest.
+ * This class permits to test the Query adapters of the Controller class.
+ *
+ * @category {{ projectName }}
+ * @package Test
+ * @subpackage Presentation\Coordination\Query
+ */
 class ControllerTest extends \PHPUnit_Framework_TestCase
 {
+    protected $request;
 
-    /* Configure the test */
+    protected $resolver;
+
+    protected $responseHandler;
+
+    protected $entity;
+
+    /** @var Controller */
+    protected $controller;
+
+{% for commandQueryResponsibilitySegregation in controllerData %}
+{% if commandQueryResponsibilitySegregation.group == group %}
+    protected ${{ commandQueryResponsibilitySegregation.action }}Handler;
+{% endif %}
+{% endfor %}
+
+    /**
+     * Configure the tests.
+     */
     public function setUp()
     {
         $this->request = Phake::mock(SymfonyStrategy::class);
         $this->resolver = Phake::mock(ResolverStrategy::class);
         $this->responseHandler = Phake::mock(ResponseHandler::class);
 
-        Phake::when($this->responseHandler)->create(Phake::anyParameters())->thenReturn($this->responseHandler);
-        Phake::when($this->responseHandler)->getResponse(Phake::anyParameters())->thenReturn(Phake::mock(Response::class));
-        Phake::when($this->request)->getContent(Phake::anyParameters())->thenReturn(json_encode(['id'=>123456]));
+        Phake::when($this->responseHandler)->create(Phake::anyParameters())
+            ->thenReturn($this->responseHandler);
+        Phake::when($this->responseHandler)->getResponse(Phake::anyParameters())
+            ->thenReturn(Phake::mock(Response::class));
+        Phake::when($this->request)->getContent(Phake::anyParameters())
+            ->thenReturn(json_encode(['id' => 123456]));
 
         $this->entity = ['id' => '00c1ab20-6e1e-4c54-83b4-62e677aba7ec'];
 
-{% set controllerArgs ="" %}
+{% set controllerArgs = "" %}
 {% for commandQueryResponsibilitySegregation in controllerData %}
 {% if  commandQueryResponsibilitySegregation.group == group %}
-        $this->{{ commandQueryResponsibilitySegregation.action }}Handler = Phake::mock({{ commandQueryResponsibilitySegregation.action }}{{ group }}Handler::class);;
-        Phake::when($this->{{ commandQueryResponsibilitySegregation.action }}Handler)->process(Phake::anyParameters())->thenReturn($this->entity);
+        $this->{{ commandQueryResponsibilitySegregation.action }}Handler = Phake::mock({{ commandQueryResponsibilitySegregation.action|capitalize }}{{ group }}Handler::class);
+        Phake::when($this->{{ commandQueryResponsibilitySegregation.action }}Handler)->process(Phake::anyParameters())
+            ->thenReturn($this->entity);
 {% endif %}
-        {% set controllerArgs = controllerArgs  ~ "                                          " ~ "$this->" ~ commandQueryResponsibilitySegregation.action ~ 'Handler,\n'%}
+        {% set controllerArgs = controllerArgs  ~ "            " ~ "$this->" ~ commandQueryResponsibilitySegregation.action ~ 'Handler,\n'%}
 {% endfor %}
 
-        $this->controller = new Controller($this->request,
-                                           $this->resolver,
-                                           $this->responseHandler,
-                                           {{ controllerArgs|trim(',\n') }});
+        $this->controller = new Controller(
+            $this->request,
+            $this->resolver,
+            $this->responseHandler,
+{{ controllerArgs|trim(',\n') }}
+        );
     }
-
 {% for commandQueryResponsibilitySegregation in controllerData %}
 {% if  commandQueryResponsibilitySegregation.group == group %}
 
 {% include('Presentation/Coordination/Entity/Query/actions/' ~ commandQueryResponsibilitySegregation.action ~ '.php.twig') with {'action': commandQueryResponsibilitySegregation.action} %}
-
 {% endif %}
 {% endfor %}
-
 }

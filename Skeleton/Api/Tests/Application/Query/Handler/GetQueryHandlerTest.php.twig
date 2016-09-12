@@ -1,35 +1,35 @@
 <?php
+declare(strict_types = 1);
 
-namespace  Tests\Application\{{ entityName }}\Query;
+namespace Tests\Application\{{ entityName }}\Query;
 
 use {{ projectName }}\Application\{{ entityName }}\Query\GetAllQuery;
 use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\QueryInterface;
 
 /**
-* Class GetQueryHandlerTest
-* This class permits to test the GetQueryHandler class
-* @category {{ projectName }}
-* @package Test
-* @subpackage Application\Query\Handler
-**/
+ * Class GetQueryHandlerTest.
+ * This class permits to test the GetQueryHandler class.
+ *
+ * @category {{ projectName }}
+ * @package Test
+ * @subpackage Application\Query\Handler
+ */
 class GetQueryHandlerTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var GetQuery */
     protected $query;
-    protected $message;
-    protected $transaction;
-    protected $jsonRequest;
 
-    /*
-    * Configure the tests
-    */
+    /**
+     * Configure the tests.
+     */
     public function setUp()
     {
-        $this->query = new GetQuery("00c1ab20-6e1e-4c54-83b4-62e677aba7ec");
+        $this->query = new GetQuery('00c1ab20-6e1e-4c54-83b4-62e677aba7ec');
     }
 
-    /*
-    * Verify that query implements QueryInterface
-    */
+    /**
+     * Verify that query implements QueryInterface.
+     */
     public function testInterface()
     {
         $this->assertInstanceOf(QueryInterface::class, $this->query);

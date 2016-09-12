@@ -3,8 +3,6 @@ declare(strict_types = 1);
 
 namespace Tests\Presentation\Request\{{ entityName }}\Command;
 
-require_once __DIR__.'/../../../../TraitVerifyResolver.php';
-
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\CommandRequestInterface;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Request\RequestInterface;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Request\SymfonyStrategy;
@@ -13,46 +11,40 @@ use {{ projectName }}\Presentation\Request\{{ entityName }}\Command\DeleteReques
 use \Phake;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Resolver\ResolverStrategy;
 
-
 /**
-* Class DeleteRequestTest
-* This class permits to test the DeleteRequest class
-* @category {{ projectName }}
-* @package Test
-* @subpackage Presentation\Request\Command
-**/
+ * Class DeleteRequestTest.
+ * This class permits to test the DeleteRequest class.
+ *
+ * @category {{ projectName }}
+ * @package Test
+ * @subpackage Presentation\Request\Command
+ */
 class DeleteRequestTest extends \PHPUnit_Framework_TestCase
 {
-
-    /**
-     * @var RequestInterface
-     */
+    /** @var RequestInterface */
     protected $requestStrategy;
-    /**
-     * @var ResolverInterface
-     */
+
+    /** @var ResolverInterface */
     protected $resolverStrategy;
-    /**
-     * @var NewRequest
-     */
+
+    /** @var NewRequest */
     protected $request;
 
-    /*
-     * configure the test
+    /**
+     * Configure the test.
      */
     public function setUp()
     {
         $this->SymfonyStrategy = Phake::mock(SymfonyStrategy::class);
         $this->resolver = Phake::mock(ResolverStrategy::class);
         $this->request = new DeleteRequest($this->SymfonyStrategy, $this->resolver);
-
     }
 
 
-    /*
-    * Verify that request implements QueryRequestInterface
-    */
-    public function testGetRequestInterface()
+    /**
+     * Verify that request implements CommandRequestInterface.
+     */
+    public function testDeleteRequestInterface()
     {
         $this->assertInstanceof(CommandRequestInterface::class, $this->request);
     }

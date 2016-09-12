@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace Tests\Application\Command\Validation;
 
@@ -12,21 +13,21 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
 use Tests\TraitPrivateMethod;
 
 /**
-* Class NewCommandValidationHandlerTest
-* This class permits to test the DeleteCommandHandler class
-* @category {{ projectName }}
-* @package Test
-* @subpackage Application\Command\Handler\Validation
-**/
+ * Class NewCommandValidationHandlerTest.
+ * This class permits to test the NewCommandValidationHandler class.
+ *
+ * @category {{ projectName }}
+ * @package Test
+ * @subpackage Application\Command\Handler\Validation
+ */
 class NewCommandValidationHandlerTest extends \PHPUnit_Framework_TestCase
 {
     use TraitPrivateMethod;
 
     /**
-    * Configure the tests
-    */
+     * Configure the tests.
+     */
     public function setUp()
     {
-
     }
 }

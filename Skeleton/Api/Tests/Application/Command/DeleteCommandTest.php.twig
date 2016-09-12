@@ -1,50 +1,52 @@
 <?php
 declare(strict_types = 1);
 
-namespace  Tests\Application\{{ entityName }}\Command;
+namespace Tests\Application\{{ entityName }}\Command;
 
 use {{ projectName }}\Application\{{ entityName }}\Command\DeleteCommand;
 use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandInterface;
 
-
 /**
-* Class DeleteCommandTest
-* This class permits to test the DeleteCommand class
-* @category {{ projectName }}
-* @package Test
-* @subpackage Application\Command
-**/
+ * Class DeleteCommandTest.
+ * This class permits to test the DeleteCommand class.
+ *
+ * @category {{ projectName }}
+ * @package Test
+ * @subpackage Application\Command
+ */
 class DeleteCommandTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var DeleteCommand */
     protected $command;
-    protected $message;
-    protected $transaction;
-    protected $jsonRequest;
+
+    /** @var string */
+    protected $revision;
+
+    /** @var string */
+    protected $entityId;
 
     /**
-    * Configure the tests
-    */
+     * Configure the tests.
+     */
     public function setUp()
     {
-
-        $this->revision='001';
-        $this->entityId='123456';
-
+        $this->revision = '001';
+        $this->entityId = '123456';
 
         $this->command = new DeleteCommand($this->entityId, $this->revision);
     }
 
     /**
-    * Test that DeleteCommand is instanceOf CommandInterface
-    */
+     * Test that DeleteCommand is instance of CommandInterface.
+     */
     public function testInterface()
     {
         $this->assertInstanceOf(CommandInterface::class, $this->command);
     }
 
     /**
-    * Verify that getters works
-    */
+     * Verify that getters works.
+     */
     public function testGetters()
     {
         $this->assertEquals($this->entityId, $this->command->getEntityId());

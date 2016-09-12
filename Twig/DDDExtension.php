@@ -37,6 +37,6 @@ class DDDExtension extends \Twig_Extension
      */
     public function getName(): string
     {
-        return 'sfynx_dddgeneratorbundle_extension_filter';
+        return 'sfynx_dddGeneratorBundle_extension_filter';
     }
 }

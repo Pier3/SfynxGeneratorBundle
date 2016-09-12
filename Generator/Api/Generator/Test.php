@@ -42,7 +42,7 @@ class Test extends LayerAbstract
     }
 
     /**
-     * Generate test for the Application layer
+     * Generate tests for the Application layer.
      * @return Test
      */
     public function generateApplicationTests(): self
@@ -53,46 +53,46 @@ class Test extends LayerAbstract
         return $this;
     }
 
-    public function generateCommands()
+    /**
+     * Generate tests for the "Command" part in the Application layer.
+     * @return Test
+     */
+    public function generateCommands(): self
     {
         foreach ($this->commandsQueriesList[self::COMMAND] as $data) {
-            $constructorParams = '';
-            $managerArgs = '';
-
             $this->parameters['actionName'] = ucfirst($data['action']);
             $this->parameters['entityName'] = ucfirst(strtolower($data['entity']));
             $this->parameters['entityFields'] = $this->entitiesToCreate[$data['entity']];
-
             $this->parameters['constructorArgs'] = $this->buildConstructorParamsString($data['entity']);
             $this->parameters['managerArgs'] = $this->buildConstructorParamsString($data['entity']);
 
             $this->addHandlers('testCommand', 'testCommandHandlerDecorator', 'testCommandHandler');
-
         }
 
         $this->generator->execute()->clear();
-
         return $this;
     }
 
     /**
-     * Generate the Query part in the "Application" layer.
-     * @throws \InvalidArgumentException
+     * Generate tests for the "Command" part in the Application layer.
+     * @return Test
      */
-    protected function generateQueries()
+    protected function generateQueries(): self
     {
         foreach ($this->commandsQueriesList[self::QUERY] as $data) {
             $this->parameters['actionName'] = ucfirst($data['action']);
             $this->parameters['entityName'] = ucfirst(strtolower($data['entity']));
             $this->parameters['entityFields'] = $this->entitiesToCreate[$data['entity']];
 
-            $this->addHandlers('testQuery');
+            $this->addHandler('testQuery');
         }
 
         $this->generator->execute()->clear();
+        return $this;
     }
 
     /**
+     * Generate tests for the Domain layer.
      * @return Test
      */
     public function generateDomainTests(): self
@@ -105,11 +105,13 @@ class Test extends LayerAbstract
         }
 
         $this->generator->execute()->clear();
-
         return $this;
     }
 
     /**
+     * Generate tests for the Presentation layer.
+     * Todo: Review this method => no generation of Queries Adapters and Requests.
+     * Todo: Move the generation of Test Controllers in another method.
      * @return Test
      */
     public function generatePresentationTests(): self
@@ -133,18 +135,17 @@ class Test extends LayerAbstract
         }
 
         $this->generator->execute()->clear();
-
         return $this;
     }
 
     /**
+     * Generate the XML configuration file for the PHPUnit tests to run.
      * @return Test
      */
     public function generatePhpUnitXML(): self
     {
         $this->addHandler('testPhpUnitXML');
         $this->generator->execute()->clear();
-
         return $this;
     }
 
@@ -170,8 +171,7 @@ class Test extends LayerAbstract
         }
 
         //Add the Handlers to the generator's stack.
-        $this->addHandler('testController'.$group);
-
+        $this->addHandler('testController' . $group);
         return $this;
     }
 }

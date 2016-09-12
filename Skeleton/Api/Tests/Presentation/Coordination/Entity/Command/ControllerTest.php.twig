@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Tests\Presentation\Coordination\Country\Command;
+namespace Tests\Presentation\Coordination\{{ entityName }}\Command;
 
 use {{ projectName}}\Application\{{ entityName }}\Command\Handler\NewCommandHandler;
 use {{ projectName}}\Application\{{ entityName }}\Command\Handler\PatchCommandHandler;
@@ -23,33 +23,44 @@ use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Resolver\ResolverS
 use Sfynx\DddBundle\Layer\Presentation\Response\Handler\ResponseHandler;
 use Symfony\Component\HttpFoundation\Response;
 
-
+/**
+* Class ControllerTest
+* This class permits to test the Controller class
+* @category {{ projectName }}
+* @package Test
+* @subpackage Presentation\Coordination\Command
+**/
 class ControllerTest extends \PHPUnit_Framework_TestCase
 {
 
+    /* Configure the test */
     public function setUp()
     {
         $this->request = Phake::mock(SymfonyStrategy::class);
         $this->resolver = Phake::mock(ResolverStrategy::class);
         $this->responseHandler = Phake::mock(ResponseHandler::class);
 
-        $this->entity = ["id" => "00c1ab20-6e1e-4c54-83b4-62e677aba7ec"];
+        $this->entity = ['id' => '00c1ab20-6e1e-4c54-83b4-62e677aba7ec'];
 
         Phake::when($this->responseHandler)->create(Phake::anyParameters())->thenReturn($this->responseHandler);
         Phake::when($this->responseHandler)->getResponse(Phake::anyParameters())->thenReturn(Phake::mock(Response::class));
-        Phake::when($this->request)->getContent(Phake::anyParameters())->thenReturn(json_encode(["id"=>123456]));
+        Phake::when($this->request)->getContent(Phake::anyParameters())->thenReturn(json_encode(['id'=>123456]));
 
-{% set controllerArgs ="" %}
+{% set controllerArgs ="                                           " %}
 {% for commandQueryResponsibilitySegregation in controllerData %}
 {% if  commandQueryResponsibilitySegregation.group == group %}
 
         $this->{{ commandQueryResponsibilitySegregation.action }}Handler = Phake::mock({{ commandQueryResponsibilitySegregation.action }}{{ group }}Handler::class);;
         Phake::when($this->{{ commandQueryResponsibilitySegregation.action }}Handler)->process(Phake::anyParameters())->thenReturn($this->entity);
-{% set controllerArgs = controllerArgs  ~ "$this->" ~ commandQueryResponsibilitySegregation.action ~ "Handler, "%}
+{% set controllerArgs = controllerArgs  ~ "                                          " ~ "$this->" ~ commandQueryResponsibilitySegregation.action  ~ 'Handler,\n '%}
 {% endif %}
 {% endfor %}
 
-        $this->controller = new Controller($this->request, $this->resolver, $this->responseHandler, {{ controllerArgs|trim(", ") }});
+        $this->controller = new Controller($this->request,
+                                           $this->resolver,
+                                           $this->responseHandler,
+                                           {{ controllerArgs|trim(",\n ") }}
+                                            );
     }
 
 {% for commandQueryResponsibilitySegregation in controllerData %}

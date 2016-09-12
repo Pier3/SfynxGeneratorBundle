@@ -6,6 +6,14 @@ namespace  Tests\Application\{{ entityName }}\Command;
 use {{ projectName }}\Application\{{ entityName }}\Command\PatchCommand;
 use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandInterface;
 
+
+/**
+* Class PatchCommandTests
+* This class permits to test the PatchCommand class
+* @category {{ projectName }}
+* @package Test
+* @subpackage Application\Command
+**/
 class PatchCommandTest extends \PHPUnit_Framework_TestCase
 {
     protected $command;
@@ -13,28 +21,39 @@ class PatchCommandTest extends \PHPUnit_Framework_TestCase
     protected $transaction;
     protected $jsonRequest;
 
+    /**
+    * Configure the tests
+    */
     public function setUp()
     {
 {% set constructorArgs = "" %}
 {% for field in entityFields %}
-        $this->{{ field.name }} = "123456";
-{% set constructorArgs = constructorArgs ~ "$this->" ~ field.name ~ ", " %}
+        $this->{{ field.name }} = '123456';
+{% set constructorArgs = constructorArgs ~ "                                        " ~ "$this->" ~ field.name ~ ",\n" %}
 {% endfor %}
 
-        $this->command = new PatchCommand({{ constructorArgs|trim(', ') }});
+        $this->command = new PatchCommand(
+{{ constructorArgs|trim(',\n') }}
+                              );
     }
 
+    /**
+    * Test PatchCommand is instanceof CommandInterface
+    */
     public function testInterface()
     {
         $this->assertInstanceOf(CommandInterface::class, $this->command);
     }
 
+    /**
+    * Verify that getters works
+    */
     public function testGetters()
     {
-        $this->assertEquals($this->libelle, $this->command->getLibelle());
-        $this->assertEquals($this->indicatif, $this->command->getIndicatif());
-        $this->assertEquals($this->iso, $this->command->getIso());
-        $this->assertEquals($this->selectable, $this->command->getSelectable());
-        $this->assertEquals($this->reference, $this->command->getReference());
+{% for field in entityFields %}
+    {% if field.type != 'id' %}
+        $this->assertEquals($this->{{ field.name }}, $this->command->get{{ field.name|ucfirst }}());
+    {% endif %}
+{% endfor %}
     }
 }

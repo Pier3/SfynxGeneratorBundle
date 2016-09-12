@@ -1,47 +1,56 @@
 <?php
 declare(strict_types = 1);
 
-namespace Tests\Domain\Service\Manager\CountryManager;
+namespace Tests\Domain\Service\Manager;
 
 
 use {{ projectName }}\Domain\Entity\{{ entityName }};
-use {{ projectName }}\Domain\Service\{{ entityName }}\Manager\CountryManager;
+use {{ projectName }}\Domain\Service\{{ entityName }}\Manager\{{ entityName|ucfirst }}Manager;
 use {{ projectName }}\Infrastructure\Persistence\Repository\{{ entityName }}\Orm\GetRepository;
 use {{ projectName }}\Domain\Service\{{ entityName }}\Processor\PrePersistProcess;
 use Phake;
-use ReflectionClass;
 use Sfynx\DddBundle\Layer\Domain\Service\Generalisation\Factory\RepositoryFactoryInterface;
 use Sfynx\DddBundle\Layer\Domain\ValueObject\IdVO;
 use Sfynx\DddBundle\Layer\Infrastructure\Logger\Logger;
 use Sfynx\DddBundle\Layer\Infrastructure\Persistence\Generalisation\CouchDB\SaveRepository;
-use Sfynx\DddBundle\Layer\Infrastructure\Validator\Constraint\IdValidator;
 
 {% set args = "" %}
 {% for field in entityFields %}
-    {% if field.type != "id" %}
-        {% if field.type == "number" %}
-            {% set args = args ~ "123,"  %}
-        {% else %}
-            {% if field.type == "boolean" %}
-                {% set args = args ~ "true,"  %}
-            {% else %}
-                {% set args = args ~ "'abc',"  %}
-            {% endif %}
-        {% endif %}
-    {% endif %}
+{% if field.type != "id" %}
+{% if field.type == "number" %}
+{% set args = args ~ "123,"  %}
+{% else %}
+{% if field.type == "boolean" %}
+{% set args = args ~ "true,"  %}
+{% else %}
+{% set args = args ~ "'abc',"  %}
+{% endif %}
+{% endif %}
+{% endif %}
 {% endfor %}
 
+
+/**
+* Class {{ entityName }}ManagerTest
+* This class permits to test the {{ entityName }}Manager class
+* @category {{ projectName }}
+* @package Test
+* @subpackage Service\Manager
+**/
 class {{ entityName }}ManagerTest extends  \PHPUnit_Framework_TestCase
 {
     protected $emailManager;
     protected $repo;
 
+    /*
+    * configure tests
+    */
     public function setUp()
     {
         $this->repo = Phake::mock(RepositoryFactoryInterface::class);
         $this->saveReposiroty = Phake::mock(SaveRepository::class);
         $this->getOneRepository = Phake::mock(GetRepository::class);
-        $this->entity = Phake::mock(Country::class);
+        $this->entity = Phake::mock({{ entityName }}::class);
         $logger = Phake::mock(Logger::class);
 
         $this->manager = new {{ entityName }}Manager($this->repo);
@@ -49,30 +58,36 @@ class {{ entityName }}ManagerTest extends  \PHPUnit_Framework_TestCase
 
         $processor = Phake::mock(PrePersistProcess::class);
 
-        $this->manager->addProcess("prepersist_create", $processor);
-        $this->manager->addProcess("postpersist_create", $processor);
-        $this->manager->addProcess("prepersist_update", $processor);
-        $this->manager->addProcess("postpersist_update", $processor);
+        $this->manager->addProcess('prepersist_create', $processor);
+        $this->manager->addProcess('postpersist_create', $processor);
+        $this->manager->addProcess('prepersist_update', $processor);
+        $this->manager->addProcess('postpersist_update', $processor);
 
         Phake::when($this->repo)->buildRepository(Phake::anyParameters())->thenReturn($this->saveReposiroty);
         Phake::when($this->saveReposiroty)->execute(Phake::anyParameters())->thenReturn($this->entity);
         Phake::when($this->repo)->create(Phake::anyParameters())->thenReturn(null);
     }
 
+    /*
+    * Test the create function
+    */
     public function testCreate()
     {
         if(!isset($_SERVER['HTTP_X_TENANT_ID'])) {
-            $_SERVER['HTTP_X_TENANT_ID']="1000";
+            $_SERVER['HTTP_X_TENANT_ID']='1000';
             $this->manager->create(null,{{ args|trim(",") }});
             Phake::verify($this->repo)->buildRepository(RepositoryFactoryInterface::NEW_REPOSITORY);
         }
     }
 
+    /*
+    * Test the update function
+    */
     public function testUpdate()
     {
         $this->manager->update(new IdVO(),{{ args|trim(",") }});
         Phake::verify($this->repo)->buildRepository(RepositoryFactoryInterface::UPDATE_REPOSITORY);
     }
 
-    //can't test if repository load or not an Country...
+    //can't test if repository load or not an {{ entityName }}...
 }

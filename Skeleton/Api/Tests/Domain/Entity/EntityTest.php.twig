@@ -4,23 +4,32 @@ namespace Tests\src\Email\Domain\Entity;
 
 require_once __DIR__.'/../../TraitPrivateMethod.php';
 
-use DemoCountry\Domain\Entity\Country;
+use {{ projectName }}\Domain\Entity\{{ entityName }};
 use Phake;
 use Tests\TraitPrivateMethod;
 
-class CountryTest extends \PHPUnit_Framework_TestCase
+
+/**
+* Class EntityTest
+* This class permits to test the {{ entityName }} class
+* @category {{ projectName }}
+* @package Test
+* @subpackage Domain\Entity
+**/
+class {{ entityName }}Test extends \PHPUnit_Framework_TestCase
 {
     use TraitPrivateMethod;
 
     /**
      * @var Message
      */
-    protected $indicatif;
-    protected $libelle;
-    protected $iso;
-    protected $selectable;
-    protected $reference;
+{% for field in entityFields %}
+    protected ${{ field.name }};
+{% endfor %}
 
+    /*
+    * Configure the tests
+    */
     public function setUp()
     {
 {% set constructorArgs = "" %}
@@ -29,30 +38,36 @@ class CountryTest extends \PHPUnit_Framework_TestCase
         $this->{{ field.name }} = "2e647197-5b18-11e6-a55f-f8b156c6181f";
 {% set constructorArgs = constructorArgs ~ "$"{{ field.name }} ~ ", " %}
 {% else %}
-        $this->{{ field.name }} = "abcd";
+        $this->{{ field.name }} = 'abcd';
 {% endif %}
-        $this->country = Country::makeInstance(
+        $this->entity = {{ entityName|ucfirst }}::makeInstance(
             {{ constructorArgs|trim(", ") }}
         );
     }
 
+    /*
+    * Test getters
+    */
     public function testGetters()
     {
 {% for field in entityFields %}
-        $this->assertEquals($this->{{ field.name }}, $this->country->ge{{ field.name|ucfirst }}());
+        $this->assertEquals($this->{{ field.name }}, $this->entity->ge{{ field.name|ucfirst }}());
 {% endfor %}
 
     }
 
+    /*
+    * Test setters
+    */
     public function testSetters()
     {
 {% for field in entityFields %}
 {% if %} field.type == "id"
-    $this->country->setEntityId('2e647197-5b18-11e6-a55f-f8b156c6181f');
-    $this->assertEquals('2e647197-5b18-11e6-a55f-f8b156c6181f', $this->country->getId()->id());
+    $this->entity->setEntityId('2e647197-5b18-11e6-a55f-f8b156c6181f');
+    $this->assertEquals('2e647197-5b18-11e6-a55f-f8b156c6181f', $this->entity->getId()->id());
 {% else %}
-    $this->country->set{{ field.name|ucfirst }}('abc');
-    $this->assertEquals('abc', $this->country->get{{ field.name|ucfirst }}());
+    $this->entity->set{{ field.name|ucfirst }}('abc');
+    $this->assertEquals('abc', $this->entity->get{{ field.name|ucfirst }}());
 {% endif %}
 {% endfor %}
 

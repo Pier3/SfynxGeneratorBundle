@@ -10,25 +10,41 @@ use {{ projectName }}\Application\{{ entityName }}\Command\DeleteCommand;
 use {{ projectName }}\Domain\Workflow\{{ entityName }}\Handler\DeleteWFHandler;
 use \Phake;
 
+/**
+* Class DeleteCommandHandlerTest
+* This class permits to test the DeleteCommandHandler class
+* @category {{ projectName }}
+* @package Test
+* @subpackage Application\Command\Handler
+**/
 class DeleteCommandHandlerTest extends \PHPUnit_Framework_TestCase
 {
     protected $amanager;
     protected $commandHandler;
     protected $command;
 
+    /**
+    * Configure the tests
+    */
     public function setUp()
     {
-        $this->manager = \Phake::mock(CountryManager::class);
+        $this->manager = \Phake::mock({{ entityName|ucfirst }}Manager::class);
         $this->command = \Phake::mock(DeleteCommand::class);
 
         $this->commandHandler = new DeleteCommandHandler($this->manager);
     }
 
+    /**
+    * Verify that commandHandler implements CommandHandlerInterface
+    */
     public function testInterfaces()
     {
         $this->assertInstanceOf(CommandHandlerInterface::class, $this->commandHandler);
     }
 
+    /**
+    * Verify the testProcess function
+    */
     public function testProcess()
     {
         $this->commandHandler->process($this->command);

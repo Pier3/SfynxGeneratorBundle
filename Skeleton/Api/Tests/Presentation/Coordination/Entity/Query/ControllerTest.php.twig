@@ -22,10 +22,17 @@ use Sfynx\DddBundle\Layer\Presentation\Response\Handler\ResponseHandler;
 
 use Symfony\Component\HttpFoundation\Response;
 
-
+/**
+* Class ControllerTest
+* This class permits to test the Controller class
+* @category {{ projectName }}
+* @package Test
+* @subpackage Presentation\Coordination\Presentation
+**/
 class ControllerTest extends \PHPUnit_Framework_TestCase
 {
 
+    /* Configure the test */
     public function setUp()
     {
         $this->request = Phake::mock(SymfonyStrategy::class);
@@ -34,21 +41,23 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 
         Phake::when($this->responseHandler)->create(Phake::anyParameters())->thenReturn($this->responseHandler);
         Phake::when($this->responseHandler)->getResponse(Phake::anyParameters())->thenReturn(Phake::mock(Response::class));
-        Phake::when($this->request)->getContent(Phake::anyParameters())->thenReturn(json_encode(["id"=>123456]));
+        Phake::when($this->request)->getContent(Phake::anyParameters())->thenReturn(json_encode(['id'=>123456]));
 
-        $this->entity = ["id" => "00c1ab20-6e1e-4c54-83b4-62e677aba7ec"];
+        $this->entity = ['id' => '00c1ab20-6e1e-4c54-83b4-62e677aba7ec'];
 
 {% set controllerArgs ="" %}
 {% for commandQueryResponsibilitySegregation in controllerData %}
 {% if  commandQueryResponsibilitySegregation.group == group %}
-        $this->{{ commandQueryResponsibilitySegregation.action }}{{ group }}Handler = Phake::mock({{ commandQueryResponsibilitySegregation.action }}{{ group }}Handler::class);;
-        Phake::when($this->{{ commandQueryResponsibilitySegregation.action }}{{ group }}Handler)->process(Phake::anyParameters())->thenReturn($this->entity);
+        $this->{{ commandQueryResponsibilitySegregation.action }}Handler = Phake::mock({{ commandQueryResponsibilitySegregation.action }}{{ group }}Handler::class);;
+        Phake::when($this->{{ commandQueryResponsibilitySegregation.action }}Handler)->process(Phake::anyParameters())->thenReturn($this->entity);
 {% endif %}
-{% set controllerArgs = controllerArgs  ~ "$this->" ~ commandQueryResponsibilitySegregation.action ~ group ~ "Handler, "%}
+        {% set controllerArgs = controllerArgs  ~ "                                          " ~ "$this->" ~ commandQueryResponsibilitySegregation.action ~ 'Handler,\n'%}
 {% endfor %}
 
-        $this->controller = new Controller($this->request, $this->resolver, $this->responseHandler, {{ controllerArgs|trim(", ") }});
-
+        $this->controller = new Controller($this->request,
+                                           $this->resolver,
+                                           $this->responseHandler,
+                                           {{ controllerArgs|trim(',\n') }});
     }
 
 {% for commandQueryResponsibilitySegregation in controllerData %}

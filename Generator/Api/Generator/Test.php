@@ -42,9 +42,18 @@ class Test extends LayerAbstract
     }
 
     /**
+     * Generate test for the Application layer
      * @return Test
      */
     public function generateApplicationTests(): self
+    {
+        $this->writeln('### COMMANDS GENERATION ###')->generateCommands();
+        $this->writeln('### QUERIES GENERATION ###')->generateQueries();
+
+        return $this;
+    }
+
+    public function generateCommands()
     {
         foreach ($this->commandsQueriesList[self::COMMAND] as $data) {
             $constructorParams = '';
@@ -54,38 +63,33 @@ class Test extends LayerAbstract
             $this->parameters['entityName'] = ucfirst(strtolower($data['entity']));
             $this->parameters['entityFields'] = $this->entitiesToCreate[$data['entity']];
 
-            $this->writeln(' - ' . $this->parameters['actionName'] . ' - ');
-
-            foreach ($this->entitiesToCreate[$data['entity']] as $field) {
-                $constructorParams .= '$' . $field['name'] . ', ';
-                if (('new' === $data['action'] && 'id' !== $field['type']) || ('new' !== $data['action'])) {
-                    $managerArgs .= '$' . $field['name'] . ', ';
-                }
-            }
-            $this->parameters['constructorArgs'] = trim($constructorParams, ', ');
-            $this->parameters['managerArgs'] = trim($managerArgs, ', ');
+            $this->parameters['constructorArgs'] = $this->buildConstructorParamsString($data['entity']);
+            $this->parameters['managerArgs'] = $this->buildConstructorParamsString($data['entity']);
 
             $this->addHandlers('testCommand', 'testCommandHandlerDecorator', 'testCommandHandler');
 
-            $this->generator->execute();
-            $this->generator->clear();
         }
 
-        // TODO : do tests for queries, like commands
+        $this->generator->execute()->clear();
+
+        return $this;
+    }
+
+    /**
+     * Generate the Query part in the "Application" layer.
+     * @throws \InvalidArgumentException
+     */
+    protected function generateQueries()
+    {
         foreach ($this->commandsQueriesList[self::QUERY] as $data) {
             $this->parameters['actionName'] = ucfirst($data['action']);
             $this->parameters['entityName'] = ucfirst(strtolower($data['entity']));
             $this->parameters['entityFields'] = $this->entitiesToCreate[$data['entity']];
 
-            $this->writeln(' - ' . $this->parameters['actionName'] . ' - ');
-
-            $this->addHandler('testQuery');
-
-            $this->generator->execute();
-            $this->generator->clear();
+            $this->addHandlers('testQuery');
         }
 
-        return $this;
+        $this->generator->execute()->clear();
     }
 
     /**
@@ -93,15 +97,14 @@ class Test extends LayerAbstract
      */
     public function generateDomainTests(): self
     {
-        foreach (array_keys($this->entitiesToCreate) as $entityName) {
+        foreach ($this->entitiesToCreate as $entityName => $fields) {
             $this->parameters['entityName'] = $entityName;
-            $this->parameters['entityFields'] = $this->entitiesToCreate[$entityName];
+            $this->parameters['entityFields'] = $fields;
 
             $this->addHandlers('testManager', 'testRepositoryFactory');
-
-            $this->generator->execute();
-            $this->generator->clear();
         }
+
+        $this->generator->execute()->clear();
 
         return $this;
     }
@@ -124,35 +127,13 @@ class Test extends LayerAbstract
         // Generate controllers
         foreach ($this->entitiesGroups as $entityName => $entityGroups) {
             $this->parameters['entityName'] = $entityName;
-            //Reset the controllerData list
-            $this->parameters['controllerData'] = [];
 
-            // Query
-            $group = self::QUERY;
-            //Set the parameter $group to its good value (might be a reset)
-            $this->parameters['group'] = $group;
-            //Fetch all controllerData for the given group (Command or Query)
-
-            foreach ($entityGroups[$group] as $entityCommandData) {
-                $this->parameters['controllerData'][] = $entityCommandData;
-            }
-            //Add the Handlers to the generator's stack.
-            $this->addHandler('testControllerQuery');
-            $this->generator->execute()->clear();
-
-            // Command
-            $group = self::COMMAND;
-            //Set the parameter $group to its good value (might be a reset)
-            $this->parameters['group'] = self::COMMAND;
-            //Fetch all controllerData for the given group (Command or Query)
-            foreach ($entityGroups[$group] as $entityCommandData) {
-                $this->parameters['controllerData'][] = $entityCommandData;
-            }
-            //Add the Handlers to the generator's stack.
-            $this->addHandler('testControllerCommand');
-
-            $this->generator->execute()->clear();
+            $this->addCQRSCoordinationToGenerator($entityGroups, self::COMMAND)
+                ->addCQRSCoordinationToGenerator($entityGroups, self::QUERY);
         }
+
+        $this->generator->execute()->clear();
+
         return $this;
     }
 
@@ -163,6 +144,33 @@ class Test extends LayerAbstract
     {
         $this->addHandler('testPhpUnitXML');
         $this->generator->execute()->clear();
+
+        return $this;
+    }
+
+    /**
+     * Add Controller (Coordination) Handler to the generator. For use in a loop for each C.Q.R.S. actions.
+     *
+     * @param array $entityGroups
+     * @param string $group
+     * @return self
+     * @throws \InvalidArgumentException
+     */
+    private function addCQRSCoordinationToGenerator(array $entityGroups, string $group): self
+    {
+        //Set the parameter $group to its good value (might be a reset)
+        $this->parameters['group'] = $group;
+
+        //Reset the controllerData list
+        $this->parameters['controllerData'] = [];
+
+        //Fetch all controllerData for the given group (Command or Query)
+        foreach ($entityGroups[$group] as $entityCommandData) {
+            $this->parameters['controllerData'][] = $entityCommandData;
+        }
+
+        //Add the Handlers to the generator's stack.
+        $this->addHandler('testController'.$group);
 
         return $this;
     }

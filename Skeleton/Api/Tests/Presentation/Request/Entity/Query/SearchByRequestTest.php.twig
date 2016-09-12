@@ -1,11 +1,11 @@
 <?php
 declare(strict_types = 1);
 
-namespace Tests\Presentation\Request\Country\Command;
+namespace Tests\Presentation\Request\{{ entityName }}\Command;
 
 require_once __DIR__.'/../../../../TraitVerifyResolver.php';
 
-use DemoCountry\Presentation\Request\Country\Query\SearchByRequest;
+use {{ projectName }}\Presentation\Request\{{ entityName }}\Query\SearchByRequest;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\QueryRequestInterface;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Request\RequestInterface;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Request\SymfonyStrategy;
@@ -13,7 +13,13 @@ use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Resolver\ResolverI
 use \Phake;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\Resolver\ResolverStrategy;
 
-
+/**
+* Class SearchByRequestTest
+* This class permits to test the SearchByRequest class
+* @category {{ projectName }}
+* @package Test
+* @subpackage Presentation\Request\Query
+**/
 class SearchByRequestTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -29,6 +35,9 @@ class SearchByRequestTest extends \PHPUnit_Framework_TestCase
      */
     protected $request;
 
+    /*
+    * Configure the test
+    */
     public function setUp()
     {
         $this->SymfonyStrategy = Phake::mock(SymfonyStrategy::class);
@@ -37,6 +46,9 @@ class SearchByRequestTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    /*
+    * Verify that request implements QueryRequestInterface
+    */
     public function testGetRequestInterface()
     {
         $this->assertInstanceof(QueryRequestInterface::class, $this->request);

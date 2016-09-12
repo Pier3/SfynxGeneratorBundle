@@ -11,7 +11,13 @@ use {{ projectName }}\Application\{{ entityName }}\Command\Handler\Decorator\Upd
 use {{ projectName }}\Application\{{ entityName }}\Command\Validation\ValidationHandler\UpdateCommandValidationHandler;
 use \Phake;
 
-
+/**
+* Class UpdateCommandHandlerDecoratorTest
+* This class permits to test theUpdateCommandHandlerDecorator class
+* @category {{ projectName }}
+* @package Test
+* @subpackage Application\Command\Handler
+**/
 class UpdateCommandHandlerDecoratorTest extends \PHPUnit_Framework_TestCase
 {
     protected $commandHandlerDecorator;
@@ -19,30 +25,43 @@ class UpdateCommandHandlerDecoratorTest extends \PHPUnit_Framework_TestCase
     protected $commandHandler;
     protected $command;
 
+    /*
+    * Configure the tests
+    */
     public function setUp()
     {
         $this->command = Phake::mock(UpdateCommand::class);
         $this->commandHandler = Phake::mock(UpdateCommandHandler::class);
 
-        Phake::when($this->commandHandler)->process(Phake::anyParameters())->thenReturn("some result");
+        Phake::when($this->commandHandler)->process(Phake::anyParameters())->thenReturn('some result');
 
         $this->validationHandler = Phake::mock(UpdateCommandValidationHandler::class);
 
         $this->specHandler = Phake::mock(UpdateCommandSpecHandler::class);
         Phake::when($this->specHandler )->process(Phake::anyParameters())->thenReturn(null);
 
-        $this->commandHandlerDecorator = new UpdateCommandHandlerDecorator($this->commandHandler, $this->validationHandler,$this->specHandler);
+        $this->commandHandlerDecorator = new UpdateCommandHandlerDecorator(
+                                            $this->commandHandler,
+                                            $this->validationHandler,
+                                            $this->specHandler
+                                         );
     }
 
+    /*
+    * Test that CommandHandlerDecorator implements CommandHandlerInterface
+    */
     public function testInterfaces()
     {
         $this->assertInstanceOf(CommandHandlerInterface::class, $this->commandHandlerDecorator);
     }
 
+    /*
+    * Test the process function
+    */
     public function testProcess()
     {
         $result = $this->commandHandlerDecorator->process($this->command);
-        $this->assertEquals("some result", $result);
+        $this->assertEquals('some result', $result);
         Phake::verify($this->validationHandler, Phake::times(1))->process(Phake::anyParameters());
         Phake::verify($this->commandHandler, Phake::times(1))->process(Phake::anyParameters());
 

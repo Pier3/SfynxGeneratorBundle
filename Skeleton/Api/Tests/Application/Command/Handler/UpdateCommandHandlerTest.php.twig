@@ -9,12 +9,22 @@ use {{ projectName }}\Application\{{ entityName }}\Command\UpdateCommand;
 use {{ projectName }}\Domain\Workflow\{{ entityName }}\Handler\UpdateWFHandler;
 use \Phake;
 
+/**
+* Class UpdateCommandHandlerTest
+* This class permits to test the UpdateCommandHandler class
+* @category {{ projectName }}
+* @package Test
+* @subpackage Application\Command\Handler
+**/
 class UpdateCommandHandlerTest extends \PHPUnit_Framework_TestCase
 {
     protected $workflowHandler;
     protected $commandHandler;
     protected $command;
 
+    /**
+    * Configure the tests
+    */
     public function setUp()
     {
         $this->command = Phake::mock(UpdateCommand::class);
@@ -24,14 +34,20 @@ class UpdateCommandHandlerTest extends \PHPUnit_Framework_TestCase
         $this->commandHandler = new UpdateCommandHandler($this->workflowHandler);
     }
 
+    /**
+    * Verify that commandHandler implements CommanderHandlerInterface
+    */
     public function testInterfaces()
     {
         $this->assertInstanceOf(CommandHandlerInterface::class, $this->commandHandler);
     }
 
+    /**
+    * Verify the testProcess function
+    */
     public function testProcess()
     {
-        $entity = [["id"=>"123465"]];
+        $entity = [['id'=>'123465']];
         $this->workflowHandler->data->entity = $entity;
 
         $result = $this->commandHandler->process($this->command);

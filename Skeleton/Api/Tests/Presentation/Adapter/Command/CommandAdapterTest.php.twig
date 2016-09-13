@@ -5,33 +5,28 @@ namespace Tests\Presentation\Adapter\{{ entityName }}\Command;
 
 use {{ projectName }}\Presentation\Adapter\{{ entityName }}\Command\UpdateCommandAdapter;
 use {{ projectName }}\Presentation\Request\{{ entityName }}\Command\UpdateRequest;
-use Sfynx\DddBundle\Layer\Application\Generalisation\Interfaces\CommandInterface;
 use Sfynx\DddBundle\Layer\Presentation\Adapter\Generalisation\CommandAdapterInterface;
 use Sfynx\DddBundle\Layer\Presentation\Request\Generalisation\CommandRequestInterface;
 use \Phake;
 
 /**
-* Class {{ actionName }}CommandAdapterTest
-* This class permits to test the {{ actionName }}CommandAdapter class
-* @category {{ projectName }}
-* @package Test
-* @subpackage Presentation\Adapter\Command
-**/
+ * Class {{ actionName }}CommandAdapterTest
+ * This class permits to test the {{ actionName }}CommandAdapter class
+ * @category {{ projectName }}
+ * @package Test
+ * @subpackage Presentation\Adapter\Command
+ */
 class {{ actionName }}CommandAdapterTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var UpdateCommandAdapter
-     */
+    /** @var UpdateCommandAdapter */
     protected $adapter;
 
-    /**
-     * @var CommandRequestInterface
-     */
+    /** @var CommandRequestInterface */
     protected $request;
 
     /**
-    * Configure the tests
-    */
+     * Configure the tests.
+     */
     public function setUp()
     {
         $this->adapter = new UpdateCommandAdapter();
@@ -39,20 +34,19 @@ class {{ actionName }}CommandAdapterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * Test if adapter implements CommandAdapterInterface
-    */
+     * Test if adapter implements CommandAdapterInterface.
+     */
     public function testInterfaces()
     {
         $this->assertInstanceOf(CommandAdapterInterface::class, $this->adapter);
     }
 
     /**
-    * Test CreateCommandFromRequest method
-    */
+     * Test CreateCommandFromRequest method.
+     */
     public function testCreateCommandFromRequest()
     {
         $this->adapter->createCommandFromRequest($this->request);
         Phake::verify($this->request, Phake::times(1))->getRequestParameters();
-
     }
 }

@@ -68,6 +68,6 @@ class PatchCommandHandlerTest extends \PHPUnit_Framework_TestCase
         //This line force to run an exception.
         $this->workflowHandler->data->entity = [];
 
-        $result = $this->commandHandler->process($this->command);
+        $this->commandHandler->process($this->command);
     }
 }

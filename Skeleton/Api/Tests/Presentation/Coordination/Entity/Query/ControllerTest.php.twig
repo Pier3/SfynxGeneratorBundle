@@ -70,7 +70,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 {% set controllerArgs = "" %}
 {% for commandQueryResponsibilitySegregation in controllerData %}
 {% if  commandQueryResponsibilitySegregation.group == group %}
-        $this->{{ commandQueryResponsibilitySegregation.action }}Handler = Phake::mock({{ commandQueryResponsibilitySegregation.action|capitalize }}{{ group }}Handler::class);
+        $this->{{ commandQueryResponsibilitySegregation.action }}Handler = Phake::mock({{ commandQueryResponsibilitySegregation.action|ucfirst }}{{ group }}Handler::class);
         Phake::when($this->{{ commandQueryResponsibilitySegregation.action }}Handler)->process(Phake::anyParameters())
             ->thenReturn($this->entity);
 {% endif %}

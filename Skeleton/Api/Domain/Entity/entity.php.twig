@@ -139,12 +139,14 @@ class {{ entityName }}
 {% endif %}
 {% else %}string
 {% endif %}
+
      */
     public function get{{ field.type|ucfirst }}(): {% if field.type == "id" %}{% if field.voName is defined %}{{ field.voName }}
 {% else %}int
 {% endif %}
 {% else %}string
 {% endif %}
+
     {
         return $this->{{ field.type }};
     }

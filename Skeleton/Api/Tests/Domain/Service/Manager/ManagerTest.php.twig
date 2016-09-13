@@ -16,12 +16,12 @@ use Sfynx\DddBundle\Layer\Infrastructure\Persistence\Generalisation\CouchDB\Save
 {% for field in entityFields %}
 {% if field.type != "id" %}
 {% if field.type == "number" %}
-{% set args = args ~ "123,"  %}
+{% set args = args ~ "123, "  %}
 {% else %}
 {% if field.type == "boolean" %}
-{% set args = args ~ "true,"  %}
+{% set args = args ~ "true, "  %}
 {% else %}
-{% set args = args ~ "'abc',"  %}
+{% set args = args ~ "'abc', "  %}
 {% endif %}
 {% endif %}
 {% endif %}
@@ -35,7 +35,7 @@ use Sfynx\DddBundle\Layer\Infrastructure\Persistence\Generalisation\CouchDB\Save
  * @package Test
  * @subpackage Service\Manager
  */
-class {{ entityName }}ManagerTest extends  \PHPUnit_Framework_TestCase
+class {{ entityName }}ManagerTest extends \PHPUnit_Framework_TestCase
 {
     /** @var {{ entityName }}Manager */
     protected $manager;
